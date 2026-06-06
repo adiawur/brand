@@ -1,0 +1,113 @@
+<div class="report-container">
+
+  <div class="hero-section">
+
+    <span class="system-badge">
+      ZECO HELP DESK
+    </span>
+
+    <h1>Report Electricity Issue</h1>
+
+    <p>
+      Quickly report electricity problems to ZECO and receive updates on issue resolution.
+    </p>
+
+  </div>
+
+  <form class="report-card" (submit)="submitIssue($event)">
+
+    <h2>Customer Information</h2>
+
+    <div class="form-group">
+
+      <label>Full Name *</label>
+
+      <input
+        type="text"
+        placeholder="Enter your full name"
+        required>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Email Address *</label>
+
+      <input
+        type="email"
+        placeholder="Enter your email address"
+        required>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Incident Type *</label>
+
+      <select required>
+
+        <option value="">
+          Select Incident Type
+        </option>
+
+        <option>Power Outage</option>
+
+        <option>Low Voltage</option>
+
+        <option>Meter Fault</option>
+
+        <option>Transformer Fault</option>
+
+        <option>Other</option>
+
+      </select>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Current Location *</label>
+
+      <div class="location-box">
+
+        <input
+          type="text"
+          [value]="locationName"
+          readonly
+          placeholder="Click Detect Location">
+
+        <button
+          type="button"
+          (click)="detectLocation()">
+
+          📍 Detect Location
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Description *</label>
+
+      <textarea
+        rows="6"
+        placeholder="Describe the issue in detail..."
+        required>
+      </textarea>
+
+    </div>
+
+    <button
+      class="submit-btn"
+      type="submit">
+
+      Submit Issue
+
+    </button>
+
+  </form>
+
+</div>

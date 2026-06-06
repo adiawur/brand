@@ -1,0 +1,133 @@
+<div class="dashboard-container">
+
+  <!-- TOPBAR MOBILE -->
+  <div class="mobile-topbar">
+    <button class="menu-btn" (click)="toggleSidebar()">☰</button>
+    <h3>ZECO HELP DESK</h3>
+    <div class="profile">👤 {{customerName}}</div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" [class.open]="sidebarOpen">
+    <!-- CLOSE BUTTON (mobile only) -->
+  <div class="close-btn" (click)="closeSidebar()">
+    ✖
+  </div>
+
+    <div class="logo">
+      ⚡ ZECO HELP DESK
+    </div>
+
+    <ul>
+      <li [class.active]="activeView === 'dashboard'" (click)="setView('dashboard')">
+        🏠 Dashboard
+      </li>
+
+      <li [class.active]="activeView === 'tickets'" (click)="setView('tickets')">
+        🎫 My Tickets
+      </li>
+
+      <li [class.active]="activeView === 'notifications'" (click)="setView('notifications')">
+        🔔 Notifications
+      </li>
+
+      <li (click)="logout()">
+        🚪 Logout
+      </li>
+    </ul>
+
+  </aside>
+
+  <!-- OVERLAY (mobile) -->
+  <div class="overlay" *ngIf="sidebarOpen" (click)="toggleSidebar()"></div>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <!-- DASHBOARD -->
+    <div *ngIf="activeView === 'dashboard'">
+
+      <div class="welcome-card">
+        <h1>Welcome Back 👋</h1>
+        <p>Track your electricity incidents in real time.</p>
+      </div>
+
+      <div class="stats-grid">
+
+        <div class="stat-card open">
+          <h2>{{openTickets}}</h2>
+          <p>📄 Open</p>
+        </div>
+
+        <div class="stat-card progress">
+          <h2>{{inProgress}}</h2>
+          <p>⏳ In Progress</p>
+        </div>
+
+        <div class="stat-card resolved">
+          <h2>{{resolved}}</h2>
+          <p>✅ Resolved</p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- TICKETS -->
+    <div *ngIf="activeView === 'tickets'">
+
+      <div class="card">
+        <h3>🎫 My Tickets</h3>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Type</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let ticket of tickets">
+              <td>{{ticket.id}}</td>
+              <td>{{ticket.type}}</td>
+              <td>
+                <span class="status" [ngClass]="ticket.status.toLowerCase()">
+                  {{ticket.status}}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+
+    </div>
+
+    <!-- NOTIFICATIONS (PREMIUM UI) -->
+    <div *ngIf="activeView === 'notifications'">
+
+      <div class="card">
+
+        <h3>🔔 Latest Updates</h3>
+
+        <div class="notification-grid">
+
+          <div class="notification-card" *ngFor="let n of notifications">
+            <div class="dot"></div>
+            <div class="content">
+              <p>{{n}}</p>
+              <small>Just now</small>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
