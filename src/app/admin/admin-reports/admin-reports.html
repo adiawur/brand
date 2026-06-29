@@ -1,0 +1,115 @@
+<div class="reports-page">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h2>Reports & Analytics</h2>
+
+            <p>
+                Monitor system performance and statistics
+            </p>
+
+        </div>
+
+        <div class="actions">
+
+            <button (click)="downloadPDF()">
+
+                <i class="fa-solid fa-file-pdf"></i>
+
+                PDF
+
+            </button>
+
+            <button (click)="downloadExcel()">
+
+                <i class="fa-solid fa-file-excel"></i>
+
+                Excel
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- SUMMARY -->
+
+    <div class="summary-grid">
+
+        <div class="summary-card">
+
+            <h3>245</h3>
+            <span>Total Incidents</span>
+
+        </div>
+
+        <div class="summary-card">
+
+            <h3>189</h3>
+            <span>Resolved</span>
+
+        </div>
+
+        <div class="summary-card">
+
+            <h3>34</h3>
+            <span>Pending</span>
+
+        </div>
+
+        <div class="summary-card">
+
+            <h3>92%</h3>
+            <span>SLA Compliance</span>
+
+        </div>
+
+    </div>
+
+    <!-- CHARTS -->
+
+    <div class="charts-grid">
+
+        <div class="chart-card">
+
+            <h3>Incident Trends</h3>
+
+            <div class="chart-container">
+
+                <canvas #trendChart></canvas>
+
+            </div>
+
+        </div>
+
+        <div class="chart-card">
+
+            <h3>Status Distribution</h3>
+
+            <div class="chart-container">
+
+                <canvas #statusChart></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="chart-card">
+
+        <h3>Incident Categories</h3>
+
+        <div class="chart-container large">
+
+            <canvas #categoryChart></canvas>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,355 @@
+<div class="users-page">
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <div>
+            <h2>User Management</h2>
+            <p>Manage system users and roles</p>
+        </div>
+
+        <button class="add-btn" (click)="openAddModal()">
+            <i class="fa-solid fa-plus"></i>
+            Add User
+        </button>
+
+    </div>
+
+    <!-- FILTERS -->
+
+    <div class="filters-card">
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-search"></i>
+
+            <input
+                type="text"
+                placeholder="Search user...">
+
+        </div>
+
+        <select>
+
+            <option>All Roles</option>
+            <option>Admin</option>
+            <option>Supervisor</option>
+            <option>Technician</option>
+            <option>Customer</option>
+
+        </select>
+
+    </div>
+
+    <!-- USERS TABLE -->
+
+    <div class="table-card">
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr *ngFor="let user of users">
+
+                        <td>
+
+                            <div class="user-info">
+
+                                <img [src]="user.image">
+
+                                <div>
+                                    <h4>{{user.name}}</h4>
+                                    <small>{{user.username}}</small>
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td>{{user.email}}</td>
+
+                        <td>{{user.phone}}</td>
+
+                        <td>
+
+                            <span class="role">
+                                {{user.role}}
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <span
+                              class="status"
+                              [class.active]="user.status==='Active'"
+                              [class.inactive]="user.status==='Inactive'">
+
+                                {{user.status}}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <div class="actions">
+
+                                <button class="view-btn" (click)="openViewModal(user)">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+
+                                <button class="edit-btn" (click)="openEditModal(user)">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+
+                                <button class="delete-btn">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ADD MODAL -->
+
+<div class="modal-backdrop"
+     *ngIf="showAddModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h3>Add New User</h3>
+
+            <button (click)="closeAddModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input [(ngModel)]="newUser.name">
+            </div>
+
+            <div class="form-group">
+                <label>Username</label>
+                <input [(ngModel)]="newUser.username">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input [(ngModel)]="newUser.email">
+            </div>
+
+            <div class="form-group">
+                <label>Phone</label>
+                <input [(ngModel)]="newUser.phone">
+            </div>
+
+            <div class="form-group">
+                <label>Role</label>
+
+                <select [(ngModel)]="newUser.role">
+
+                    <option>Admin</option>
+                    <option>Supervisor</option>
+                    <option>Technician</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+
+            <button class="cancel"
+                    (click)="closeAddModal()">
+
+                Cancel
+
+            </button>
+
+            <button class="save"
+                    (click)="saveUser()">
+
+                Save User
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- EDIT MODAL -->
+
+<div class="modal-backdrop"
+     *ngIf="showEditModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h3>Edit User</h3>
+
+            <button (click)="closeEditModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <div class="form-group">
+                <label>Full Name</label>
+
+                <input
+                [(ngModel)]="selectedUser.name">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+
+                <input
+                [(ngModel)]="selectedUser.email">
+            </div>
+
+            <div class="form-group">
+                <label>Phone</label>
+
+                <input
+                [(ngModel)]="selectedUser.phone">
+            </div>
+
+            <div class="form-group">
+                <label>Role</label>
+
+                <select
+                [(ngModel)]="selectedUser.role">
+
+                    <option>Admin</option>
+                    <option>Supervisor</option>
+                    <option>Technician</option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Status</label>
+
+                <select
+                [(ngModel)]="selectedUser.status">
+
+                    <option>Active</option>
+                    <option>Inactive</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+
+            <button class="cancel"
+                    (click)="closeEditModal()">
+
+                Cancel
+
+            </button>
+
+            <button class="save"
+                    (click)="updateUser()">
+
+                Update
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- VIEW MODAL -->
+
+<div class="modal-backdrop"
+     *ngIf="showViewModal">
+
+    <div class="modal view-modal">
+
+        <div class="modal-header">
+
+            <h3>User Details</h3>
+
+            <button (click)="closeViewModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <div class="profile-view">
+
+            <img [src]="selectedUser?.image">
+
+            <h3>{{selectedUser?.name}}</h3>
+
+            <span>{{selectedUser?.role}}</span>
+
+            <div class="details">
+
+                <p><strong>Username:</strong>
+                    {{selectedUser?.username}}</p>
+
+                <p><strong>Email:</strong>
+                    {{selectedUser?.email}}</p>
+
+                <p><strong>Phone:</strong>
+                    {{selectedUser?.phone}}</p>
+
+                <p><strong>Status:</strong>
+                    {{selectedUser?.status}}</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

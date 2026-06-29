@@ -1,88 +1,118 @@
-<div class="report-container">
+<div class="page-wrapper">
 
-  <div class="hero-section">
+    <!-- LEFT -->
 
-    <span class="system-badge">
-      ZECO HELP DESK
-    </span>
+    <div class="main-card">
 
-    <h1>Report Electricity Issue</h1>
+        <div class="page-header">
 
-    <p>
-      Quickly report electricity problems to ZECO and receive updates on issue resolution.
-    </p>
+            <div>
+                <h2>Report New Incident</h2>
+                <p>
+                    Fill all required information below
+                </p>
+            </div>
 
-  </div>
+            <button class="location-btn"
+                    (click)="detectLocation()">
 
-  <form class="report-card" (submit)="submitIssue($event)">
+                <i class="fa-solid fa-location-crosshairs"></i>
 
-    <h2>Customer Information</h2>
+                Detect Again
+
+            </button>
+
+        </div>
+
+        <form (ngSubmit)="submitIncident()">
+
+  <div class="grid">
 
     <div class="form-group">
-
-      <label>Full Name *</label>
+      <label>Reporter Name *</label>
 
       <input
         type="text"
-        placeholder="Enter your full name"
-        required>
-
+        [(ngModel)]="incident.reporterName"
+        name="reporterName"
+        placeholder="Enter full name">
     </div>
 
     <div class="form-group">
-
-      <label>Email Address *</label>
+      <label>Phone Number *</label>
 
       <input
-        type="email"
-        placeholder="Enter your email address"
-        required>
-
+        type="text"
+        [(ngModel)]="incident.phone"
+        name="phone"
+        placeholder="+2557XXXXXXXX">
     </div>
+
+  </div>
+
+   <div class="grid">
+    <div class="form-group">
+
+    <label>Email (Optional)</label>
+
+    <input
+      type="email"
+      [(ngModel)]="incident.email"
+      name="email"
+      placeholder="example@gmail.com">
+
+  </div>
+
+  <div class="form-group">
+
+    <label>Incident Type</label>
+
+    <select
+      [(ngModel)]="incident.incidentType"
+      name="incidentType"
+      (change)="onIncidentTypeChange()">
+
+      <option
+        *ngFor="let type of incidentTypes"
+        [value]="type">
+
+        {{ type }}
+
+      </option>
+
+    </select>
+
+  </div>
+   </div>
+
+  <div class="form-group">
+
+    <label>Description *</label>
+
+    <textarea
+      rows="6"
+      [(ngModel)]="incident.description"
+      name="description"
+      placeholder="Describe the incident">
+    </textarea>
+
+  </div>
+
+  <div class="location-grid">
 
     <div class="form-group">
 
-      <label>Incident Type *</label>
+      <label>Detected Location</label>
 
-      <select required>
+      <div class="input-icon">
 
-        <option value="">
-          Select Incident Type
-        </option>
-
-        <option>Power Outage</option>
-
-        <option>Low Voltage</option>
-
-        <option>Meter Fault</option>
-
-        <option>Transformer Fault</option>
-
-        <option>Other</option>
-
-      </select>
-
-    </div>
-
-    <div class="form-group">
-
-      <label>Current Location *</label>
-
-      <div class="location-box">
+        <i
+          class="fa-solid fa-location-dot">
+        </i>
 
         <input
-          type="text"
-          [value]="locationName"
-          readonly
-          placeholder="Click Detect Location">
-
-        <button
-          type="button"
-          (click)="detectLocation()">
-
-          📍 Detect Location
-
-        </button>
+          [value]="location"
+          readonly>
 
       </div>
 
@@ -90,24 +120,130 @@
 
     <div class="form-group">
 
-      <label>Description *</label>
+      <label>Nearby Landmark</label>
 
-      <textarea
-        rows="6"
-        placeholder="Describe the issue in detail..."
-        required>
-      </textarea>
+      <input
+        type="text"
+        [(ngModel)]="incident.landmark"
+        name="landmark"
+        placeholder="Near Kisauni Market">
 
     </div>
 
-    <button
-      class="submit-btn"
-      type="submit">
+  </div>
 
-      Submit Issue
+  <div class="grid">
+
+    <div class="form-group">
+
+      <label>Latitude</label>
+
+      <input
+        [value]="latitude"
+        readonly>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Longitude</label>
+
+      <input
+        [value]="longitude"
+        readonly>
+
+    </div>
+
+  </div>
+
+  <div
+    class="form-group"
+    *ngIf="showImageUpload">
+
+    <label>
+      Photo Evidence *
+    </label>
+
+    <input
+      type="file"
+      accept="image/*"
+      (change)="onFileSelected($event)">
+
+    <small class="hint">
+
+      Photo is required for
+      safety incidents.
+
+    </small>
+
+  </div>
+
+  <div class="actions">
+
+    <button
+      type="button"
+      class="cancel-btn">
+
+      Cancel
 
     </button>
 
-  </form>
+    <button
+      type="submit"
+      class="submit-btn">
+
+      <i
+        class="fa-solid fa-paper-plane">
+      </i>
+
+      Submit Incident
+
+    </button>
+
+  </div>
+
+</form>
+
+    </div>
+
+    <!-- RIGHT -->
+
+    <div class="tips-card">
+
+        <h3>
+
+            <i class="fa-solid fa-lightbulb"></i>
+
+            Reporting Tips
+
+        </h3>
+
+        <ul>
+
+            <li>
+                Provide accurate location details.
+            </li>
+
+            <li>
+                Attach photo if available.
+            </li>
+
+            <li>
+                Describe incident clearly.
+            </li>
+
+            <li>
+                High-risk incidents are prioritized.
+            </li>
+
+        </ul>
+
+        <div class="illustration">
+
+            <i class="fa-solid fa-bolt"></i>
+
+        </div>
+
+    </div>
 
 </div>

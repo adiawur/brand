@@ -1,0 +1,180 @@
+:host{
+    display:block;
+}
+
+.notifications-page{
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.page-header h2{
+    color:#222;
+    margin-bottom:5px;
+}
+
+.page-header p{
+    color:#777;
+}
+
+.mark-btn{
+    border:none;
+    background:#5c334a;
+    color:#fff;
+    padding:12px 18px;
+    border-radius:12px;
+    cursor:pointer;
+}
+
+.notification-list{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.notification-card{
+
+    background:#fff;
+    border-radius:18px;
+
+    padding:22px;
+
+    display:flex;
+    align-items:flex-start;
+    gap:18px;
+
+    box-shadow:0 2px 15px rgba(0,0,0,.05);
+
+    border-left:5px solid transparent;
+}
+
+.notification-card.unread{
+    border-left-color:#5c334a;
+}
+
+/* ICON */
+
+.icon{
+
+    width:55px;
+    height:55px;
+
+    border-radius:15px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+
+    font-size:1.2rem;
+}
+
+.assignment{
+    background:#f3edf1;
+    color:#5c334a;
+}
+
+.comment{
+    background:#eef5ff;
+    color:#0063cc;
+}
+
+.sla{
+    background:#fff4db;
+    color:#b78200;
+}
+
+.success{
+    background:#e7f8ec;
+    color:#18874d;
+}
+
+/* CONTENT */
+
+.content{
+    flex:1;
+}
+
+.top-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+}
+
+.top-row h4{
+    color:#222;
+}
+
+.top-row span{
+    color:#888;
+    font-size:.85rem;
+}
+
+.content p{
+    color:#666;
+    line-height:1.6;
+}
+
+/* ACTIONS */
+
+.actions{
+    display:flex;
+    gap:10px;
+}
+
+.actions button{
+
+    width:40px;
+    height:40px;
+
+    border:none;
+    border-radius:10px;
+
+    cursor:pointer;
+}
+
+.read-btn{
+    background:#f3edf1;
+    color:#5c334a;
+}
+
+.delete-btn{
+    background:#fdeaea;
+    color:#d63031;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .page-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    .notification-card{
+        flex-direction:column;
+    }
+
+    .top-row{
+        flex-direction:column;
+        gap:5px;
+    }
+
+    .actions{
+        width:100%;
+    }
+
+    .actions button{
+        flex:1;
+    }
+
+}

@@ -1,0 +1,177 @@
+<div class="admin-wrapper">
+
+    <!-- MOBILE OVERLAY -->
+
+    <div
+        class="overlay"
+        *ngIf="mobileSidebar"
+        (click)="toggleMobileSidebar()">
+    </div>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar"
+
+        [class.collapsed]="sidebarCollapsed"
+        [class.mobile-open]="mobileSidebar">
+
+        <div class="logo-area">
+
+            <img src="/img/favicon-tr.png">
+
+            <div *ngIf="!sidebarCollapsed">
+
+                <div class="brand">
+                    <h2>ZECO</h2><small>help desk</small>
+                </div>
+                <span>Admin Panel</span>
+
+            </div>
+
+        </div>
+
+        <ul>
+
+            <li routerLink="dashboard"
+                routerLinkActive="active">
+
+                <i class="fa-solid fa-gauge"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Dashboard
+                </span>
+
+            </li>
+
+            <li routerLink="users"
+                routerLinkActive="active">
+
+                <i class="fa-solid fa-users"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Users
+                </span>
+
+            </li>
+
+            <li routerLink="incidents"
+                routerLinkActive="active">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    incdents
+                </span>
+
+            </li>
+
+            <li routerLink="notifications"
+                routerLinkActive="active">
+
+                <i class="fa-solid fa-bell"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Notifications
+                </span>
+
+            </li>
+
+            <li routerLink="repots"
+                routerLinkActive="active">
+
+                <i class="fa-solid fa-chart-line "></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Reports
+                </span>
+
+            </li>
+
+            <li routerLink="profile"
+                routerLinkActive="active">
+
+                <i class="fa-solid fa-user"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Profile
+                </span>
+
+            </li>
+
+            <li (click)="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Logout
+                </span>
+
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- MAIN -->
+
+    <div class="main-content">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="left-actions">
+
+                <button
+                    class="mobile-btn"
+                    (click)="toggleMobileSidebar()">
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+                <button
+                    class="desktop-btn"
+                    (click)="toggleSidebar()">
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+            </div>
+
+            <div class="top-right">
+
+                <button class="icon-btn">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                </button>
+
+                <div class="admin-info">
+
+                    <img src="/img/admin.png">
+
+                    <div>
+
+                        <h4>Admin</h4>
+                        <small>System Administrator</small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- CHILD PAGES -->
+
+        <div class="page-content">
+
+            <router-outlet></router-outlet>
+
+        </div>
+
+    </div>
+
+</div>

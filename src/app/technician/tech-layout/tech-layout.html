@@ -1,0 +1,158 @@
+<div class="layout-wrapper">
+
+    <!-- MOBILE OVERLAY -->
+
+    <div class="overlay"
+         *ngIf="mobileSidebarOpen"
+         (click)="closeMobileSidebar()">
+    </div>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar"
+           [class.collapsed]="sidebarCollapsed"
+           [class.mobile-open]="mobileSidebarOpen">
+
+        <!-- LOGO -->
+
+        <div class="logo-section">
+
+            <img src="/img/favicon-tr.png" alt="logo">
+
+            <div class="logo-text"
+                 *ngIf="!sidebarCollapsed">
+
+                <h3>ZECO</h3>
+                <span>Technician</span>
+
+            </div>
+
+        </div>
+
+        <!-- MENU -->
+
+        <ul class="menu">
+
+            <li routerLink="dashboard"
+                routerLinkActive="active"
+                (click)="closeMobileSidebar()">
+
+                <i class="fa-solid fa-gauge"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Dashboard
+                </span>
+
+            </li>
+
+            <li routerLink="assignments"
+                routerLinkActive="active"
+                (click)="closeMobileSidebar()">
+
+                <i class="fa-solid fa-list-check"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Assignments
+                </span>
+
+            </li>
+
+            <li routerLink="notifications"
+                routerLinkActive="active"
+                (click)="closeMobileSidebar()">
+
+                <i class="fa-regular fa-bell"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Notifications
+                </span>
+
+            </li>
+
+            <li routerLink="profile"
+                routerLinkActive="active"
+                (click)="closeMobileSidebar()">
+
+                <i class="fa-solid fa-user"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Profile
+                </span>
+
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- MAIN -->
+
+    <div class="main-content">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="left-section">
+
+                <button class="mobile-btn"
+                        (click)="toggleMobileSidebar()">
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+                <button class="collapse-btn"
+                        (click)="toggleSidebar()">
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+                <div>
+
+                    <h2>Technician Panel</h2>
+                    <p>Manage your field assignments</p>
+
+                </div>
+
+            </div>
+
+            <div class="right-section">
+
+                <button class="notification-btn">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                    <span class="badge">3</span>
+
+                </button>
+
+                <div class="profile">
+
+                    <img src="/img/tech.jfif">
+
+                    <div class="profile-info">
+
+                        <h4>Juma Salim</h4>
+                        <span>Field Technician</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- CHILD PAGES -->
+
+        <div class="page-content">
+
+            <router-outlet></router-outlet>
+
+        </div>
+
+    </div>
+
+</div>

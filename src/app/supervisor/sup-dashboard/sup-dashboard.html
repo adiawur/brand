@@ -1,0 +1,211 @@
+<div class="dashboard">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h2>Supervisor Dashboard</h2>
+
+            <p>
+                Welcome back, manage incidents efficiently
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- STATS -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="icon total">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+
+            <div>
+                <h3>245</h3>
+                <span>Total Incidents</span>
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="icon pending">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+
+            <div>
+                <h3>18</h3>
+                <span>Unassigned</span>
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="icon progress">
+                <i class="fa-solid fa-spinner"></i>
+            </div>
+
+            <div>
+                <h3>52</h3>
+                <span>In Progress</span>
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="icon resolved">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div>
+                <h3>120</h3>
+                <span>Resolved Today</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SECOND ROW -->
+
+    <div class="content-grid">
+
+        <!-- INCIDENT TREND -->
+
+        <div class="chart-card">
+
+            <div class="card-header">
+
+                <h3>Incident Trends</h3>
+
+            </div>
+
+            <div class="trend-chart">
+
+                <svg viewBox="0 0 400 180">
+
+                    <polyline
+                        points="10,150 80,100 140,120 210,70 280,90 350,40"
+                        fill="none"
+                        stroke="#4F7FB5"
+                        stroke-width="5"/>
+
+                </svg>
+
+            </div>
+
+        </div>
+
+        <!-- SLA ALERTS -->
+
+        <div class="alert-card">
+
+            <div class="card-header">
+
+                <h3>SLA Alerts</h3>
+
+            </div>
+
+            <div class="alert-item">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <div>
+                    <h4>INC-002</h4>
+                    <p>Response time exceeded</p>
+                </div>
+
+            </div>
+
+            <div class="alert-item">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <div>
+                    <h4>INC-011</h4>
+                    <p>Technician not assigned</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- RECENT INCIDENTS -->
+
+    <div class="table-card">
+
+        <div class="card-header">
+
+            <h3>Recent Incidents</h3>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Type</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr *ngFor="let incident of recentIncidents">
+
+                        <td>{{incident.id}}</td>
+
+                        <td>{{incident.customer}}</td>
+
+                        <td>{{incident.type}}</td>
+
+                        <td>
+
+                            <span class="priority">
+
+                                {{incident.priority}}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <span class="status">
+
+                                {{incident.status}}
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

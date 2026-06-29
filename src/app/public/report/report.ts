@@ -1,73 +1,114 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-report',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './report.html',
-  styleUrl: './report.css',
+  styleUrl: './report.css'
 })
-export class Report {
+export class Report implements OnInit {
 
- locationName = '';
+  location = 'Detecting location...';
+  latitude = '';
+  longitude = '';
 
-latitude!: number;
-longitude!: number;
+  selectedFile?: File;
+  showImageUpload = false;
 
-detectLocation() {
+  incident = {
+    reporterName: '',
+    phone: '',
+    email: '',
+    incidentType: 'Power Outage',
+    description: '',
+    landmark: ''
+  };
 
-  if (!navigator.geolocation) {
-    alert('Geolocation not supported');
-    return;
+  incidentTypes = [
+    'Power Outage',
+    'Transformer Fault',
+    'Broken Pole',
+    'Exposed Wires',
+    'Fire Hazard',
+    'Voltage Fluctuation',
+    'Meter Issue',
+    'Billing Issue',
+    'Street Light Fault',
+    'Other'
+  ];
+
+  ngOnInit(): void {
+    this.detectLocation();
+    this.onIncidentTypeChange();
   }
 
-  navigator.geolocation.getCurrentPosition(
+  detectLocation() {
 
-    async (position) => {
-
-      this.latitude = position.coords.latitude;
-      this.longitude = position.coords.longitude;
-
-      try {
-
-        const response = await fetch(
-
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${this.latitude}&lon=${this.longitude}`
-
-        );
-
-        const data = await response.json();
-
-        this.locationName =
-          data.address.suburb ||
-          data.address.neighbourhood ||
-          data.address.village ||
-          data.address.town ||
-          data.display_name;
-
-      } catch (error) {
-
-        console.error(error);
-
-        this.locationName =
-          `${this.latitude}, ${this.longitude}`;
-
-      }
-
-    },
-
-    (error) => {
-
-      console.error(error);
-
+    if (!navigator.geolocation) {
+      this.location = 'Geolocation not supported';
+      return;
     }
 
-  );
+    navigator.geolocation.getCurrentPosition(
 
-}
-submitIssue(event: Event) {
-  event.preventDefault();
+      (position) => {
 
-  console.log('Issue Submitted');
-}
+        this.latitude =
+          position.coords.latitude.toFixed(6);
+
+        this.longitude =
+          position.coords.longitude.toFixed(6);
+
+        this.location =
+          `${this.latitude}, ${this.longitude}`;
+      },
+
+      () => {
+        this.location = 'Location access denied';
+      }
+
+    );
+  }
+
+  onFileSelected(event: any) {
+
+    const file = event.target.files[0];
+
+    if (file) {
+      this.selectedFile = file;
+    }
+  }
+
+  onIncidentTypeChange() {
+
+    const type = this.incident.incidentType;
+
+    this.showImageUpload = [
+
+      'Transformer Fault',
+      'Broken Pole',
+      'Exposed Wires',
+      'Fire Hazard'
+
+    ].includes(type);
+
+  }
+
+  submitIncident() {
+
+    console.log({
+      ...this.incident,
+      location: this.location,
+      latitude: this.latitude,
+      longitude: this.longitude,
+      attachment: this.selectedFile
+    });
+
+    alert('Incident Submitted Successfully');
+
+  }
 
 }

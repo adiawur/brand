@@ -1,0 +1,233 @@
+<div class="assignments-page">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div>
+            <h2>My Assignments</h2>
+            <p>
+                Manage and update assigned field tasks
+            </p>
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+
+    <div class="table-card">
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Type</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Location</th>
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr *ngFor="let item of assignments">
+
+                        <td>{{item.id}}</td>
+
+                        <td>{{item.customer}}</td>
+
+                        <td>{{item.type}}</td>
+
+                        <td>
+
+                            <span class="priority"
+                                  [class.high]="item.priority==='High'"
+                                  [class.medium]="item.priority==='Medium'">
+
+                                {{item.priority}}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <span class="status">
+
+                                {{item.status}}
+
+                            </span>
+
+                        </td>
+
+                        <td>{{item.location}}</td>
+
+                        <td>
+
+                            <div class="actions">
+
+                                <button class="view-btn"
+                                        (click)="openDetails(item)">
+
+                                    <i class="fa-solid fa-eye"></i>
+
+                                </button>
+
+                                <button class="map-btn"
+                                        (click)="openMap(item)">
+
+                                    <i class="fa-solid fa-location-dot"></i>
+
+                                </button>
+
+                                <button class="update-btn"
+                                        (click)="openUpdate(item)">
+
+                                    <i class="fa-solid fa-pen"></i>
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- DETAILS MODAL -->
+
+<div class="modal-backdrop"
+     *ngIf="showDetailsModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h3>Assignment Details</h3>
+
+            <button (click)="closeDetails()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <p><strong>ID:</strong>
+                {{selectedAssignment?.id}}</p>
+
+            <p><strong>Customer:</strong>
+                {{selectedAssignment?.customer}}</p>
+
+            <p><strong>Type:</strong>
+                {{selectedAssignment?.type}}</p>
+
+            <p><strong>Location:</strong>
+                {{selectedAssignment?.location}}</p>
+
+            <p><strong>Description:</strong>
+                {{selectedAssignment?.description}}</p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- UPDATE MODAL -->
+
+<div class="modal-backdrop"
+     *ngIf="showUpdateModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h3>Update Assignment</h3>
+
+            <button (click)="closeUpdate()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <div class="form-group">
+
+                <label>Status</label>
+
+                <select [(ngModel)]="updateData.status">
+
+                    <option>Assigned</option>
+                    <option>In Progress</option>
+                    <option>Completed</option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Work Notes</label>
+
+                <textarea rows="5"
+                          [(ngModel)]="updateData.notes">
+
+                </textarea>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Photo Evidence</label>
+
+                <input
+                    type="file"
+                    (change)="onFileSelected($event)">
+
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+
+            <button class="cancel-btn"
+                    (click)="closeUpdate()">
+
+                Cancel
+
+            </button>
+
+            <button class="save-btn"
+                    (click)="submitUpdate()">
+
+                Submit Update
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>

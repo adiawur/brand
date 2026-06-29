@@ -1,0 +1,226 @@
+<div class="dashboard">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h2>Dashboard</h2>
+
+            <p>
+                Welcome back, here is your field work overview.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- STATS -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="icon total">
+                <i class="fa-solid fa-list-check"></i>
+            </div>
+
+            <div>
+                <h3>24</h3>
+                <span>Total Assignments</span>
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="icon pending">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+
+            <div>
+                <h3>6</h3>
+                <span>Pending Tasks</span>
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="icon progress">
+                <i class="fa-solid fa-spinner"></i>
+            </div>
+
+            <div>
+                <h3>8</h3>
+                <span>In Progress</span>
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="icon completed">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div>
+                <h3>10</h3>
+                <span>Completed</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SECOND ROW -->
+
+    <div class="content-grid">
+
+        <!-- TODAY TASKS -->
+
+        <div class="tasks-card">
+
+            <div class="card-header">
+
+                <h3>Today's Tasks</h3>
+
+            </div>
+
+            <div class="task-item">
+
+                <i class="fa-solid fa-bolt"></i>
+
+                <div>
+
+                    <h4>Power Outage</h4>
+
+                    <p>Kisauni - 08:30 AM</p>
+
+                </div>
+
+            </div>
+
+            <div class="task-item">
+
+                <i class="fa-solid fa-bolt"></i>
+
+                <div>
+
+                    <h4>Transformer Fault</h4>
+
+                    <p>Mwera - 10:00 AM</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- QUICK ACTIONS -->
+
+        <div class="quick-card">
+
+            <div class="card-header">
+
+                <h3>Quick Actions</h3>
+
+            </div>
+
+            <button>
+
+                <i class="fa-solid fa-list-check"></i>
+
+                View Assignments
+
+            </button>
+
+            <button>
+
+                <i class="fa-solid fa-location-dot"></i>
+
+                Open Map
+
+            </button>
+
+            <button>
+
+                <i class="fa-solid fa-upload"></i>
+
+                Submit Report
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- RECENT ASSIGNMENTS -->
+
+    <div class="table-card">
+
+        <div class="card-header">
+
+            <h3>Recent Assignments</h3>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Incident</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Date</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                <tr *ngFor="let item of assignments">
+
+                    <td>{{item.id}}</td>
+
+                    <td>{{item.customer}}</td>
+
+                    <td>{{item.type}}</td>
+
+                    <td>{{item.location}}</td>
+
+                    <td>
+
+                        <span class="status"
+
+                              [class.pending-status]="item.status === 'Pending'"
+                              [class.progress-status]="item.status === 'In Progress'"
+                              [class.completed-status]="item.status === 'Completed'">
+
+                            {{item.status}}
+
+                        </span>
+
+                    </td>
+
+                    <td>{{item.date}}</td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

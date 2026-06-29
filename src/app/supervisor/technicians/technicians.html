@@ -1,0 +1,329 @@
+<div class="technicians-page">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h2>Technicians Management</h2>
+
+            <p>
+                Manage technicians and assign service zones
+            </p>
+
+        </div>
+
+        <button class="add-btn"
+                (click)="openAddModal()">
+
+            <i class="fa-solid fa-plus"></i>
+
+            Add Technician
+
+        </button>
+
+    </div>
+
+    <!-- SEARCH -->
+
+    <div class="search-card">
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-search"></i>
+
+            <input
+                type="text"
+                placeholder="Search technician...">
+
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+
+    <div class="table-card">
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                <tr>
+
+                    <th>Technician</th>
+                    <th>Phone</th>
+                    <th>Zone</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                <tr *ngFor="let tech of technicians">
+
+                    <td>
+
+                        <div class="tech-info">
+
+                            <img [src]="tech.image">
+
+                            <div>
+
+                                <h4>{{tech.name}}</h4>
+                                <small>{{tech.email}}</small>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                    <td>{{tech.phone}}</td>
+
+                    <td>{{tech.zone}}</td>
+
+                    <td>
+
+                        <span class="status"
+
+                              [class.available]="tech.status==='Available'"
+                              [class.busy]="tech.status==='Busy'"
+                              [class.offline]="tech.status==='Offline'">
+
+                            {{tech.status}}
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <div class="actions">
+
+                            <button class="view-btn"
+                                    (click)="openViewModal(tech)">
+
+                                <i class="fa-solid fa-eye"></i>
+
+                            </button>
+
+                            <button class="edit-btn"
+                                    (click)="openEditModal(tech)">
+
+                                <i class="fa-solid fa-pen"></i>
+
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ADD MODAL -->
+
+<div class="modal-backdrop"
+     *ngIf="showAddModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h3>Add Technician</h3>
+
+            <button (click)="closeAddModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <div class="form-group">
+
+                <label>Full Name</label>
+
+                <input [(ngModel)]="newTechnician.name">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Email</label>
+
+                <input [(ngModel)]="newTechnician.email">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Phone</label>
+
+                <input [(ngModel)]="newTechnician.phone">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Service Zone</label>
+
+                <select [(ngModel)]="newTechnician.zone">
+
+                    <option>Urban</option>
+                    <option>Urban West</option>
+                    <option>North A</option>
+                    <option>North B</option>
+                    <option>South</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+
+            <button class="cancel"
+                    (click)="closeAddModal()">
+
+                Cancel
+
+            </button>
+
+            <button class="save"
+                    (click)="saveTechnician()">
+
+                Save
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- VIEW MODAL -->
+
+<div class="modal-backdrop"
+     *ngIf="showViewModal">
+
+    <div class="modal">
+
+        <div class="profile-view">
+
+            <img [src]="selectedTechnician?.image">
+
+            <h3>{{selectedTechnician?.name}}</h3>
+
+            <span>{{selectedTechnician?.zone}}</span>
+
+            <div class="details">
+
+                <p><strong>Email:</strong>
+                    {{selectedTechnician?.email}}</p>
+
+                <p><strong>Phone:</strong>
+                    {{selectedTechnician?.phone}}</p>
+
+                <p><strong>Status:</strong>
+                    {{selectedTechnician?.status}}</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- EDIT MODAL -->
+
+<div class="modal-backdrop"
+     *ngIf="showEditModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h3>Edit Technician</h3>
+
+            <button (click)="closeEditModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <div class="form-group">
+
+                <label>Name</label>
+
+                <input [(ngModel)]="selectedTechnician.name">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Email</label>
+
+                <input [(ngModel)]="selectedTechnician.email">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Phone</label>
+
+                <input [(ngModel)]="selectedTechnician.phone">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Zone</label>
+
+                <input [(ngModel)]="selectedTechnician.zone">
+
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+
+            <button class="cancel"
+                    (click)="closeEditModal()">
+
+                Cancel
+
+            </button>
+
+            <button class="save"
+                    (click)="updateTechnician()">
+
+                Update
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>

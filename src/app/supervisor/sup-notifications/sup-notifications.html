@@ -1,0 +1,101 @@
+<div class="notifications-page">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h2>Notifications</h2>
+
+            <p>
+                Monitor incidents, technician updates and SLA alerts
+            </p>
+
+        </div>
+
+        <button class="mark-btn"
+                (click)="markAllRead()">
+
+            <i class="fa-solid fa-check-double"></i>
+
+            Mark All Read
+
+        </button>
+
+    </div>
+
+    <!-- NOTIFICATIONS -->
+
+    <div class="notification-list">
+
+        <div class="notification-card"
+
+             *ngFor="let notification of notifications"
+
+             [class.unread]="!notification.read">
+
+            <!-- ICON -->
+
+            <div class="icon"
+
+                 [class.incident]="notification.type==='NEW_INCIDENT'"
+                 [class.sla]="notification.type==='SLA_ALERT'"
+                 [class.tech]="notification.type==='TECHNICIAN_UPDATE'"
+                 [class.resolved]="notification.type==='RESOLVED'"
+                 [class.escalated]="notification.type==='ESCALATED'">
+
+                <i class="fa-solid"
+
+                   [class.fa-bolt]="notification.type==='NEW_INCIDENT'"
+                   [class.fa-clock]="notification.type==='SLA_ALERT'"
+                   [class.fa-user-gear]="notification.type==='TECHNICIAN_UPDATE'"
+                   [class.fa-circle-check]="notification.type==='RESOLVED'"
+                   [class.fa-triangle-exclamation]="notification.type==='ESCALATED'">
+                </i>
+
+            </div>
+
+            <!-- CONTENT -->
+
+            <div class="content">
+
+                <div class="top-row">
+
+                    <h4>{{notification.title}}</h4>
+
+                    <span>{{notification.time}}</span>
+
+                </div>
+
+                <p>{{notification.message}}</p>
+
+            </div>
+
+            <!-- ACTIONS -->
+
+            <div class="actions">
+
+                <button
+                    *ngIf="!notification.read"
+                    class="read-btn"
+                    (click)="markAsRead(notification)">
+
+                    <i class="fa-solid fa-check"></i>
+
+                </button>
+
+                <button class="delete-btn"
+                        (click)="deleteNotification(notification.id)">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,179 @@
+<div class="profile-page">
+
+    <!-- PROFILE CARD -->
+
+    <div class="profile-card">
+
+        <div class="profile-header">
+
+            <img [src]="supervisor.image">
+
+            <div>
+
+                <h2>{{supervisor.fullName}}</h2>
+
+                <span>{{supervisor.role}}</span>
+
+            </div>
+
+        </div>
+
+        <button class="photo-btn">
+
+            <i class="fa-solid fa-camera"></i>
+
+            Change Photo
+
+        </button>
+
+    </div>
+
+    <!-- DETAILS -->
+
+    <div class="details-card">
+
+        <div class="card-header">
+
+            <h3>Profile Information</h3>
+
+            <button class="edit-btn"
+                    *ngIf="!editMode"
+                    (click)="toggleEdit()">
+
+                <i class="fa-solid fa-pen"></i>
+
+                Edit Profile
+
+            </button>
+
+        </div>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>Full Name</label>
+
+                <input
+                    [(ngModel)]="supervisor.fullName"
+                    [readonly]="!editMode">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Username</label>
+
+                <input
+                    [(ngModel)]="supervisor.username"
+                    [readonly]="!editMode">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Email Address</label>
+
+                <input
+                    [(ngModel)]="supervisor.email"
+                    [readonly]="!editMode">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Phone Number</label>
+
+                <input
+                    [(ngModel)]="supervisor.phone"
+                    [readonly]="!editMode">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Role</label>
+
+                <input
+                    [value]="supervisor.role"
+                    readonly>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Assigned Zone</label>
+
+                <input
+                    [(ngModel)]="supervisor.zone"
+                    [readonly]="!editMode">
+
+            </div>
+
+        </div>
+
+        <div class="actions"
+             *ngIf="editMode">
+
+            <button class="cancel-btn"
+                    (click)="toggleEdit()">
+
+                Cancel
+
+            </button>
+
+            <button class="save-btn"
+                    (click)="saveProfile()">
+
+                Save Changes
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- PASSWORD -->
+
+    <div class="password-card">
+
+        <h3>Change Password</h3>
+
+        <div class="password-grid">
+
+            <div class="form-group">
+
+                <label>Current Password</label>
+
+                <input type="password">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>New Password</label>
+
+                <input type="password">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Confirm Password</label>
+
+                <input type="password">
+
+            </div>
+
+        </div>
+
+        <button class="save-btn"
+                (click)="updatePassword()">
+
+            Update Password
+
+        </button>
+
+    </div>
+
+</div>

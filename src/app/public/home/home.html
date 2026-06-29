@@ -1,146 +1,182 @@
-<app-navbar></app-navbar>
+<!-- NAVBAR -->
 
-<section class="hero">
+<header class="navbar">
 
-<div class="hero-content">
+    <div class="logo">
 
-<span class="badge">
-ZECO HELP DESK MANAGEMENT SYSTEM
-</span>
+        <img src="/img/favicon-tr.png" alt="logo">
 
-<h1>
-Smart Complaint Management For Better Electricity Services
-</h1>
+        <div>
+            <h2>ZECO</h2>
+            <span>Help Desk</span>
+        </div>
 
-<p>
-Submit, monitor and track electricity complaints quickly and efficiently through a centralized support system.
-</p>
+    </div>
 
-<div class="buttons">
+    <nav [class.active]="menuOpen">
 
-<button class="btn-primary">
-Submit Complaint
-</button>
+        <a href="#">Home</a>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+         <a href="#steps">Steps</a>
+        <a href="#contact">Contact</a>
 
-<button class="btn-secondary">
-Track Complaint
-</button>
+        <button class="login-btn"
+           routerLink="/login"
+          >
+            Login
+        </button>
 
-</div>
+    </nav>
 
-</div>
+    <button class="menu-btn"
+            (click)="toggleMenu()">
 
-<div class="hero-image">
+        <i class="fa-solid"
+           [class.fa-bars]="!menuOpen"
+           [class.fa-xmark]="menuOpen">
+        </i>
 
-<img src="img/hero.png" alt="Help Desk">
+    </button>
 
-</div>
+</header>
 
-</section>
+<!-- HERO -->
 
+<section class="hero" id="about">
 
-<section class="features">
+    <div class="hero-content">
 
-<h2>System Features</h2>
+        <span class="badge">
+            24/7 Customer Support
+        </span>
 
-<div class="feature-grid">
+        <h1>
+            Report Electricity Problems Quickly & Easily
+        </h1>
 
-<div class="feature-card">
+        <p>
+            Submit complaints, track progress and receive updates
+            directly from ZECO through one digital platform.
+        </p>
 
-<lucide-icon name="file-text"></lucide-icon>
+        <div class="hero-buttons">
 
-<h3>Online Complaints</h3>
+            <button class="primary-btn" routerLink="/report-incident">
+                Report Incident
+            </button>
 
-<p>
-Customers submit issues online.
-</p>
+            <button class="secondary-btn">
+                Track Incident
+            </button>
 
-</div>
+        </div>
 
+    </div>
 
-<div class="feature-card">
+    <div class="hero-image">
 
-<lucide-icon name="bell"></lucide-icon>
+        <img src="/img/hero.png"
+             alt="hero">
 
-<h3>Notifications</h3>
-
-<p>
-Receive complaint updates instantly.
-</p>
-
-</div>
-
-
-<div class="feature-card">
-
-<lucide-icon name="chart-column"></lucide-icon>
-
-<h3>Reports</h3>
-
-<p>
-Generate analytical reports.
-</p>
-
-</div>
-
-
-<div class="feature-card">
-
-<lucide-icon name="shield"></lucide-icon>
-
-<h3>Security</h3>
-
-<p>
-Role-based access and monitoring.
-</p>
-
-</div>
-
-</div>
+    </div>
 
 </section>
 
+<!-- SERVICES -->
 
-<section class="workflow">
+<section class="services" id="services">
 
-<h2>How It Works</h2>
+    <h2>Our Services</h2>
 
-<div class="steps">
+    <div class="service-grid">
 
-<div class="step">
+        <div class="card">
 
-<h1>1</h1>
+            <i class="fa-solid fa-triangle-exclamation"></i>
 
-<p>Submit complaint</p>
+            <h3>Report Incident</h3>
 
-</div>
+            <p>
+                Report power outages, faults and electrical hazards.
+            </p>
 
-<div class="step">
+        </div>
 
-<h1>2</h1>
+        <div class="card">
 
-<p>Complaint assigned</p>
+            <i class="fa-solid fa-list-check"></i>
 
-</div>
+            <h3>Track Status</h3>
 
-<div class="step">
+            <p>
+                Follow the progress of your reported incidents.
+            </p>
 
-<h1>3</h1>
+        </div>
 
-<p>Technician resolves issue</p>
+        <div class="card">
 
-</div>
+            <i class="fa-solid fa-headset"></i>
 
-<div class="step">
+            <h3>Customer Support</h3>
 
-<h1>4</h1>
+            <p>
+                Receive timely support from ZECO technical teams.
+            </p>
 
-<p>Receive notification</p>
+        </div>
 
-</div>
-
-</div>
+    </div>
 
 </section>
 
-<app-footer></app-footer>
+<!-- STEPS -->
+
+<section class="steps" id="steps">
+
+    <h2>How It Works</h2>
+
+    <div class="step-grid">
+
+        <div class="step">
+            <span>1</span>
+            <h3>Report</h3>
+            <p>Submit your issue online.</p>
+        </div>
+
+        <div class="step">
+            <span>2</span>
+            <h3>Assignment</h3>
+            <p>ZECO assigns technicians.</p>
+        </div>
+
+        <div class="step">
+            <span>3</span>
+            <h3>Resolution</h3>
+            <p>Problem solved and feedback sent.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer class="footer" id="contact">
+
+    <h3>ZECO Help Desk System</h3>
+
+    <p>
+        Email: support@zeco.co.tz
+    </p>
+
+    <p>
+        Phone: +255 24 223 0000
+    </p>
+
+    <small>
+        © 2026 ZECO. All rights reserved.
+    </small>
+
+</footer>

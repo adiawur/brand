@@ -1,72 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Inter,sans-serif;
+/* Reset */
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+
+:root{
+  --primary:#6D071A;       /* Burgundy */
+  --primary-light:#8B1E32;
+  --secondary:#E9DFC9;     /* Beige */
+  --dark:#1E1E1E;
+  --light:#FFFFFF;
+  --gray:#F5F5F5;
+  --text:#444;
 }
 
-body{
-background:var(--background);
-color:var(--text);
-}
-
-.container{
-width:95%;
-max-width:1400px;
-margin:auto;
-}
-
-.card{
-
-background:var(--card);
-
-padding:20px;
-
-border-radius:15px;
-
-box-shadow:
-0 5px 15px rgba(0,0,0,.08);
-}
-
-.btn{
-
-padding:12px 18px;
-
-border:none;
-
-border-radius:8px;
-
-cursor:pointer;
-
-font-size:14px;
-
-transition:.3s;
-}
-
-.btn-primary{
-
-background:var(--primary);
-
-color:white;
-}
-
-.btn-primary:hover{
-
-transform:translateY(-2px);
-}
-
-.grid{
-
-display:grid;
-gap:20px;
-}
-
-@media(max-width:768px){
-
-.grid{
-
-grid-template-columns:1fr;
-}
-
-}

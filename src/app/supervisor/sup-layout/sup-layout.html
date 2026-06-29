@@ -1,0 +1,163 @@
+<div class="wrapper">
+
+    <!-- OVERLAY -->
+
+    <div class="overlay"
+         *ngIf="mobileSidebar"
+         (click)="toggleMobileSidebar()">
+    </div>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar"
+
+        [class.collapsed]="sidebarCollapsed"
+        [class.mobile-open]="mobileSidebar">
+
+        <div class="logo-area">
+
+            <img src="/img/favicon-tr.png">
+
+            <div *ngIf="!sidebarCollapsed" style="display: block;;">
+
+                <div class="brand">
+                    <h2>ZECO</h2>
+                </div>
+                <!-- <small>help desk</small> -->
+                <span>Supervisor</span>
+
+            </div>
+
+        </div>
+
+        <ul>
+
+            <li routerLink="dashboard"
+                routerLinkActive="active">
+
+                <i class="fa-solid fa-gauge"></i>
+                <span *ngIf="!sidebarCollapsed">
+                    Dashboard
+                </span>
+
+            </li>
+
+            <li routerLink="technicians"
+                routerLinkActive="active">
+
+                <i class="fa-solid fa-user-gear"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Technicians
+                </span>
+
+            </li>
+
+            <li routerLink="incidents"
+                routerLinkActive="active">
+
+                <i class="fa-solid fa-bolt"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Incidents
+                </span>
+
+            </li>
+
+            <li routerLink="notifications"
+                routerLinkActive="active">
+
+                <i class="fa-regular fa-bell"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Notifications
+                </span>
+
+            </li>
+
+            <li routerLink="profile"
+                routerLinkActive="active">
+
+                <i class="fa-solid fa-user"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Profile
+                </span>
+
+            </li>
+
+             <li (click)="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Logout
+                </span>
+
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- MAIN -->
+
+    <div class="main-content">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="left">
+
+                <button class="mobile-btn"
+                        (click)="toggleMobileSidebar()">
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+                <button class="desktop-btn"
+                        (click)="toggleSidebar()">
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+            </div>
+
+            <div class="right">
+
+                <button class="notification-btn">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                </button>
+
+                <div class="user">
+
+                    <img src="/img/sup.jfif">
+
+                    <div>
+
+                        <h4>Supervisor</h4>
+                        <small>ZECO Staff</small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- CHILD -->
+
+        <div class="page-content">
+
+            <router-outlet></router-outlet>
+
+        </div>
+
+    </div>
+
+</div>

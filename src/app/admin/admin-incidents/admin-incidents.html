@@ -1,0 +1,213 @@
+<div class="incidents-page">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div>
+            <h2>Incident Monitoring</h2>
+            <p>
+                Monitor incidents and staff actions
+            </p>
+        </div>
+
+    </div>
+
+    <!-- FILTERS -->
+
+    <div class="filters-card">
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-search"></i>
+
+            <input
+                type="text"
+                placeholder="Search incident...">
+
+        </div>
+
+        <select>
+            <option>All Status</option>
+            <option>Reported</option>
+            <option>Assigned</option>
+            <option>In Progress</option>
+            <option>Resolved</option>
+        </select>
+
+        <select>
+            <option>All Priorities</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+        </select>
+
+    </div>
+
+    <!-- TABLE -->
+
+    <div class="table-card">
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Type</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Supervisor</th>
+                    <th>Technician</th>
+                    <th>SLA</th>
+                    <th>Action</th>
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                <tr *ngFor="let incident of incidents">
+
+                    <td>{{incident.id}}</td>
+
+                    <td>{{incident.customer}}</td>
+
+                    <td>{{incident.type}}</td>
+
+                    <td>
+                        <span class="priority"
+                              [class.high]="incident.priority==='High'"
+                              [class.medium]="incident.priority==='Medium'"
+                              [class.low]="incident.priority==='Low'">
+
+                            {{incident.priority}}
+
+                        </span>
+                    </td>
+
+                    <td>
+
+                        <span class="status"
+                              [class.reported]="incident.status==='Reported'"
+                              [class.assigned]="incident.status==='Assigned'"
+                              [class.progress]="incident.status==='In Progress'"
+                              [class.resolved]="incident.status==='Resolved'">
+
+                            {{incident.status}}
+
+                        </span>
+
+                    </td>
+
+                    <td>{{incident.supervisor}}</td>
+
+                    <td>{{incident.technician}}</td>
+
+                    <td>
+
+                        <span class="sla"
+                              [class.ok]="incident.sla==='On Time'"
+                              [class.breach]="incident.sla==='Breached'">
+
+                            {{incident.sla}}
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <button class="view-btn"
+                                (click)="openDetails(incident)">
+
+                            <i class="fa-solid fa-eye"></i>
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- DETAILS MODAL -->
+
+<div class="modal-backdrop"
+     *ngIf="showDetailsModal">
+
+    <div class="modal details-modal">
+
+        <div class="modal-header">
+
+            <h3>Incident Details</h3>
+
+            <button (click)="closeDetails()">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <div class="detail-item">
+
+                <label>Incident ID</label>
+                <p>{{selectedIncident?.id}}</p>
+
+            </div>
+
+            <div class="detail-item">
+
+                <label>Customer</label>
+                <p>{{selectedIncident?.customer}}</p>
+
+            </div>
+
+            <div class="detail-item">
+
+                <label>Location</label>
+                <p>{{selectedIncident?.location}}</p>
+
+            </div>
+
+            <div class="detail-item">
+
+                <label>Description</label>
+                <p>{{selectedIncident?.description}}</p>
+
+            </div>
+
+            <div class="detail-item">
+
+                <label>Supervisor Action</label>
+                <p>{{selectedIncident?.supervisorAction}}</p>
+
+            </div>
+
+            <div class="detail-item">
+
+                <label>Technician Action</label>
+                <p>{{selectedIncident?.technicianAction}}</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

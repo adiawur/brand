@@ -1,0 +1,236 @@
+<div class="incidents-page">
+
+    <div class="page-header">
+
+        <div>
+            <h2>Incident Management</h2>
+            <p>
+                Assign technicians and monitor incidents
+            </p>
+        </div>
+
+    </div>
+
+    <div class="table-card">
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Type</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Location</th>
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr *ngFor="let incident of incidents">
+
+                        <td>{{incident.id}}</td>
+
+                        <td>{{incident.customer}}</td>
+
+                        <td>{{incident.type}}</td>
+
+                        <td>
+
+                            <span class="priority">
+                                {{incident.priority}}
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <span class="status">
+                                {{incident.status}}
+                            </span>
+
+                        </td>
+
+                        <td>{{incident.location}}</td>
+
+                        <td>
+
+                            <div class="actions">
+
+                                <button
+                                    class="view-btn"
+                                    (click)="openDetails(incident)">
+
+                                    <i class="fa fa-eye"></i>
+
+                                </button>
+
+                                <button
+                                    class="map-btn"
+                                    (click)="openMap(incident)">
+
+                                    <i class="fa fa-location-dot"></i>
+
+                                </button>
+
+                                <button
+                                    class="assign-btn"
+                                    (click)="openAssignModal(incident)">
+
+                                    <i class="fa fa-user-plus"></i>
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- DETAILS MODAL -->
+
+<div class="modal-backdrop"
+     *ngIf="showDetailsModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h3>Incident Details</h3>
+
+            <button (click)="closeDetails()">
+
+                <i class="fa fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <p><strong>ID:</strong>
+                {{selectedIncident?.id}}</p>
+
+            <p><strong>Customer:</strong>
+                {{selectedIncident?.customer}}</p>
+
+            <p><strong>Location:</strong>
+                {{selectedIncident?.location}}</p>
+
+            <p><strong>Description:</strong>
+                {{selectedIncident?.description}}</p>
+
+            <p><strong>Required Skill:</strong>
+                {{selectedIncident?.requiredSkill}}</p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ASSIGN MODAL -->
+
+<div class="modal-backdrop"
+     *ngIf="showAssignModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h3>Assign Technician</h3>
+
+            <button (click)="closeAssignModal()">
+
+                <i class="fa fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <div class="incident-summary">
+
+                <h4>{{selectedIncident?.id}}</h4>
+
+                <p>
+                    {{selectedIncident?.type}}
+                </p>
+
+                <small>
+
+                    Required Skill:
+                    {{selectedIncident?.requiredSkill}}
+
+                </small>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Select Technician</label>
+
+                <select
+                    [(ngModel)]="selectedTechnician">
+
+                    <option value="">
+                        Choose Technician
+                    </option>
+
+                    <option
+                      *ngFor="let tech of availableTechnicians"
+                      [value]="tech.name">
+
+                        {{tech.name}}
+                        ({{tech.skill}})
+
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+
+            <button class="cancel-btn"
+                    (click)="closeAssignModal()">
+
+                Cancel
+
+            </button>
+
+            <button class="save-btn"
+                    (click)="assignTechnician()">
+
+                Assign
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>

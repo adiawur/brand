@@ -1,0 +1,91 @@
+<div class="notifications-page">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h2>Notifications & SLA Alerts</h2>
+
+            <p>
+                Monitor important system activities and alerts
+            </p>
+
+        </div>
+
+        <button class="clear-btn"
+                (click)="clearAll()">
+
+            <i class="fa-solid fa-trash"></i>
+
+            Clear All
+
+        </button>
+
+    </div>
+
+    <!-- LIST -->
+
+    <div class="notifications-list">
+
+        <div class="notification-card"
+
+             *ngFor="let notification of notifications"
+
+             [class.unread]="!notification.read">
+
+            <!-- ICON -->
+
+            <div class="icon"
+
+                 [class.incident]="notification.type==='INCIDENT'"
+                 [class.sla]="notification.type==='SLA'"
+                 [class.tech]="notification.type==='TECHNICIAN'"
+                 [class.escalation]="notification.type==='ESCALATION'"
+                 [class.resolved]="notification.type==='RESOLVED'">
+
+                <i class="fa-solid"
+
+                   [class.fa-bolt]="notification.type==='INCIDENT'"
+                   [class.fa-triangle-exclamation]="notification.type==='SLA'"
+                   [class.fa-user-gear]="notification.type==='TECHNICIAN'"
+                   [class.fa-arrow-up-right-dots]="notification.type==='ESCALATION'"
+                   [class.fa-circle-check]="notification.type==='RESOLVED'">
+                </i>
+
+            </div>
+
+            <!-- CONTENT -->
+
+            <div class="content">
+
+                <div class="title-row">
+
+                    <h4>{{notification.title}}</h4>
+
+                    <span>{{notification.time}}</span>
+
+                </div>
+
+                <p>{{notification.message}}</p>
+
+            </div>
+
+            <!-- ACTION -->
+
+            <button class="read-btn"
+
+                    *ngIf="!notification.read"
+
+                    (click)="markAsRead(notification)">
+
+                Mark Read
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>

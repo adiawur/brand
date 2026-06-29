@@ -1,0 +1,95 @@
+<div class="notifications-page">
+
+    <div class="page-header">
+
+        <div>
+
+            <h2>Notifications</h2>
+
+            <p>
+                Stay updated with assignments and alerts
+            </p>
+
+        </div>
+
+        <button class="mark-btn"
+                (click)="markAllRead()">
+
+            <i class="fa-solid fa-check-double"></i>
+
+            Mark All Read
+
+        </button>
+
+    </div>
+
+    <div class="notification-list">
+
+        <div class="notification-card"
+
+             *ngFor="let notification of notifications"
+
+             [class.unread]="!notification.read">
+
+            <!-- ICON -->
+
+            <div class="icon"
+
+                 [class.assignment]="notification.type==='assignment'"
+                 [class.comment]="notification.type==='comment'"
+                 [class.sla]="notification.type==='sla'"
+                 [class.success]="notification.type==='success'">
+
+                <i class="fa-solid"
+
+                   [class.fa-list-check]="notification.type==='assignment'"
+                   [class.fa-comments]="notification.type==='comment'"
+                   [class.fa-clock]="notification.type==='sla'"
+                   [class.fa-circle-check]="notification.type==='success'">
+
+                </i>
+
+            </div>
+
+            <!-- CONTENT -->
+
+            <div class="content">
+
+                <div class="top-row">
+
+                    <h4>{{notification.title}}</h4>
+
+                    <span>{{notification.time}}</span>
+
+                </div>
+
+                <p>{{notification.message}}</p>
+
+            </div>
+
+            <!-- ACTIONS -->
+
+            <div class="actions">
+
+                <button class="read-btn"
+                        *ngIf="!notification.read"
+                        (click)="markAsRead(notification)">
+
+                    <i class="fa-solid fa-check"></i>
+
+                </button>
+
+                <button class="delete-btn"
+                        (click)="deleteNotification(notification.id)">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

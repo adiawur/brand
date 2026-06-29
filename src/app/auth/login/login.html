@@ -1,55 +1,100 @@
 <div class="login-container">
 
-  <div class="login-card">
+  <!-- LEFT SIDE -->
 
-    <div class="logo">
+  <div class="left-panel">
 
-      <lucide-icon name="shield"></lucide-icon>
+    <div class="overlay"></div>
 
-      <h2>ZHDMS</h2>
+    <div class="brand-content">
 
-      <p>ZECO Help Desk Management System</p>
+      <img src="img/favicon-tr.png" alt="ZECO Logo" class="logo">
+
+      <h1>ZECO</h1>
+
+      <span>HELP DESK SYSTEM</span>
+
+      <p>
+        Powering Service.<br>
+        Empowering People.
+      </p>
 
     </div>
 
-    <form (submit)="onLogin($event)">
+  </div>
 
-      <div class="input-group">
+  <!-- RIGHT SIDE -->
 
-        <label>Email</label>
+  <div class="right-panel">
 
-        <div class="input-box">
+    <div class="login-card">
 
-          <lucide-icon name="users"></lucide-icon>
+      <div class="heading">
+        <h2>Welcome Back</h2>
+        <p>Sign in to your account</p>
+      </div>
 
-          <input type="email" placeholder="Enter email" required />
+      <form>
+
+        <!-- EMAIL -->
+
+        <div class="input-group">
+
+          <label>Email or Username</label>
+
+          <div class="input-field">
+            <i class="fa-regular fa-user"></i>
+            <input
+              type="text"
+              placeholder="Enter your email or username">
+          </div>
 
         </div>
 
-      </div>
+        <!-- PASSWORD -->
 
-      <div class="input-group">
+        <div class="input-group">
 
-        <label>Password</label>
+          <label>Password</label>
 
-        <div class="input-box">
+          <div class="input-field">
+            <i class="fa-solid fa-lock"></i>
 
-          <lucide-icon name="shield"></lucide-icon>
+            <input
+              type="password"
+              placeholder="Enter your password">
 
-          <input type="password" placeholder="Enter password" required />
+            <i class="fa-regular fa-eye eye"></i>
+          </div>
 
         </div>
 
-      </div>
+        <!-- OPTIONS -->
 
-      <button type="submit" class="btn-login">
-        Login
-      </button>
+        <div class="options">
 
-    </form>
+          <label class="remember">
+            <input type="checkbox">
+            Remember me
+          </label>
 
-    <div class="footer-text">
-      <p>Forgot password? Contact admin</p>
+          <a routerLink="/forgot-password">
+            Forgot password?
+          </a>
+
+        </div>
+
+        <button type="submit" class="login-btn">
+          Login
+        </button>
+
+        <p class="register">
+          <i class="fa fa-arrow-left"></i>
+          <a href="#">back to home</a>
+        </p>
+
+      </form>
+
     </div>
 
   </div>
