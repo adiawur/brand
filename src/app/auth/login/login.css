@@ -22,37 +22,30 @@ LEFT PANEL
 =================================== */
 
 .left-panel{
-    position:relative;
-
+    position: relative;
     background:
         linear-gradient(
-            rgba(109,7,26,.88),
-            rgba(53,3,13,.88)
+            rgba(109,7,26,.18),
+            rgba(53,3,13,.18)
         ),
+        url('/img/bg-login.png');
 
-        url('/img/bg-login-bg.jpg');
-
-    background-size: contain;
-    background-position:center;
-    background-repeat:no-repeat;
+    background-size: cover;
+    background-position: bottom;
+    background-repeat: no-repeat;
 
     display:flex;
     justify-content:center;
     align-items:center;
-
     overflow:hidden;
 }
 
 .overlay{
     position:absolute;
     inset:0;
-    background:linear-gradient(
-        180deg,
-        rgba(0,0,0,.1),
-        rgba(0,0,0,.35)
-    );
-}
 
+    background:rgba(0,0,0,.12);
+}
 .brand-content{
     position:relative;
     z-index:2;
