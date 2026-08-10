@@ -20,10 +20,17 @@ import {
   Twitter,
   Linkedin
 } from 'lucide-angular';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './services/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes)
+    provideRouter(routes),
+    provideHttpClient(
+      withInterceptors([
+        authInterceptor
+      ])
+    )
   ],
 };

@@ -1,116 +1,147 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {Incident,IncidentService} from '../../services/incident.service';
+
+import {
+  AssignmentService
+} from '../../services/assignment.service';
+
+import {
+  User,
+  UserService
+} from '../../services/user.service';
+
+import {
+  AlertService
+} from '../../services/alert.service';
 
 @Component({
   selector: 'app-sup-incidents',
-  
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   templateUrl: './sup-incidents.html',
-  styleUrl: './sup-incidents.css',
+  styleUrl: './sup-incidents.css'
 })
-export class SupIncidents  { 
+export class SupIncidents implements OnInit {
 
   showDetailsModal = false;
+
   showAssignModal = false;
 
-  selectedIncident: any = null;
+  selectedIncident: Incident | null = null;
 
-  incidents = [
+  incidents: Incident[] = [];
 
-    {
-      id:'INC-001',
-      customer:'Ali Hassan',
-      type:'Power Outage',
-      priority:'High',
-      status:'Reported',
-      location:'Kisauni, Zanzibar',
-      latitude:-6.1659,
-      longitude:39.2026,
-      description:'No electricity in the entire area.',
-      requiredSkill:'Power Distribution'
-    },
+  technicians: User[] = [];
 
-    {
-      id:'INC-002',
-      customer:'Fatma Omar',
-      type:'Transformer Fault',
-      priority:'High',
-      status:'Reported',
-      location:'Mwera, Zanzibar',
-      latitude:-6.2123,
-      longitude:39.2211,
-      description:'Transformer exploded.',
-      requiredSkill:'Transformer Maintenance'
-    },
+  availableTechnicians: User[] = [];
 
-    {
-      id:'INC-003',
-      customer:'Said Ali',
-      type:'Meter Issue',
-      priority:'Medium',
-      status:'Reported',
-      location:'Stone Town',
-      latitude:-6.1619,
-      longitude:39.1880,
-      description:'Meter stopped working.',
-      requiredSkill:'Meter Installation'
-    }
-
-  ];
-
-  technicians = [
-
-    {
-      id:1,
-      name:'Juma Salim',
-      skill:'Power Distribution',
-      status:'Available'
-    },
-
-    {
-      id:2,
-      name:'Ali Hassan',
-      skill:'Transformer Maintenance',
-      status:'Available'
-    },
-
-    {
-      id:3,
-      name:'Hamad Omar',
-      skill:'Meter Installation',
-      status:'Available'
-    },
-
-    {
-      id:4,
-      name:'Salim Ali',
-      skill:'Transformer Maintenance',
-      status:'Busy'
-    }
-
-  ];
-
-  availableTechnicians: any[] = [];
   selectedTechnician = '';
 
-  openDetails(incident:any){
+  loading = false;
 
-    this.selectedIncident = incident;
+  constructor(
+    private incidentService: IncidentService,private assignmentService: AssignmentService,private userService: UserService,private alertService: AlertService,private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+
+    this.loadIncidents();
+
+    this.loadTechnicians();
+
+  }
+
+  loadIncidents(): void {
+
+    this.loading = true;
+
+    this.incidentService
+      .getAll()
+      .subscribe({
+
+        next: (incidents) => {
+
+          this.incidents = incidents;
+
+          this.loading = false;
+          this.cdr.detectChanges();
+
+        },
+
+        error: () => {
+
+          this.loading = false;
+
+          this.alertService.error(
+            'Operation Failed',
+            'Unable to load incidents.'
+          );
+
+        }
+
+      });
+
+  }
+
+  loadTechnicians(): void {
+
+  this.userService
+    .getTechnicians()
+    .subscribe({
+
+      next: (users) => {
+
+        this.technicians = users;
+        this.cdr.detectChanges();
+
+      },
+
+      error: () => {
+
+        this.alertService.error(
+          'Operation Failed',
+          'Unable to load technicians.'
+        );
+
+      }
+
+    });
+
+}
+
+  openDetails(
+    incident: Incident
+  ): void {
+
+    this.selectedIncident =
+      incident;
+
     this.showDetailsModal = true;
 
   }
 
-  closeDetails(){
+  closeDetails(): void {
 
     this.showDetailsModal = false;
 
+    this.selectedIncident = null;
+
   }
 
-  openMap(incident:any){
+  openMap(
+    incident: Incident
+  ): void {
 
-    const lat = incident.latitude;
-    const lng = incident.longitude;
+    const lat =
+      incident.latitude;
+
+    const lng =
+      incident.longitude;
 
     window.open(
       `https://www.google.com/maps?q=${lat},${lng}`,
@@ -119,41 +150,124 @@ export class SupIncidents  {
 
   }
 
-  openAssignModal(incident:any){
+  openAssignModal(
+    incident: Incident
+  ): void {
 
-    this.selectedIncident = incident;
+    this.selectedIncident =
+      incident;
+
+    this.selectedTechnician =
+      '';
 
     this.availableTechnicians =
-      this.technicians.filter(t =>
-
-        t.status === 'Available' &&
-        t.skill === incident.requiredSkill
-
-      );
+      this.technicians;
 
     this.showAssignModal = true;
 
   }
 
-  closeAssignModal(){
+  closeAssignModal(): void {
 
     this.showAssignModal = false;
+
+    this.selectedTechnician = '';
 
   }
 
-  assignTechnician(){
+  assignTechnician(): void {
 
-    if(!this.selectedTechnician){
-      alert('Please select technician');
+    if (
+      !this.selectedIncident ||
+      !this.selectedTechnician
+    ) {
+
+      this.alertService.warning(
+        'Select Technician',
+        'Please select a technician first.'
+      );
+
       return;
+
     }
 
-    alert(
-      `${this.selectedTechnician}
-       assigned successfully`
-    );
+    const data = {
 
-    this.showAssignModal = false;
+      incidentId:
+        this.selectedIncident.id,
+
+      technicianId:
+        Number(this.selectedTechnician)
+
+    };
+
+    this.assignmentService
+      .assign(data)
+      .subscribe({
+
+        next: () => {
+
+          this.alertService.success(
+            'Assignment Successful',
+            'Technician assigned successfully.'
+          );
+
+          this.closeAssignModal();
+
+          this.loadIncidents();
+
+        },
+
+        error: (error) => {
+
+          this.alertService.error(
+            'Assignment Failed',
+            error?.error?.message ||
+            'Unable to assign technician.'
+          );
+
+        }
+
+      });
+
+  }
+
+  formatType(
+    type: string
+  ): string {
+
+    return type
+      .replace(/_/g, ' ')
+      .toLowerCase()
+      .replace(/\b\w/g, char =>
+        char.toUpperCase()
+      );
+
+  }
+
+  formatStatus(
+    status: string
+  ): string {
+
+    return status
+      .replace(/_/g, ' ')
+      .toLowerCase()
+      .replace(/\b\w/g, char =>
+        char.toUpperCase()
+      );
+
+  }
+
+  formatPriority(
+    priority: string
+  ): string {
+
+    return priority
+      .charAt(0)
+      .toUpperCase() +
+      priority
+        .slice(1)
+        .toLowerCase();
 
   }
 

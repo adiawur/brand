@@ -338,3 +338,70 @@ tbody tr{
     background:#4F7FB5;
     color:white;
 }
+
+.modal-backdrop{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    z-index:1000;
+}
+
+.modal{
+    width:100%;
+    max-width:550px;
+    background:#fff;
+    border-radius:20px;
+}
+
+.modal-header{
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    border-bottom:1px solid #eee;
+}
+
+.modal-header button{
+    border:none;
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    background:#f5f5f5;
+    cursor:pointer;
+}
+
+.modal-body{
+    padding:25px;
+}
+
+.modal-body p{
+    margin-bottom:15px;
+}
+
+.modal-footer{
+    padding:20px;
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    border-top:1px solid #eee;
+}
+
+.cancel-btn,
+.save-btn{
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.save-btn{
+    background:#4F7FB5;
+    color:#fff;
+}
+
+.cancel-btn{
+    background:#eee;
+}

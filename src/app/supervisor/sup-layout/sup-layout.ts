@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sup-layout',
@@ -9,7 +10,10 @@ import { Router, RouterModule } from '@angular/router';
   styleUrl: './sup-layout.css',
 })
 export class SupLayout {
-  constructor(private router:Router){}
+  constructor(
+      private authService:AuthService,
+      private router:Router
+    ){}
 
   sidebarCollapsed = false;
   mobileSidebar = false;
@@ -24,8 +28,9 @@ export class SupLayout {
     !this.mobileSidebar;
   }
 
-  logout() {
+  logout(){
+    this.authService.logout();
     this.router.navigate(['/login']);
-}
+  }
 
 }

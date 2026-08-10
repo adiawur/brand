@@ -223,3 +223,24 @@ textarea{
 .submit-btn i{
   margin-right:8px;
 }
+
+.location-status{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:25px;
+    padding:14px 16px;
+    border-radius:12px;
+    background:#fff6df;
+    color:#b78200;
+    font-size:.9rem;
+}
+
+.location-status.detected{
+    background:#e7f8ec;
+    color:#18874d;
+}
+
+.location-status i{
+    font-size:1rem;
+}

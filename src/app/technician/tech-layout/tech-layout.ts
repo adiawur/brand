@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-tech-layout',
@@ -14,6 +15,11 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   styleUrl: './tech-layout.css',
 })
 export class TechLayout {
+
+  constructor(
+    private authService:AuthService,
+    private router:Router
+  ){}
 
   sidebarCollapsed = false;
   mobileSidebarOpen = false;
@@ -29,6 +35,11 @@ export class TechLayout {
 
   closeMobileSidebar() {
     this.mobileSidebarOpen = false;
+  }
+
+  logout(){
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
 }

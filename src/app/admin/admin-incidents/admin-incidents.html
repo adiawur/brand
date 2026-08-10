@@ -1,128 +1,223 @@
-<div class="incidents-page">
+<!-- HEADER -->
 
-    <!-- HEADER -->
+<div class="page-header">
 
-    <div class="page-header">
+    <div>
 
-        <div>
-            <h2>Incident Monitoring</h2>
-            <p>
-                Monitor incidents and staff actions
-            </p>
-        </div>
+        <h2>Incident Monitoring</h2>
 
-    </div>
-
-    <!-- FILTERS -->
-
-    <div class="filters-card">
-
-        <div class="search-box">
-
-            <i class="fa-solid fa-search"></i>
-
-            <input
-                type="text"
-                placeholder="Search incident...">
-
-        </div>
-
-        <select>
-            <option>All Status</option>
-            <option>Reported</option>
-            <option>Assigned</option>
-            <option>In Progress</option>
-            <option>Resolved</option>
-        </select>
-
-        <select>
-            <option>All Priorities</option>
-            <option>High</option>
-            <option>Medium</option>
-            <option>Low</option>
-        </select>
+        <p>
+            Monitor incidents and staff actions
+        </p>
 
     </div>
 
-    <!-- TABLE -->
+</div>
 
-    <div class="table-card">
 
-        <div class="table-responsive">
+<!-- FILTERS -->
 
-            <table>
+<div class="filters-card">
 
-                <thead>
+    <div class="search-box">
+
+        <i class="fa-solid fa-search"></i>
+
+        <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            placeholder="Search incident...">
+
+    </div>
+
+
+    <select [(ngModel)]="selectedStatus">
+
+        <option value="All Status">
+            All Status
+        </option>
+
+        <option value="REPORTED">
+            Reported
+        </option>
+
+        <option value="ASSIGNED">
+            Assigned
+        </option>
+
+        <option value="IN_PROGRESS">
+            In Progress
+        </option>
+
+        <option value="COMPLETED">
+            Completed
+        </option>
+
+        <option value="RESOLVED">
+            Resolved
+        </option>
+
+        <option value="CLOSED">
+            Closed
+        </option>
+
+    </select>
+
+
+    <select [(ngModel)]="selectedPriority">
+
+        <option value="All Priorities">
+            All Priorities
+        </option>
+
+        <option value="HIGH">
+            High
+        </option>
+
+        <option value="MEDIUM">
+            Medium
+        </option>
+
+        <option value="LOW">
+            Low
+        </option>
+
+    </select>
+
+</div>
+
+
+<!-- TABLE -->
+
+<div class="table-card">
+
+    <div class="table-responsive">
+
+        <table>
+
+            <thead>
 
                 <tr>
+
                     <th>ID</th>
+
                     <th>Customer</th>
+
                     <th>Type</th>
+
                     <th>Priority</th>
+
                     <th>Status</th>
-                    <th>Supervisor</th>
-                    <th>Technician</th>
+
+                    <th>Location</th>
+
                     <th>SLA</th>
+
                     <th>Action</th>
+
                 </tr>
 
-                </thead>
+            </thead>
 
-                <tbody>
 
-                <tr *ngFor="let incident of incidents">
+            <tbody>
 
-                    <td>{{incident.id}}</td>
+                <tr *ngIf="loading">
 
-                    <td>{{incident.customer}}</td>
+                    <td colspan="8">
 
-                    <td>{{incident.type}}</td>
-
-                    <td>
-                        <span class="priority"
-                              [class.high]="incident.priority==='High'"
-                              [class.medium]="incident.priority==='Medium'"
-                              [class.low]="incident.priority==='Low'">
-
-                            {{incident.priority}}
-
-                        </span>
-                    </td>
-
-                    <td>
-
-                        <span class="status"
-                              [class.reported]="incident.status==='Reported'"
-                              [class.assigned]="incident.status==='Assigned'"
-                              [class.progress]="incident.status==='In Progress'"
-                              [class.resolved]="incident.status==='Resolved'">
-
-                            {{incident.status}}
-
-                        </span>
+                        Loading incidents...
 
                     </td>
 
-                    <td>{{incident.supervisor}}</td>
+                </tr>
 
-                    <td>{{incident.technician}}</td>
+
+                <tr
+                    *ngFor="let incident of filteredIncidents">
 
                     <td>
 
-                        <span class="sla"
-                              [class.ok]="incident.sla==='On Time'"
-                              [class.breach]="incident.sla==='Breached'">
+                        {{ incident.ticketId }}
 
-                            {{incident.sla}}
+                    </td>
+
+
+                    <td>
+
+                        {{ incident.reporterName }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ formatIncidentType(incident.incidentType) }}
+
+                    </td>
+
+
+                    <td>
+
+                        <span
+                            class="priority"
+                            [class.high]="incident.priority === 'HIGH'"
+                            [class.medium]="incident.priority === 'MEDIUM'"
+                            [class.low]="incident.priority === 'LOW'">
+
+                            {{ formatPriority(incident.priority) }}
 
                         </span>
 
                     </td>
 
+
                     <td>
 
-                        <button class="view-btn"
-                                (click)="openDetails(incident)">
+                        <span
+                            class="status"
+                            [class.reported]="incident.status === 'REPORTED'"
+                            [class.assigned]="incident.status === 'ASSIGNED'"
+                            [class.progress]="incident.status === 'IN_PROGRESS'"
+                            [class.resolved]="incident.status === 'RESOLVED'"
+                            [class.completed]="incident.status === 'COMPLETED'"
+                            [class.closed]="incident.status === 'CLOSED'">
+
+                            {{ formatStatus(incident.status) }}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        {{ incident.location }}
+
+                    </td>
+
+
+                    <td>
+
+                        <span
+                            class="sla"
+                            [class.ok]="incident.slaStatus === 'ON_TIME'"
+                            [class.breach]="incident.slaStatus === 'BREACHED'"
+                            [class.risk]="incident.slaStatus === 'AT_RISK'"
+                            [class.completed-sla]="incident.slaStatus === 'COMPLETED'">
+
+                            {{ formatSla(incident.slaStatus) }}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <button
+                            class="view-btn"
+                            (click)="openDetails(incident)">
 
                             <i class="fa-solid fa-eye"></i>
 
@@ -132,11 +227,21 @@
 
                 </tr>
 
-                </tbody>
 
-            </table>
+                <tr
+                    *ngIf="!loading && filteredIncidents.length === 0">
 
-        </div>
+                    <td colspan="8">
+
+                        No incidents found.
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
 
     </div>
 
@@ -145,8 +250,9 @@
 
 <!-- DETAILS MODAL -->
 
-<div class="modal-backdrop"
-     *ngIf="showDetailsModal">
+<div
+    class="modal-backdrop"
+    *ngIf="showDetailsModal">
 
     <div class="modal details-modal">
 
@@ -154,7 +260,8 @@
 
             <h3>Incident Details</h3>
 
-            <button (click)="closeDetails()">
+            <button
+                (click)="closeDetails()">
 
                 <i class="fa-solid fa-xmark"></i>
 
@@ -162,47 +269,263 @@
 
         </div>
 
+
         <div class="modal-body">
 
             <div class="detail-item">
 
                 <label>Incident ID</label>
-                <p>{{selectedIncident?.id}}</p>
+
+                <p>
+                    {{ selectedIncident?.ticketId }}
+                </p>
 
             </div>
+
 
             <div class="detail-item">
 
                 <label>Customer</label>
-                <p>{{selectedIncident?.customer}}</p>
+
+                <p>
+                    {{ selectedIncident?.reporterName }}
+                </p>
 
             </div>
+
+
+            <div class="detail-item">
+
+                <label>Phone</label>
+
+                <p>
+                    {{ selectedIncident?.phone }}
+                </p>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <label>Email</label>
+
+                <p>
+                    {{ selectedIncident?.email || 'Not provided' }}
+                </p>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <label>Incident Type</label>
+
+                <p>
+                    {{
+                        selectedIncident
+                        ? formatIncidentType(selectedIncident.incidentType)
+                        : ''
+                    }}
+                </p>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <label>Priority</label>
+
+                <p>
+
+                    <span
+                        *ngIf="selectedIncident"
+                        class="priority"
+                        [class.high]="selectedIncident.priority === 'HIGH'"
+                        [class.medium]="selectedIncident.priority === 'MEDIUM'"
+                        [class.low]="selectedIncident.priority === 'LOW'">
+
+                        {{ formatPriority(selectedIncident.priority) }}
+
+                    </span>
+
+                </p>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <label>Status</label>
+
+                <p>
+
+                    <span
+                        *ngIf="selectedIncident"
+                        class="status"
+                        [class.reported]="selectedIncident.status === 'REPORTED'"
+                        [class.assigned]="selectedIncident.status === 'ASSIGNED'"
+                        [class.progress]="selectedIncident.status === 'IN_PROGRESS'"
+                        [class.resolved]="selectedIncident.status === 'RESOLVED'"
+                        [class.completed]="selectedIncident.status === 'COMPLETED'"
+                        [class.closed]="selectedIncident.status === 'CLOSED'">
+
+                        {{ formatStatus(selectedIncident.status) }}
+
+                    </span>
+
+                </p>
+
+            </div>
+
 
             <div class="detail-item">
 
                 <label>Location</label>
-                <p>{{selectedIncident?.location}}</p>
+
+                <p>
+                    {{ selectedIncident?.location }}
+                </p>
 
             </div>
+
+
+            <div class="detail-item">
+
+                <label>Landmark</label>
+
+                <p>
+                    {{ selectedIncident?.landmark || 'Not provided' }}
+                </p>
+
+            </div>
+
 
             <div class="detail-item">
 
                 <label>Description</label>
-                <p>{{selectedIncident?.description}}</p>
+
+                <p>
+                    {{ selectedIncident?.description }}
+                </p>
 
             </div>
 
+
             <div class="detail-item">
 
-                <label>Supervisor Action</label>
-                <p>{{selectedIncident?.supervisorAction}}</p>
+                <label>SLA</label>
+
+                <p>
+
+                    <span
+                        *ngIf="selectedIncident"
+                        class="sla"
+                        [class.ok]="selectedIncident.slaStatus === 'ON_TIME'"
+                        [class.breach]="selectedIncident.slaStatus === 'BREACHED'"
+                        [class.risk]="selectedIncident.slaStatus === 'AT_RISK'"
+                        [class.completed-sla]="selectedIncident.slaStatus === 'COMPLETED'">
+
+                        {{ formatSla(selectedIncident.slaStatus) }}
+
+                    </span>
+
+                </p>
 
             </div>
 
+
             <div class="detail-item">
 
-                <label>Technician Action</label>
-                <p>{{selectedIncident?.technicianAction}}</p>
+                <label>Reported At</label>
+
+                <p>
+                    {{
+                        selectedIncident
+                        ? formatDate(selectedIncident.reportedAt)
+                        : 'N/A'
+                    }}
+                </p>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <label>SLA Deadline</label>
+
+                <p>
+                    {{
+                        selectedIncident
+                        ? formatDate(selectedIncident.slaDeadline)
+                        : 'N/A'
+                    }}
+                </p>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <label>Time Remaining</label>
+
+                <p>
+                    {{
+                        selectedIncident
+                        ? formatRemaining(selectedIncident.remainingMinutes)
+                        : 'N/A'
+                    }}
+                </p>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <label>Resolution Notes</label>
+
+                <p>
+                    {{
+                        selectedIncident?.resolutionNotes ||
+                        'No resolution notes available.'
+                    }}
+                </p>
+
+            </div>
+
+
+            <div
+                class="detail-item"
+                *ngIf="selectedIncident?.attachment">
+
+                <label>Attachment</label>
+
+                <p>
+
+                    <a
+                        [href]="getAttachmentUrl(selectedIncident?.attachment)"
+                        target="_blank">
+
+                        <i class="fa-solid fa-image"></i>
+
+                        View Attachment
+
+                    </a>
+
+                </p>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <label>Coordinates</label>
+
+                <p>
+
+                    {{ selectedIncident?.latitude }},
+                    {{ selectedIncident?.longitude }}
+
+                </p>
 
             </div>
 

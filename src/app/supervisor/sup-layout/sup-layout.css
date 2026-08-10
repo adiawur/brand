@@ -37,7 +37,7 @@
 }
 
 .logo-area{
-    height:90px;
+    height: 80px;
     padding:20px;
 
     display:flex;
@@ -53,9 +53,10 @@
     object-fit:contain;
 }
 
-.logo-area h2{
-    font-size:1.4rem;
+.logo-area h6{
+    font-size: .89rem;
     margin-bottom:3px;
+    text-transform: capitalize;
 }
 
 .logo-area span{

@@ -34,7 +34,7 @@
         <p>Sign in to your account</p>
       </div>
 
-      <form>
+      <form (ngSubmit)="onLogin($event)">
 
         <!-- EMAIL -->
 
@@ -44,9 +44,15 @@
 
           <div class="input-field">
             <i class="fa-regular fa-user"></i>
+
             <input
               type="text"
-              placeholder="Enter your email or username">
+              name="username"
+              [(ngModel)]="username"
+              placeholder="Enter your email or username"
+              autocomplete="username"
+            >
+
           </div>
 
         </div>
@@ -58,13 +64,19 @@
           <label>Password</label>
 
           <div class="input-field">
+
             <i class="fa-solid fa-lock"></i>
 
             <input
               type="password"
-              placeholder="Enter your password">
+              name="password"
+              [(ngModel)]="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+            >
 
             <i class="fa-regular fa-eye eye"></i>
+
           </div>
 
         </div>
@@ -74,8 +86,14 @@
         <div class="options">
 
           <label class="remember">
-            <input type="checkbox">
+
+            <input
+              type="checkbox"
+              name="remember"
+            >
+
             Remember me
+
           </label>
 
           <a routerLink="/forgot-password">
@@ -84,13 +102,24 @@
 
         </div>
 
-        <button type="submit" class="login-btn">
-          Login
+        <button
+          type="submit"
+          class="login-btn"
+          [disabled]="loading"
+        >
+
+          {{ loading ? 'Signing in...' : 'Login' }}
+
         </button>
 
         <p class="register">
+
           <i class="fa fa-arrow-left"></i>
-          <a href="#">back to home</a>
+
+          <a routerLink="/">
+            back to home
+          </a>
+
         </p>
 
       </form>

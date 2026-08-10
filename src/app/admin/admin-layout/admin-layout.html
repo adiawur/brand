@@ -8,10 +8,11 @@
         (click)="toggleMobileSidebar()">
     </div>
 
+
     <!-- SIDEBAR -->
 
-    <aside class="sidebar"
-
+    <aside
+        class="sidebar"
         [class.collapsed]="sidebarCollapsed"
         [class.mobile-open]="mobileSidebar">
 
@@ -22,17 +23,26 @@
             <div *ngIf="!sidebarCollapsed">
 
                 <div class="brand">
-                    <h2>ZECO</h2><small>help desk</small>
+
+                    <h6>
+                        zeco help desk
+                    </h6>
+
                 </div>
-                <span>Admin Panel</span>
+
+                <span>
+                    Admin Panel
+                </span>
 
             </div>
 
         </div>
 
+
         <ul>
 
-            <li routerLink="dashboard"
+            <li
+                routerLink="dashboard"
                 routerLinkActive="active">
 
                 <i class="fa-solid fa-gauge"></i>
@@ -43,7 +53,9 @@
 
             </li>
 
-            <li routerLink="users"
+
+            <li
+                routerLink="users"
                 routerLinkActive="active">
 
                 <i class="fa-solid fa-users"></i>
@@ -54,18 +66,22 @@
 
             </li>
 
-            <li routerLink="incidents"
+
+            <li
+                routerLink="incidents"
                 routerLinkActive="active">
 
                 <i class="fa-solid fa-triangle-exclamation"></i>
 
                 <span *ngIf="!sidebarCollapsed">
-                    incdents
+                    Incidents
                 </span>
 
             </li>
 
-            <li routerLink="notifications"
+
+            <li
+                routerLink="notifications"
                 routerLinkActive="active">
 
                 <i class="fa-solid fa-bell"></i>
@@ -76,10 +92,12 @@
 
             </li>
 
-            <li routerLink="repots"
+
+            <li
+                routerLink="reports"
                 routerLinkActive="active">
 
-                <i class="fa-solid fa-chart-line "></i>
+                <i class="fa-solid fa-chart-line"></i>
 
                 <span *ngIf="!sidebarCollapsed">
                     Reports
@@ -87,7 +105,9 @@
 
             </li>
 
-            <li routerLink="profile"
+
+            <li
+                routerLink="profile"
                 routerLinkActive="active">
 
                 <i class="fa-solid fa-user"></i>
@@ -98,7 +118,10 @@
 
             </li>
 
-            <li (click)="logout()">
+
+            <li
+                (click)="logout()">
+
                 <i class="fa-solid fa-right-from-bracket"></i>
 
                 <span *ngIf="!sidebarCollapsed">
@@ -110,6 +133,7 @@
         </ul>
 
     </aside>
+
 
     <!-- MAIN -->
 
@@ -129,6 +153,7 @@
 
                 </button>
 
+
                 <button
                     class="desktop-btn"
                     (click)="toggleSidebar()">
@@ -139,22 +164,46 @@
 
             </div>
 
+
             <div class="top-right">
 
-                <button class="icon-btn">
+                <div class="date-info">
+
+                    <i class="fa-regular fa-calendar"></i>
+
+                    <span>
+                        {{currentDate | date:'EEE, dd MMM yyyy'}}
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="icon-btn"
+                    routerLink="notifications">
 
                     <i class="fa-regular fa-bell"></i>
 
                 </button>
 
-                <div class="admin-info">
 
-                    <img src="/img/admin.png">
+                <div
+                    class="admin-info"
+                    routerLink="profile">
+
+                    <img
+                        [src]="adminImage"
+                        alt="Admin">
 
                     <div>
 
-                        <h4>Admin</h4>
-                        <small>System Administrator</small>
+                        <h4>
+                            {{adminName}}
+                        </h4>
+
+                        <small>
+                            {{adminRole}}
+                        </small>
 
                     </div>
 
@@ -163,6 +212,7 @@
             </div>
 
         </header>
+
 
         <!-- CHILD PAGES -->
 

@@ -1,168 +1,466 @@
-import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit
+} from '@angular/core';
+
+import {
+  CommonModule
+} from '@angular/common';
+
 import {
   Chart,
   registerables
 } from 'chart.js';
 
+import {
+  ReportService
+} from '../../services/report.service';
+
+import {
+  AlertService
+} from '../../services/alert.service';
+
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-admin-reports',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './admin-reports.html',
-  styleUrl: './admin-reports.css',
+  styleUrl: './admin-reports.css'
 })
-export class AdminReports implements AfterViewInit {
+export class AdminReports implements OnInit {
 
-  @ViewChild('trendChart')
-  trendChart!: ElementRef;
+  dashboard: any = null;
 
-  @ViewChild('statusChart')
-  statusChart!: ElementRef;
+  typeData: any[] = [];
 
-  @ViewChild('categoryChart')
-  categoryChart!: ElementRef;
+  priorityData: any[] = [];
 
-  ngAfterViewInit(): void {
+  slaData: any[] = [];
 
-    this.loadTrendChart();
-    this.loadStatusChart();
-    this.loadCategoryChart();
+  statusData: any[] = [];
+
+  loading = false;
+
+  typeChart?: Chart;
+  priorityChart?: Chart;
+  slaChart?: Chart;
+  statusChart?: Chart;
+
+  constructor(
+    private reportService: ReportService,
+    private alertService: AlertService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+
+    this.loadReports();
 
   }
 
-  loadTrendChart() {
+  loadReports(): void {
 
-    new Chart(this.trendChart.nativeElement, {
+    this.loading = true;
 
-      type: 'line',
+    this.reportService.getDashboard()
+      .subscribe({
 
-      data: {
+        next: (data) => {
 
-        labels: [
-          'Jan','Feb','Mar',
-          'Apr','May','Jun'
-        ],
+          this.dashboard = data;
 
-        datasets: [{
+          this.loading = false;
 
-          label: 'Incidents',
+          this.cdr.detectChanges();
 
-          data: [45,60,55,80,90,120],
+        },
 
-          borderColor: '#6D071A',
+        error: (error) => {
 
-          backgroundColor: 'rgba(109,7,26,.1)',
+          this.loading = false;
 
-          tension: .4,
+          this.showError(
+            error,
+            'Unable to load report summary.'
+          );
 
-          fill: true
+        }
 
-        }]
+      });
 
-      },
+    this.reportService.getTypes()
+      .subscribe({
 
-      options: {
+        next: (data) => {
 
-        responsive: true,
-        maintainAspectRatio: false
+          this.typeData = data;
+
+          this.createTypeChart();
+
+        },
+
+        error: () => {}
+
+      });
+
+    this.reportService.getPriority()
+      .subscribe({
+
+        next: (data) => {
+
+          this.priorityData = data;
+
+          this.createPriorityChart();
+
+        },
+
+        error: () => {}
+
+      });
+
+    this.reportService.getSla()
+      .subscribe({
+
+        next: (data) => {
+
+          this.slaData = data;
+
+          this.createSlaChart();
+
+        },
+
+        error: () => {}
+
+      });
+
+    this.reportService.getStatus()
+      .subscribe({
+
+        next: (data) => {
+
+          this.statusData = data;
+
+          this.createStatusChart();
+
+        },
+
+        error: () => {}
+
+      });
+
+  }
+
+  createTypeChart(): void {
+
+    if (this.typeChart) {
+      this.typeChart.destroy();
+    }
+
+    const canvas =
+      document.getElementById(
+        'typeChart'
+      ) as HTMLCanvasElement;
+
+    if (!canvas) {
+      return;
+    }
+
+    this.typeChart = new Chart(
+      canvas,
+      {
+        type: 'bar',
+
+        data: {
+
+          labels: this.typeData.map(
+            item => this.format(
+              item.incidentType
+            )
+          ),
+
+          datasets: [{
+
+            label: 'Incidents',
+
+            data: this.typeData.map(
+              item => item.count
+            )
+
+          }]
+
+        },
+
+        options: {
+
+          responsive: true,
+
+          maintainAspectRatio: false,
+
+          plugins: {
+
+            legend: {
+              display: false
+            }
+
+          },
+
+          scales: {
+
+            y: {
+              beginAtZero: true
+            }
+
+          }
+
+        }
 
       }
-
-    });
+    );
 
   }
 
-  loadStatusChart() {
+  createPriorityChart(): void {
 
-    new Chart(this.statusChart.nativeElement, {
+    if (this.priorityChart) {
+      this.priorityChart.destroy();
+    }
 
-      type: 'doughnut',
+    const canvas =
+      document.getElementById(
+        'priorityReportChart'
+      ) as HTMLCanvasElement;
 
-      data: {
+    if (!canvas) {
+      return;
+    }
 
-        labels: [
-          'Resolved',
-          'Pending',
-          'In Progress'
-        ],
+    this.priorityChart = new Chart(
+      canvas,
+      {
+        type: 'doughnut',
 
-        datasets: [{
+        data: {
 
-          data: [65,20,15],
+          labels: this.priorityData.map(
+            item => this.format(
+              item.priority
+            )
+          ),
 
-          backgroundColor: [
-            '#198754',
-            '#ffc107',
-            '#0d6efd'
-          ]
+          datasets: [{
 
-        }]
+            data: this.priorityData.map(
+              item => item.count
+            )
 
-      },
+          }]
 
-      options: {
+        },
 
-        responsive: true,
-        maintainAspectRatio: false
+        options: {
+
+          responsive: true,
+
+          maintainAspectRatio: false,
+
+          plugins: {
+
+            legend: {
+              position: 'bottom'
+            }
+
+          }
+
+        }
 
       }
-
-    });
+    );
 
   }
 
-  loadCategoryChart() {
+  createSlaChart(): void {
 
-    new Chart(this.categoryChart.nativeElement, {
+    if (this.slaChart) {
+      this.slaChart.destroy();
+    }
 
-      type: 'bar',
+    const canvas =
+      document.getElementById(
+        'slaReportChart'
+      ) as HTMLCanvasElement;
 
-      data: {
+    if (!canvas) {
+      return;
+    }
 
-        labels: [
+    this.slaChart = new Chart(
+      canvas,
+      {
+        type: 'bar',
 
-          'Outage',
-          'Meter',
-          'Transformer',
-          'Voltage',
-          'Other'
+        data: {
 
-        ],
+          labels: this.slaData.map(
+            item => this.format(
+              item.slaStatus
+            )
+          ),
 
-        datasets: [{
+          datasets: [{
 
-          label: 'Cases',
+            label: 'Incidents',
 
-          data: [120,70,45,30,15],
+            data: this.slaData.map(
+              item => item.count
+            )
 
-          backgroundColor: '#6D071A'
+          }]
 
-        }]
+        },
 
-      },
+        options: {
 
-      options: {
+          responsive: true,
 
-        responsive: true,
-        maintainAspectRatio: false
+          maintainAspectRatio: false,
+
+          plugins: {
+
+            legend: {
+              display: false
+            }
+
+          },
+
+          scales: {
+
+            y: {
+              beginAtZero: true
+            }
+
+          }
+
+        }
 
       }
-
-    });
-
-  }
-
-  downloadPDF() {
-
-    alert('PDF report downloaded');
+    );
 
   }
 
-  downloadExcel() {
+  createStatusChart(): void {
 
-    alert('Excel report downloaded');
+    if (this.statusChart) {
+      this.statusChart.destroy();
+    }
+
+    const canvas =
+      document.getElementById(
+        'statusReportChart'
+      ) as HTMLCanvasElement;
+
+    if (!canvas) {
+      return;
+    }
+
+    this.statusChart = new Chart(
+      canvas,
+      {
+        type: 'doughnut',
+
+        data: {
+
+          labels: this.statusData.map(
+            item => this.format(
+              item.status
+            )
+          ),
+
+          datasets: [{
+
+            data: this.statusData.map(
+              item => item.count
+            )
+
+          }]
+
+        },
+
+        options: {
+
+          responsive: true,
+
+          maintainAspectRatio: false,
+
+          plugins: {
+
+            legend: {
+              position: 'bottom'
+            }
+
+          }
+
+        }
+
+      }
+    );
+
+  }
+
+  format(value: string): string {
+
+    return value
+      .replace(/_/g, ' ')
+      .toLowerCase()
+      .replace(/\b\w/g, char =>
+        char.toUpperCase()
+      );
+
+  }
+
+  downloadPDF(): void {
+
+    this.alertService.info(
+      'PDF Report',
+      'PDF export will be connected to the report generator.'
+    );
+
+  }
+
+  downloadExcel(): void {
+
+    this.alertService.info(
+      'Excel Report',
+      'Excel export will be connected to the report generator.'
+    );
+
+  }
+
+  private showError(
+    error: any,
+    fallback: string
+  ): void {
+
+    let message = fallback;
+
+    if (error?.error?.message) {
+
+      message = error.error.message;
+
+    } else if (
+      typeof error?.error === 'string'
+    ) {
+
+      message = error.error;
+
+    }
+
+    this.alertService.error(
+      'Operation Failed',
+      message
+    );
 
   }
 

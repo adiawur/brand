@@ -22,8 +22,8 @@
             <div class="logo-text"
                  *ngIf="!sidebarCollapsed">
 
-                <h3>ZECO</h3>
-                <span>Technician</span>
+                <h6>zeco help desk</h6>
+                <span>Technician Panel</span>
 
             </div>
 
@@ -77,6 +77,14 @@
 
                 <span *ngIf="!sidebarCollapsed">
                     Profile
+                </span>
+
+            </li>
+            <li (click)="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <span *ngIf="!sidebarCollapsed">
+                    Logout
                 </span>
 
             </li>

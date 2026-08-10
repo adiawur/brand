@@ -1,105 +1,146 @@
-<div class="incidents-page">
+<div class="page-header">
 
-    <div class="page-header">
+    <div>
 
-        <div>
-            <h2>Incident Management</h2>
-            <p>
-                Assign technicians and monitor incidents
-            </p>
-        </div>
+        <h2>Incident Management</h2>
+
+        <p>
+            Assign technicians and monitor incidents
+        </p>
 
     </div>
 
-    <div class="table-card">
+</div>
 
-        <div class="table-responsive">
+<div class="table-card">
 
-            <table>
+    <div class="table-responsive">
 
-                <thead>
+        <table>
 
-                    <tr>
+            <thead>
 
-                        <th>ID</th>
-                        <th>Customer</th>
-                        <th>Type</th>
-                        <th>Priority</th>
-                        <th>Status</th>
-                        <th>Location</th>
-                        <th>Actions</th>
+                <tr>
 
-                    </tr>
+                    <th>ID</th>
 
-                </thead>
+                    <th>Customer</th>
 
-                <tbody>
+                    <th>Type</th>
 
-                    <tr *ngFor="let incident of incidents">
+                    <th>Priority</th>
 
-                        <td>{{incident.id}}</td>
+                    <th>Status</th>
 
-                        <td>{{incident.customer}}</td>
+                    <th>Location</th>
 
-                        <td>{{incident.type}}</td>
+                    <th>Actions</th>
 
-                        <td>
+                </tr>
 
-                            <span class="priority">
-                                {{incident.priority}}
-                            </span>
+            </thead>
 
-                        </td>
+            <tbody>
 
-                        <td>
+                <tr
+                    *ngFor="let incident of incidents">
 
-                            <span class="status">
-                                {{incident.status}}
-                            </span>
+                    <td>
+                        {{incident.ticketId}}
+                    </td>
 
-                        </td>
+                    <td>
+                        {{incident.reporterName}}
+                    </td>
 
-                        <td>{{incident.location}}</td>
+                    <td>
+                        {{formatType(incident.incidentType)}}
+                    </td>
 
-                        <td>
+                    <td>
 
-                            <div class="actions">
+                        <span
+                            class="priority"
+                            [class.high]="incident.priority === 'HIGH'"
+                            [class.medium]="incident.priority === 'MEDIUM'"
+                            [class.low]="incident.priority === 'LOW'">
 
-                                <button
-                                    class="view-btn"
-                                    (click)="openDetails(incident)">
+                            {{formatPriority(incident.priority)}}
 
-                                    <i class="fa fa-eye"></i>
+                        </span>
 
-                                </button>
+                    </td>
 
-                                <button
-                                    class="map-btn"
-                                    (click)="openMap(incident)">
+                    <td>
 
-                                    <i class="fa fa-location-dot"></i>
+                        <span
+                            class="status"
+                            [class.reported]="incident.status === 'REPORTED'"
+                            [class.assigned]="incident.status === 'ASSIGNED'"
+                            [class.progress]="incident.status === 'IN_PROGRESS'"
+                            [class.resolved]="incident.status === 'RESOLVED'">
 
-                                </button>
+                            {{formatStatus(incident.status)}}
 
-                                <button
-                                    class="assign-btn"
-                                    (click)="openAssignModal(incident)">
+                        </span>
 
-                                    <i class="fa fa-user-plus"></i>
+                    </td>
 
-                                </button>
+                    <td>
+                        {{incident.location}}
+                    </td>
 
-                            </div>
+                    <td>
 
-                        </td>
+                        <div class="actions">
 
-                    </tr>
+                            <button
+                                class="view-btn"
+                                (click)="openDetails(incident)">
 
-                </tbody>
+                                <i class="fa fa-eye"></i>
 
-            </table>
+                            </button>
 
-        </div>
+                            <button
+                                class="map-btn"
+                                (click)="openMap(incident)">
+
+                                <i class="fa fa-location-dot"></i>
+
+                            </button>
+
+                            <button
+                                class="assign-btn"
+                                *ngIf="incident.status === 'REPORTED'"
+                                (click)="openAssignModal(incident)">
+
+                                <i class="fa fa-user-plus"></i>
+
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                <tr
+                    *ngIf="!loading && incidents.length === 0">
+
+                    <td
+                        colspan="7"
+                        style="text-align:center;">
+
+                        No incidents found.
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
 
     </div>
 
@@ -108,8 +149,9 @@
 
 <!-- DETAILS MODAL -->
 
-<div class="modal-backdrop"
-     *ngIf="showDetailsModal">
+<div
+    class="modal-backdrop"
+    *ngIf="showDetailsModal">
 
     <div class="modal">
 
@@ -117,7 +159,8 @@
 
             <h3>Incident Details</h3>
 
-            <button (click)="closeDetails()">
+            <button
+                (click)="closeDetails()">
 
                 <i class="fa fa-xmark"></i>
 
@@ -127,20 +170,45 @@
 
         <div class="modal-body">
 
-            <p><strong>ID:</strong>
-                {{selectedIncident?.id}}</p>
+            <p>
+                <strong>ID:</strong>
+                {{selectedIncident?.ticketId}}
+            </p>
 
-            <p><strong>Customer:</strong>
-                {{selectedIncident?.customer}}</p>
+            <p>
+                <strong>Customer:</strong>
+                {{selectedIncident?.reporterName}}
+            </p>
 
-            <p><strong>Location:</strong>
-                {{selectedIncident?.location}}</p>
+            <p>
+                <strong>Phone:</strong>
+                {{selectedIncident?.phone}}
+            </p>
 
-            <p><strong>Description:</strong>
-                {{selectedIncident?.description}}</p>
+            <p>
+                <strong>Type:</strong>
+                {{formatType(selectedIncident?.incidentType || '')}}
+            </p>
 
-            <p><strong>Required Skill:</strong>
-                {{selectedIncident?.requiredSkill}}</p>
+            <p>
+                <strong>Priority:</strong>
+                {{formatPriority(selectedIncident?.priority || '')}}
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                {{formatStatus(selectedIncident?.status || '')}}
+            </p>
+
+            <p>
+                <strong>Location:</strong>
+                {{selectedIncident?.location}}
+            </p>
+
+            <p>
+                <strong>Description:</strong>
+                {{selectedIncident?.description}}
+            </p>
 
         </div>
 
@@ -151,8 +219,9 @@
 
 <!-- ASSIGN MODAL -->
 
-<div class="modal-backdrop"
-     *ngIf="showAssignModal">
+<div
+    class="modal-backdrop"
+    *ngIf="showAssignModal">
 
     <div class="modal">
 
@@ -160,7 +229,8 @@
 
             <h3>Assign Technician</h3>
 
-            <button (click)="closeAssignModal()">
+            <button
+                (click)="closeAssignModal()">
 
                 <i class="fa fa-xmark"></i>
 
@@ -172,16 +242,20 @@
 
             <div class="incident-summary">
 
-                <h4>{{selectedIncident?.id}}</h4>
+                <h4>
+                    {{selectedIncident?.ticketId}}
+                </h4>
 
                 <p>
-                    {{selectedIncident?.type}}
+                    {{formatType(
+                        selectedIncident?.incidentType || ''
+                    )}}
                 </p>
 
                 <small>
 
-                    Required Skill:
-                    {{selectedIncident?.requiredSkill}}
+                    Location:
+                    {{selectedIncident?.location}}
 
                 </small>
 
@@ -189,7 +263,9 @@
 
             <div class="form-group">
 
-                <label>Select Technician</label>
+                <label>
+                    Select Technician
+                </label>
 
                 <select
                     [(ngModel)]="selectedTechnician">
@@ -199,11 +275,17 @@
                     </option>
 
                     <option
-                      *ngFor="let tech of availableTechnicians"
-                      [value]="tech.name">
+                        *ngFor="let tech of availableTechnicians"
+                        [value]="tech.id">
 
-                        {{tech.name}}
-                        ({{tech.skill}})
+                        {{tech.fullName}}
+
+                        <span
+                            *ngIf="tech.specialization">
+
+                            - {{tech.specialization}}
+
+                        </span>
 
                     </option>
 
@@ -215,15 +297,17 @@
 
         <div class="modal-footer">
 
-            <button class="cancel-btn"
-                    (click)="closeAssignModal()">
+            <button
+                class="cancel-btn"
+                (click)="closeAssignModal()">
 
                 Cancel
 
             </button>
 
-            <button class="save-btn"
-                    (click)="assignTechnician()">
+            <button
+                class="save-btn"
+                (click)="assignTechnician()">
 
                 Assign
 

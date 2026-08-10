@@ -1,194 +1,230 @@
-<div class="profile-page">
+<!-- PROFILE CARD -->
 
-    <!-- PROFILE CARD -->
+<div class="profile-card">
 
-    <div class="profile-card">
+    <div class="profile-header">
 
-        <div class="profile-header">
+        <img
+            [src]="getProfileImage()"
+            alt="Admin Profile">
 
-            <img [src]="admin.image">
+        <div>
 
-            <div>
+            <h2>
+                {{admin?.fullName}}
+            </h2>
 
-                <h2>{{admin.fullName}}</h2>
-
-                <span>{{admin.role}}</span>
-
-            </div>
+            <span>
+                {{admin?.role}}
+            </span>
 
         </div>
 
-        <button class="upload-btn">
+    </div>
 
-            <i class="fa-solid fa-camera"></i>
+</div>
 
-            Change Photo
+
+<!-- DETAILS CARD -->
+
+<div class="details-card">
+
+    <div class="card-header">
+
+        <h3>Profile Information</h3>
+
+        <button
+            *ngIf="!editMode"
+            class="edit-btn"
+            (click)="toggleEdit()">
+
+            <i class="fa-solid fa-pen"></i>
+
+            Edit Profile
 
         </button>
 
     </div>
 
-    <!-- DETAILS CARD -->
 
-    <div class="details-card">
+    <div
+        class="form-grid"
+        *ngIf="admin">
 
-        <div class="card-header">
+        <!-- FULL NAME -->
 
-            <h3>Profile Information</h3>
+        <div class="form-group">
 
-            <button
-                *ngIf="!editMode"
-                class="edit-btn"
-                (click)="toggleEdit()">
+            <label>Full Name</label>
 
-                <i class="fa-solid fa-pen"></i>
-
-                Edit Profile
-
-            </button>
+            <input
+                [(ngModel)]="admin.fullName"
+                [readonly]="!editMode">
 
         </div>
 
-        <div class="form-grid">
 
-            <!-- FULL NAME -->
+        <!-- USERNAME -->
 
-            <div class="form-group">
+        <div class="form-group">
 
-                <label>Full Name</label>
+            <label>Username</label>
 
-                <input
-                    [(ngModel)]="admin.fullName"
-                    [readonly]="!editMode">
-
-            </div>
-
-            <!-- USERNAME -->
-
-            <div class="form-group">
-
-                <label>Username</label>
-
-                <input
-                    [(ngModel)]="admin.username"
-                    [readonly]="!editMode">
-
-            </div>
-
-            <!-- EMAIL -->
-
-            <div class="form-group">
-
-                <label>Email Address</label>
-
-                <input
-                    [(ngModel)]="admin.email"
-                    [readonly]="!editMode">
-
-            </div>
-
-            <!-- PHONE -->
-
-            <div class="form-group">
-
-                <label>Phone Number</label>
-
-                <input
-                    [(ngModel)]="admin.phone"
-                    [readonly]="!editMode">
-
-            </div>
-
-            <!-- ROLE -->
-
-            <div class="form-group">
-
-                <label>Role</label>
-
-                <input
-                    [value]="admin.role"
-                    readonly>
-
-            </div>
-
-            <!-- DEPARTMENT -->
-
-            <div class="form-group">
-
-                <label>Department</label>
-
-                <input
-                    [(ngModel)]="admin.department"
-                    [readonly]="!editMode">
-
-            </div>
+            <input
+                [(ngModel)]="admin.username"
+                [readonly]="!editMode">
 
         </div>
 
-        <div
-            class="actions"
-            *ngIf="editMode">
 
-            <button
-                class="cancel-btn"
-                (click)="toggleEdit()">
+        <!-- EMAIL -->
 
-                Cancel
+        <div class="form-group">
 
-            </button>
+            <label>Email Address</label>
 
-            <button
-                class="save-btn"
-                (click)="saveProfile()">
+            <input
+                type="email"
+                [(ngModel)]="admin.email"
+                [readonly]="!editMode">
 
-                Save Changes
+        </div>
 
-            </button>
+
+        <!-- PHONE -->
+
+        <div class="form-group">
+
+            <label>Phone Number</label>
+
+            <input
+                [(ngModel)]="admin.phone"
+                [readonly]="!editMode">
+
+        </div>
+
+
+        <!-- ROLE -->
+
+        <div class="form-group">
+
+            <label>Role</label>
+
+            <input
+                [value]="admin.role"
+                readonly>
+
+        </div>
+
+
+        <!-- SPECIALIZATION -->
+
+        <div class="form-group">
+
+            <label>Specialization</label>
+
+            <input
+                [(ngModel)]="admin.specialization"
+                [readonly]="!editMode">
+
+        </div>
+
+
+        <!-- ZONE -->
+
+        <div class="form-group">
+
+            <label>Zone</label>
+
+            <input
+                [(ngModel)]="admin.zone"
+                [readonly]="!editMode">
 
         </div>
 
     </div>
 
-    <!-- PASSWORD CARD -->
 
-    <div class="password-card">
+    <div
+        class="actions"
+        *ngIf="editMode">
 
-        <h3>Change Password</h3>
+        <button
+            class="cancel-btn"
+            (click)="toggleEdit()">
 
-        <div class="password-grid">
+            Cancel
 
-            <div class="form-group">
+        </button>
 
-                <label>Current Password</label>
+        <button
+            class="save-btn"
+            (click)="saveProfile()">
 
-                <input type="password">
+            <i class="fa-solid fa-check"></i>
 
-            </div>
-
-            <div class="form-group">
-
-                <label>New Password</label>
-
-                <input type="password">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Confirm Password</label>
-
-                <input type="password">
-
-            </div>
-
-        </div>
-
-        <button class="save-btn">
-
-            Update Password
+            Save Changes
 
         </button>
 
     </div>
+
+</div>
+
+
+<!-- PASSWORD CARD -->
+
+<div class="password-card">
+
+    <h3>Change Password</h3>
+
+    <p class="password-info">
+        Password management can be connected to the
+        authentication module.
+    </p>
+
+    <div class="password-grid">
+
+        <div class="form-group">
+
+            <label>Current Password</label>
+
+            <input
+                type="password"
+                placeholder="Current password">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>New Password</label>
+
+            <input
+                type="password"
+                placeholder="New password">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Confirm Password</label>
+
+            <input
+                type="password"
+                placeholder="Confirm password">
+
+        </div>
+
+    </div>
+
+    <button
+        class="save-btn"
+        disabled>
+
+        Update Password
+
+    </button>
 
 </div>

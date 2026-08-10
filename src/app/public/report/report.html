@@ -7,202 +7,186 @@
         <div class="page-header">
 
             <div>
+
                 <h2>Report New Incident</h2>
+
                 <p>
                     Fill all required information below
                 </p>
+
             </div>
-
-            <button class="location-btn"
-                    (click)="detectLocation()">
-
-                <i class="fa-solid fa-location-crosshairs"></i>
-
-                Detect Again
-
-            </button>
 
         </div>
 
-        <form (ngSubmit)="submitIncident()">
+        <div
+            class="location-status"
+            [class.detected]="locationDetected">
 
-  <div class="grid">
+            <i
+                class="fa-solid"
+                [class.fa-location-dot]="locationDetected"
+                [class.fa-spinner]="detectingLocation"
+                [class.fa-spin]="detectingLocation">
+            </i>
 
-    <div class="form-group">
-      <label>Reporter Name *</label>
+            <span *ngIf="detectingLocation">
+                Detecting your location...
+            </span>
 
-      <input
-        type="text"
-        [(ngModel)]="incident.reporterName"
-        name="reporterName"
-        placeholder="Enter full name">
-    </div>
+            <span *ngIf="locationDetected">
+                Location detected automatically
+            </span>
 
-    <div class="form-group">
-      <label>Phone Number *</label>
+        </div>
 
-      <input
-        type="text"
-        [(ngModel)]="incident.phone"
-        name="phone"
-        placeholder="+2557XXXXXXXX">
-    </div>
+        <form
+            (ngSubmit)="submitIncident()">
 
-  </div>
+            <div class="grid">
 
-   <div class="grid">
-    <div class="form-group">
+                <div class="form-group">
 
-    <label>Email (Optional)</label>
+                    <label>
+                        Reporter Name *
+                    </label>
 
-    <input
-      type="email"
-      [(ngModel)]="incident.email"
-      name="email"
-      placeholder="example@gmail.com">
+                    <input
+                        type="text"
+                        [(ngModel)]="incident.reporterName"
+                        name="reporterName"
+                        placeholder="Enter full name">
 
-  </div>
+                </div>
 
-  <div class="form-group">
+                <div class="form-group">
 
-    <label>Incident Type</label>
+                    <label>
+                        Phone Number *
+                    </label>
 
-    <select
-      [(ngModel)]="incident.incidentType"
-      name="incidentType"
-      (change)="onIncidentTypeChange()">
+                    <input
+                        type="text"
+                        [(ngModel)]="incident.phone"
+                        name="phone"
+                        placeholder="+2557XXXXXXXX">
 
-      <option
-        *ngFor="let type of incidentTypes"
-        [value]="type">
+                </div>
 
-        {{ type }}
+            </div>
 
-      </option>
+            <div class="form-group">
 
-    </select>
+                <label>
+                    Email (Optional)
+                </label>
 
-  </div>
-   </div>
+                <input
+                    type="email"
+                    [(ngModel)]="incident.email"
+                    name="email"
+                    placeholder="example@gmail.com">
 
-  <div class="form-group">
+            </div>
 
-    <label>Description *</label>
+            <div class="form-group">
 
-    <textarea
-      rows="6"
-      [(ngModel)]="incident.description"
-      name="description"
-      placeholder="Describe the incident">
-    </textarea>
+                <label>
+                    Incident Type *
+                </label>
 
-  </div>
+                <select
+                    [(ngModel)]="incident.incidentType"
+                    name="incidentType"
+                    (change)="onIncidentTypeChange()">
 
-  <div class="location-grid">
+                    <option
+                        *ngFor="let type of incidentTypes"
+                        [value]="type.value">
 
-    <div class="form-group">
+                        {{type.label}}
 
-      <label>Detected Location</label>
+                    </option>
 
-      <div class="input-icon">
+                </select>
 
-        <i
-          class="fa-solid fa-location-dot">
-        </i>
+            </div>
 
-        <input
-          [value]="location"
-          readonly>
+            <div class="form-group">
 
-      </div>
+                <label>
+                    Description *
+                </label>
 
-    </div>
+                <textarea
+                    rows="6"
+                    [(ngModel)]="incident.description"
+                    name="description"
+                    placeholder="Describe the incident">
+                </textarea>
 
-    <div class="form-group">
+            </div>
 
-      <label>Nearby Landmark</label>
+            <!-- <div class="form-group">
 
-      <input
-        type="text"
-        [(ngModel)]="incident.landmark"
-        name="landmark"
-        placeholder="Near Kisauni Market">
+                <label>
+                    Nearby Landmark
+                </label>
 
-    </div>
+                <input
+                    type="text"
+                    [(ngModel)]="incident.landmark"
+                    name="landmark"
+                    placeholder="Near Kisauni Market">
 
-  </div>
+            </div> -->
 
-  <div class="grid">
+            <div
+                class="form-group"
+                *ngIf="showImageUpload">
 
-    <div class="form-group">
+                <label>
+                    Photo Evidence *
+                </label>
 
-      <label>Latitude</label>
+                <input
+                    type="file"
+                    accept="image/*"
+                    (change)="onFileSelected($event)">
 
-      <input
-        [value]="latitude"
-        readonly>
+                <small class="hint">
 
-    </div>
+                    Photo evidence is required
+                    for this type of incident.
 
-    <div class="form-group">
+                </small>
 
-      <label>Longitude</label>
+            </div>
 
-      <input
-        [value]="longitude"
-        readonly>
+            <div class="actions">
 
-    </div>
+                <button
+                    type="button"
+                    class="cancel-btn">
 
-  </div>
+                    Cancel
 
-  <div
-    class="form-group"
-    *ngIf="showImageUpload">
+                </button>
 
-    <label>
-      Photo Evidence *
-    </label>
+                <button
+                    type="submit"
+                    class="submit-btn">
 
-    <input
-      type="file"
-      accept="image/*"
-      (change)="onFileSelected($event)">
+                    <i
+                        class="fa-solid fa-paper-plane">
+                    </i>
 
-    <small class="hint">
+                    Submit Incident
 
-      Photo is required for
-      safety incidents.
+                </button>
 
-    </small>
+            </div>
 
-  </div>
-
-  <div class="actions">
-
-    <button
-      type="button"
-      class="cancel-btn">
-
-      Cancel
-
-    </button>
-
-    <button
-      type="submit"
-      class="submit-btn">
-
-      <i
-        class="fa-solid fa-paper-plane">
-      </i>
-
-      Submit Incident
-
-    </button>
-
-  </div>
-
-</form>
+        </form>
 
     </div>
 
@@ -212,7 +196,9 @@
 
         <h3>
 
-            <i class="fa-solid fa-lightbulb"></i>
+            <i
+                class="fa-solid fa-lightbulb">
+            </i>
 
             Reporting Tips
 
@@ -221,15 +207,19 @@
         <ul>
 
             <li>
-                Provide accurate location details.
+                Provide accurate information.
             </li>
 
             <li>
-                Attach photo if available.
+                Describe the incident clearly.
             </li>
 
             <li>
-                Describe incident clearly.
+                Add a nearby landmark if available.
+            </li>
+
+            <li>
+                Your location is detected automatically.
             </li>
 
             <li>
@@ -240,7 +230,9 @@
 
         <div class="illustration">
 
-            <i class="fa-solid fa-bolt"></i>
+            <i
+                class="fa-solid fa-bolt">
+            </i>
 
         </div>
 
