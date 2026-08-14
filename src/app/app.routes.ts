@@ -11,51 +11,30 @@ import { AdminIncidents } from './admin/admin-incidents/admin-incidents';
 import { AdminNotifications } from './admin/admin-notifications/admin-notifications';
 import { AdminReports } from './admin/admin-reports/admin-reports';
 import { AdminProfile } from './admin/admin-profile/admin-profile';
-
 import { SupDashboard } from './supervisor/sup-dashboard/sup-dashboard';
 import { Technicians } from './supervisor/technicians/technicians';
 import { SupNotifications } from './supervisor/sup-notifications/sup-notifications';
 import { SupProfile } from './supervisor/sup-profile/sup-profile';
 import { SupLayout } from './supervisor/sup-layout/sup-layout';
 import { SupIncidents } from './supervisor/sup-incidents/sup-incidents';
-
 import { TechLayout } from './technician/tech-layout/tech-layout';
 import { TechDashboard } from './technician/tech-dashboard/tech-dashboard';
 import { Assigments } from './technician/assigments/assigments';
 import { TechNotifications } from './technician/tech-notifications/tech-notifications';
 import { TechProfile } from './technician/tech-profile/tech-profile';
-
-
-// =========================================================
-// GUARDS
-// =========================================================
-
 import { authGuard } from './services/auth.guard';
 import { roleGuard } from './services/role.guard';
+import { TrackIncident } from './public/track-incident/track-incident';
 
 
 export const routes: Routes = [
-
-  // =========================================================
   // PUBLIC ROUTES
-  // =========================================================
-  {
-    path: '',
-    component: Home},
+  {path: '',component: Home},
+  {path: 'login',component: Login},
+  {path: 'report-incident',component: Report},
+  {path: 'track-incident', component:TrackIncident},
 
-  {
-    path: 'login',
-    component: Login},
-
-  {
-    path: 'report-incident',
-    component: Report},
-
-
-  // =========================================================
   // ADMIN ROUTES
-  // =========================================================
-
   {
     path: 'admin',
 
@@ -104,16 +83,14 @@ export const routes: Routes = [
   },
 
       {
-        path: 'profile',
-        component: AdminProfile
+        path: 'profile',component: AdminProfile
       }
-
     ]},
 
 
-  // =========================================================
+
   // SUPERVISOR ROUTES
-  // =========================================================
+
 
   {
     path: 'supervisor',
@@ -165,9 +142,9 @@ export const routes: Routes = [
     ]},
 
 
-  // =========================================================
+
   // TECHNICIAN ROUTES
-  // =========================================================
+
 
   {
     path: 'technician',

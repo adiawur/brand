@@ -5,32 +5,73 @@ import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sup-layout',
-  imports: [CommonModule, RouterModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule
+  ],
   templateUrl: './sup-layout.html',
   styleUrl: './sup-layout.css',
 })
 export class SupLayout {
-  constructor(
-      private authService:AuthService,
-      private router:Router
-    ){}
 
   sidebarCollapsed = false;
+
   mobileSidebar = false;
 
-  toggleSidebar() {
+  today = new Date();
+
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+
+  // =========================================================
+  // DESKTOP SIDEBAR
+  // =========================================================
+
+  toggleSidebar(): void {
+
     this.sidebarCollapsed =
-    !this.sidebarCollapsed;
+      !this.sidebarCollapsed;
+
   }
 
-  toggleMobileSidebar() {
+
+  // =========================================================
+  // MOBILE SIDEBAR
+  // =========================================================
+
+  toggleMobileSidebar(): void {
+
     this.mobileSidebar =
-    !this.mobileSidebar;
+      !this.mobileSidebar;
+
   }
 
-  logout(){
+
+  // =========================================================
+  // LOGOUT
+  // =========================================================
+
+  logout(): void {
+
+    const confirmed =
+      window.confirm(
+        'Are you sure you want to logout?'
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
     this.authService.logout();
-    this.router.navigate(['/login']);
+
+    this.router.navigate([
+      '/login'
+    ]);
+
   }
 
 }

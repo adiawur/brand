@@ -1,7 +1,5 @@
 <div class="technicians-page">
 
-    <!-- HEADER -->
-
     <div class="page-header">
 
         <div>
@@ -9,23 +7,12 @@
             <h2>Technicians Management</h2>
 
             <p>
-                Manage technicians and assign service zones
+                View technicians and service zones
             </p>
 
         </div>
 
-        <button class="add-btn"
-                (click)="openAddModal()">
-
-            <i class="fa-solid fa-plus"></i>
-
-            Add Technician
-
-        </button>
-
     </div>
-
-    <!-- SEARCH -->
 
     <div class="search-card">
 
@@ -35,13 +22,12 @@
 
             <input
                 type="text"
+                [(ngModel)]="searchTerm"
                 placeholder="Search technician...">
 
         </div>
 
     </div>
-
-    <!-- TABLE -->
 
     <div class="table-card">
 
@@ -55,6 +41,7 @@
 
                     <th>Technician</th>
                     <th>Phone</th>
+                    <th>Specialization</th>
                     <th>Zone</th>
                     <th>Status</th>
                     <th>Actions</th>
@@ -65,18 +52,22 @@
 
                 <tbody>
 
-                <tr *ngFor="let tech of technicians">
+                <tr *ngFor="let tech of filteredTechnicians">
 
                     <td>
 
                         <div class="tech-info">
 
-                            <img [src]="tech.image">
+                            <img
+                                [src]="tech.imageUrl || '/img/user.jpg'">
 
                             <div>
 
-                                <h4>{{tech.name}}</h4>
-                                <small>{{tech.email}}</small>
+                                <h4>{{tech.fullName}}</h4>
+
+                                <small>
+                                    {{tech.email}}
+                                </small>
 
                             </div>
 
@@ -84,19 +75,26 @@
 
                     </td>
 
-                    <td>{{tech.phone}}</td>
+                    <td>
+                        {{tech.phone}}
+                    </td>
 
-                    <td>{{tech.zone}}</td>
+                    <td>
+                        {{tech.specialization || 'N/A'}}
+                    </td>
+
+                    <td>
+                        {{tech.zone || 'N/A'}}
+                    </td>
 
                     <td>
 
-                        <span class="status"
+                        <span
+                            class="status"
+                            [class.available]="tech.active"
+                            [class.offline]="!tech.active">
 
-                              [class.available]="tech.status==='Available'"
-                              [class.busy]="tech.status==='Busy'"
-                              [class.offline]="tech.status==='Offline'">
-
-                            {{tech.status}}
+                            {{tech.active ? 'Active' : 'Inactive'}}
 
                         </span>
 
@@ -106,21 +104,27 @@
 
                         <div class="actions">
 
-                            <button class="view-btn"
-                                    (click)="openViewModal(tech)">
+                            <button
+                                class="view-btn"
+                                (click)="openViewModal(tech)">
 
                                 <i class="fa-solid fa-eye"></i>
 
                             </button>
 
-                            <button class="edit-btn"
-                                    (click)="openEditModal(tech)">
-
-                                <i class="fa-solid fa-pen"></i>
-
-                            </button>
-
                         </div>
+
+                    </td>
+
+                </tr>
+
+                <tr *ngIf="filteredTechnicians.length === 0">
+
+                    <td
+                        colspan="6"
+                        class="empty">
+
+                        No technicians found.
 
                     </td>
 
@@ -136,171 +140,158 @@
 
 </div>
 
-<!-- ADD MODAL -->
-
-<div class="modal-backdrop"
-     *ngIf="showAddModal">
-
-    <div class="modal">
-
-        <div class="modal-header">
-
-            <h3>Add Technician</h3>
-
-            <button (click)="closeAddModal()">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-        </div>
-
-        <div class="modal-body">
-
-            <div class="form-group">
-
-                <label>Full Name</label>
-
-                <input [(ngModel)]="newTechnician.name">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Email</label>
-
-                <input [(ngModel)]="newTechnician.email">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Phone</label>
-
-                <input [(ngModel)]="newTechnician.phone">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Service Zone</label>
-
-                <select [(ngModel)]="newTechnician.zone">
-
-                    <option>Urban</option>
-                    <option>Urban West</option>
-                    <option>North A</option>
-                    <option>North B</option>
-                    <option>South</option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-        <div class="modal-footer">
-
-            <button class="cancel"
-                    (click)="closeAddModal()">
-
-                Cancel
-
-            </button>
-
-            <button class="save"
-                    (click)="saveTechnician()">
-
-                Save
-
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
 <!-- VIEW MODAL -->
 
-<div class="modal-backdrop"
-     *ngIf="showViewModal">
+<div
+    class="modal-backdrop"
+    *ngIf="showViewModal"
+    (click)="closeViewModal()">
 
-    <div class="modal">
-
-        <div class="profile-view">
-
-            <img [src]="selectedTechnician?.image">
-
-            <h3>{{selectedTechnician?.name}}</h3>
-
-            <span>{{selectedTechnician?.zone}}</span>
-
-            <div class="details">
-
-                <p><strong>Email:</strong>
-                    {{selectedTechnician?.email}}</p>
-
-                <p><strong>Phone:</strong>
-                    {{selectedTechnician?.phone}}</p>
-
-                <p><strong>Status:</strong>
-                    {{selectedTechnician?.status}}</p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- EDIT MODAL -->
-
-<div class="modal-backdrop"
-     *ngIf="showEditModal">
-
-    <div class="modal">
+    <div
+        class="modal technician-modal"
+        (click)="$event.stopPropagation()">
 
         <div class="modal-header">
 
-            <h3>Edit Technician</h3>
+            <div>
 
-            <button (click)="closeEditModal()">
+                <h3>Technician Profile</h3>
+
+                <p>
+                    Technician information and service details
+                </p>
+
+            </div>
+
+            <button
+                class="close-btn"
+                (click)="closeViewModal()">
+
                 <i class="fa-solid fa-xmark"></i>
+
             </button>
 
         </div>
 
         <div class="modal-body">
 
-            <div class="form-group">
+            <div class="profile-section">
 
-                <label>Name</label>
+                <div class="profile-image">
 
-                <input [(ngModel)]="selectedTechnician.name">
+                    <img
+                        [src]="selectedTechnician?.imageUrl || '/img/user.jpg'">
+
+                </div>
+
+                <div class="profile-info">
+
+                    <h2>
+                        {{selectedTechnician?.fullName}}
+                    </h2>
+
+                    <span class="role-badge">
+                        {{selectedTechnician?.role}}
+                    </span>
+
+                    <p>
+                        {{selectedTechnician?.email}}
+                    </p>
+
+                </div>
 
             </div>
 
-            <div class="form-group">
+            <div class="details-section">
 
-                <label>Email</label>
+                <h4>Technician Information</h4>
 
-                <input [(ngModel)]="selectedTechnician.email">
+                <div class="details-grid">
+
+                    <div class="detail-item">
+
+                        <label>Username</label>
+
+                        <div class="detail-value">
+
+                            <i class="fa-solid fa-user"></i>
+
+                            <span>
+                                {{selectedTechnician?.username}}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="detail-item">
+
+                        <label>Phone Number</label>
+
+                        <div class="detail-value">
+
+                            <i class="fa-solid fa-phone"></i>
+
+                            <span>
+                                {{selectedTechnician?.phone}}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="detail-item">
+
+                        <label>Specialization</label>
+
+                        <div class="detail-value">
+
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+
+                            <span>
+                                {{selectedTechnician?.specialization || 'N/A'}}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="detail-item">
+
+                        <label>Service Zone</label>
+
+                        <div class="detail-value">
+
+                            <i class="fa-solid fa-location-dot"></i>
+
+                            <span>
+                                {{selectedTechnician?.zone || 'N/A'}}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
 
-            <div class="form-group">
+            <div class="status-section">
 
-                <label>Phone</label>
+                <label>Account Status</label>
 
-                <input [(ngModel)]="selectedTechnician.phone">
+                <span
+                    class="status"
+                    [class.available]="selectedTechnician?.active"
+                    [class.offline]="!selectedTechnician?.active">
 
-            </div>
+                    <i
+                        class="fa-solid fa-circle">
+                    </i>
 
-            <div class="form-group">
+                    {{selectedTechnician?.active ? 'Active' : 'Inactive'}}
 
-                <label>Zone</label>
-
-                <input [(ngModel)]="selectedTechnician.zone">
+                </span>
 
             </div>
 
@@ -308,17 +299,11 @@
 
         <div class="modal-footer">
 
-            <button class="cancel"
-                    (click)="closeEditModal()">
+            <button
+                class="close-modal-btn"
+                (click)="closeViewModal()">
 
-                Cancel
-
-            </button>
-
-            <button class="save"
-                    (click)="updateTechnician()">
-
-                Update
+                Close
 
             </button>
 

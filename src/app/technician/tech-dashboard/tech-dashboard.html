@@ -16,101 +16,124 @@
 
     </div>
 
-    <!-- STATS -->
 
-    <div class="stats-grid">
+    <!-- LOADING -->
 
-        <div class="stat-card">
+    <div
+        class="loading-state"
+        *ngIf="loading">
 
-            <div class="icon total">
-                <i class="fa-solid fa-list-check"></i>
-            </div>
+        <i class="fa-solid fa-spinner fa-spin"></i>
 
-            <div>
-                <h3>24</h3>
-                <span>Total Assignments</span>
-            </div>
-
-        </div>
-
-        <div class="stat-card">
-
-            <div class="icon pending">
-                <i class="fa-solid fa-clock"></i>
-            </div>
-
-            <div>
-                <h3>6</h3>
-                <span>Pending Tasks</span>
-            </div>
-
-        </div>
-
-        <div class="stat-card">
-
-            <div class="icon progress">
-                <i class="fa-solid fa-spinner"></i>
-            </div>
-
-            <div>
-                <h3>8</h3>
-                <span>In Progress</span>
-            </div>
-
-        </div>
-
-        <div class="stat-card">
-
-            <div class="icon completed">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-
-            <div>
-                <h3>10</h3>
-                <span>Completed</span>
-            </div>
-
-        </div>
+        <span>
+            Loading dashboard...
+        </span>
 
     </div>
 
-    <!-- SECOND ROW -->
 
-    <div class="content-grid">
+    <!-- DASHBOARD CONTENT -->
 
-        <!-- TODAY TASKS -->
+    <ng-container *ngIf="!loading">
 
-        <div class="tasks-card">
+        <!-- STATS -->
 
-            <div class="card-header">
+        <div class="stats-grid">
 
-                <h3>Today's Tasks</h3>
+            <!-- TOTAL -->
 
-            </div>
+            <div class="stat-card">
 
-            <div class="task-item">
+                <div class="icon total">
 
-                <i class="fa-solid fa-bolt"></i>
+                    <i class="fa-solid fa-list-check"></i>
+
+                </div>
 
                 <div>
 
-                    <h4>Power Outage</h4>
+                    <h3>
+                        {{totalAssignments}}
+                    </h3>
 
-                    <p>Kisauni - 08:30 AM</p>
+                    <span>
+                        Total Assignments
+                    </span>
 
                 </div>
 
             </div>
 
-            <div class="task-item">
 
-                <i class="fa-solid fa-bolt"></i>
+            <!-- PENDING -->
+
+            <div class="stat-card">
+
+                <div class="icon pending">
+
+                    <i class="fa-solid fa-clock"></i>
+
+                </div>
 
                 <div>
 
-                    <h4>Transformer Fault</h4>
+                    <h3>
+                        {{pendingTasks}}
+                    </h3>
 
-                    <p>Mwera - 10:00 AM</p>
+                    <span>
+                        Pending Tasks
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- IN PROGRESS -->
+
+            <div class="stat-card">
+
+                <div class="icon progress">
+
+                    <i class="fa-solid fa-spinner"></i>
+
+                </div>
+
+                <div>
+
+                    <h3>
+                        {{inProgressTasks}}
+                    </h3>
+
+                    <span>
+                        In Progress
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- COMPLETED -->
+
+            <div class="stat-card">
+
+                <div class="icon completed">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                </div>
+
+                <div>
+
+                    <h3>
+                        {{completedTasks}}
+                    </h3>
+
+                    <span>
+                        Completed
+                    </span>
 
                 </div>
 
@@ -118,109 +141,345 @@
 
         </div>
 
-        <!-- QUICK ACTIONS -->
 
-        <div class="quick-card">
+        <!-- SECOND ROW -->
 
-            <div class="card-header">
+        <div class="content-grid">
 
-                <h3>Quick Actions</h3>
+
+            <!-- TODAY TASKS -->
+
+            <div class="tasks-card">
+
+                <div class="card-header">
+
+                    <h3>
+                        Today's Tasks
+                    </h3>
+
+                    <span
+                        class="task-count">
+
+                        {{todayTasks.length}}
+
+                    </span>
+
+                </div>
+
+
+                <!-- TASKS -->
+
+                <div
+                    class="task-item"
+                    *ngFor="let task of todayTasks">
+
+                    <div class="task-icon">
+
+                        <i class="fa-solid fa-bolt"></i>
+
+                    </div>
+
+
+                    <div class="task-content">
+
+                        <div class="task-top">
+
+                            <h4>
+                                {{task.type}}
+                            </h4>
+
+                            <span
+                                class="status"
+                                [class.pending-status]="
+                                    task.status === 'ASSIGNED'
+                                "
+                                [class.progress-status]="
+                                    task.status === 'IN_PROGRESS'
+                                "
+                                [class.completed-status]="
+                                    task.status === 'COMPLETED' ||
+                                    task.status === 'RESOLVED'
+                                ">
+
+                                {{getStatusLabel(task.status)}}
+
+                            </span>
+
+                        </div>
+
+                        <p>
+
+                            <i class="fa-solid fa-location-dot"></i>
+
+                            {{task.location}}
+
+                        </p>
+
+                        <small>
+
+                            {{task.customer}}
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMPTY -->
+
+                <div
+                    class="empty-tasks"
+                    *ngIf="todayTasks.length === 0">
+
+                    <i class="fa-regular fa-calendar-check"></i>
+
+                    <strong>
+                        No tasks for today
+                    </strong>
+
+                    <span>
+                        You currently have no assignments scheduled today.
+                    </span>
+
+                </div>
 
             </div>
 
-            <button>
 
-                <i class="fa-solid fa-list-check"></i>
+            <!-- QUICK ACTIONS -->
 
-                View Assignments
+            <div class="quick-card">
 
-            </button>
+                <div class="card-header">
 
-            <button>
+                    <h3>
+                        Quick Actions
+                    </h3>
 
-                <i class="fa-solid fa-location-dot"></i>
+                </div>
 
-                Open Map
 
-            </button>
+                <button
+                    type="button"
+                    (click)="viewAssignments()">
 
-            <button>
+                    <i class="fa-solid fa-list-check"></i>
 
-                <i class="fa-solid fa-upload"></i>
+                    View Assignments
 
-                Submit Report
+                </button>
 
-            </button>
 
-        </div>
+                <button
+                    type="button"
+                    (click)="openMap()">
 
-    </div>
+                    <i class="fa-solid fa-location-dot"></i>
 
-    <!-- RECENT ASSIGNMENTS -->
+                    Open Map
 
-    <div class="table-card">
+                </button>
 
-        <div class="card-header">
 
-            <h3>Recent Assignments</h3>
+                <button
+                    type="button"
+                    (click)="submitReport()">
 
-        </div>
+                    <i class="fa-solid fa-upload"></i>
 
-        <div class="table-responsive">
+                    Submit Report
 
-            <table>
+                </button>
 
-                <thead>
-
-                <tr>
-
-                    <th>ID</th>
-                    <th>Customer</th>
-                    <th>Incident</th>
-                    <th>Location</th>
-                    <th>Status</th>
-                    <th>Date</th>
-
-                </tr>
-
-                </thead>
-
-                <tbody>
-
-                <tr *ngFor="let item of assignments">
-
-                    <td>{{item.id}}</td>
-
-                    <td>{{item.customer}}</td>
-
-                    <td>{{item.type}}</td>
-
-                    <td>{{item.location}}</td>
-
-                    <td>
-
-                        <span class="status"
-
-                              [class.pending-status]="item.status === 'Pending'"
-                              [class.progress-status]="item.status === 'In Progress'"
-                              [class.completed-status]="item.status === 'Completed'">
-
-                            {{item.status}}
-
-                        </span>
-
-                    </td>
-
-                    <td>{{item.date}}</td>
-
-                </tr>
-
-                </tbody>
-
-            </table>
+            </div>
 
         </div>
 
-    </div>
+
+        <!-- RECENT ASSIGNMENTS -->
+
+        <div class="table-card">
+
+            <div class="card-header">
+
+                <h3>
+                    Recent Assignments
+                </h3>
+
+                <button
+                    class="view-all-btn"
+                    type="button"
+                    (click)="viewAssignments()">
+
+                    View All
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Customer</th>
+
+                            <th>Incident</th>
+
+                            <th>Priority</th>
+
+                            <th>Location</th>
+
+                            <th>Status</th>
+
+                            <th>Date</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr
+                            *ngFor="
+                                let item of assignments
+                                | slice:0:5
+                            ">
+
+                            <td>
+
+                                <strong>
+                                    {{item.id}}
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="customer-cell">
+
+                                    <strong>
+                                        {{item.customer}}
+                                    </strong>
+
+                                    <small>
+                                        {{item.phone}}
+                                    </small>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+                                {{item.type}}
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="priority"
+                                    [class.high]="
+                                        item.priority === 'HIGH'
+                                    "
+                                    [class.medium]="
+                                        item.priority === 'MEDIUM'
+                                    "
+                                    [class.low]="
+                                        item.priority === 'LOW'
+                                    ">
+
+                                    {{item.priority}}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="location-text">
+
+                                    {{item.location}}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="status"
+                                    [class.pending-status]="
+                                        item.status === 'ASSIGNED'
+                                    "
+                                    [class.progress-status]="
+                                        item.status === 'IN_PROGRESS'
+                                    "
+                                    [class.completed-status]="
+                                        item.status === 'COMPLETED' ||
+                                        item.status === 'RESOLVED'
+                                    ">
+
+                                    {{getStatusLabel(item.status)}}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                {{item.date}}
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- EMPTY -->
+
+                        <tr
+                            *ngIf="
+                                assignments.length === 0
+                            ">
+
+                            <td
+                                colspan="7"
+                                class="empty-table">
+
+                                <i class="fa-regular fa-folder-open"></i>
+
+                                <span>
+                                    No assignments found.
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </ng-container>
 
 </div>

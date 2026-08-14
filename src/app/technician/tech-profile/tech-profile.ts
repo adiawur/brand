@@ -1,44 +1,272 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit
+} from '@angular/core';
+
+import {
+  FormsModule
+} from '@angular/forms';
+
+import {
+  User,
+  UserService,
+  UpdateUserRequest
+} from '../../services/user.service';
+
 
 @Component({
   selector: 'app-tech-profile',
-  imports: [CommonModule,FormsModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   templateUrl: './tech-profile.html',
   styleUrl: './tech-profile.css',
 })
-export class TechProfile {
+export class TechProfile implements OnInit {
+
+  // =========================================================
+  // STATE
+  // =========================================================
 
   editMode = false;
 
-  technician = {
-    fullName: 'Juma Salim',
-    username: 'tech01',
-    email: 'juma@zeco.co.tz',
-    phone: '+255712345678',
-    role: 'Technician',
-    specialization: 'Transformer Maintenance',
-    zone: 'Urban West',
-    status: 'Available',
-    image: '/img/tech.jfif'
+  loading = false;
+
+  saving = false;
+
+  technician: any = {
+
+    id: null,
+
+    fullName: '',
+
+    username: '',
+
+    email: '',
+
+    phone: '',
+
+    role: '',
+
+    specialization: '',
+
+    zone: '',
+
+    imageUrl: null,
+
+    active: false
+
   };
 
-  toggleEdit() {
-    this.editMode = !this.editMode;
+
+  // =========================================================
+  // CONSTRUCTOR
+  // =========================================================
+
+  constructor(
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+
+  // =========================================================
+  // INIT
+  // =========================================================
+
+  ngOnInit(): void {
+
+    this.loadProfile();
+
   }
 
-  saveProfile() {
+
+  // =========================================================
+  // LOAD PROFILE
+  // =========================================================
+
+  loadProfile(): void {
+
+    this.loading = true;
+
+    this.userService
+      .getMyProfile()
+      .subscribe({
+
+        next: (user: User) => {
+
+          this.technician = {
+            ...user
+          };
+
+          this.loading = false;
+
+          this.cdr.detectChanges();
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Failed to load technician profile:',
+            error
+          );
+
+          this.loading = false;
+
+          this.cdr.detectChanges();
+
+        }
+
+      });
+
+  }
+
+
+  // =========================================================
+  // EDIT
+  // =========================================================
+
+  toggleEdit(): void {
+
+    this.editMode =
+      !this.editMode;
+
+  }
+
+
+  // =========================================================
+  // SAVE PROFILE
+  // =========================================================
+
+  saveProfile(): void {
+
+    this.saving = true;
+
+
+    const data: UpdateUserRequest = {
+
+      fullName:
+        this.technician.fullName,
+
+      username:
+        this.technician.username,
+
+      email:
+        this.technician.email,
+
+      phone:
+        this.technician.phone,
+
+      role:
+        this.technician.role,
+
+      specialization:
+        this.technician.specialization,
+
+      zone:
+        this.technician.zone,
+
+      imageUrl:
+        this.technician.imageUrl
+
+    };
+
+
+    this.userService
+      .updateMyProfile(data)
+      .subscribe({
+
+        next: (user: User) => {
+
+          this.technician = {
+            ...user
+          };
+
+          this.editMode = false;
+
+          this.saving = false;
+
+          this.cdr.detectChanges();
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Failed to update profile:',
+            error
+          );
+
+          this.saving = false;
+
+          this.cdr.detectChanges();
+
+        }
+
+      });
+
+  }
+
+
+  // =========================================================
+  // CANCEL
+  // =========================================================
+
+  cancelEdit(): void {
 
     this.editMode = false;
 
-    alert('Profile updated successfully');
+    this.loadProfile();
 
   }
 
-  updatePassword() {
 
-    alert('Password updated successfully');
+  // =========================================================
+  // PASSWORD
+  // =========================================================
+
+  updatePassword(): void {
+
+    /*
+     * Password endpoint haijapewa
+     * kwenye backend yako kwa sasa.
+     */
+
+    console.warn(
+      'Password update endpoint is not implemented yet.'
+    );
+
+  }
+
+
+  // =========================================================
+  // AVAILABILITY
+  // =========================================================
+
+  get availabilityStatus(): string {
+
+    return this.technician.active
+      ? 'Available'
+      : 'Offline';
+
+  }
+
+
+  // =========================================================
+  // IMAGE
+  // =========================================================
+
+  get profileImage(): string {
+
+    return this.technician.imageUrl
+      || '/img/default-user.png';
 
   }
 

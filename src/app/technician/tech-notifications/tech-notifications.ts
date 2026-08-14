@@ -1,65 +1,229 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit
+} from '@angular/core';
+
+import {
+  NotificationService
+} from '../../services/notification.service';
+
 
 @Component({
   selector: 'app-tech-notifications',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [
+    CommonModule
+  ],
   templateUrl: './tech-notifications.html',
   styleUrl: './tech-notifications.css',
 })
-export class TechNotifications {
+export class TechNotifications implements OnInit {
 
-  notifications = [
+  // =========================================================
+  // DATA
+  // =========================================================
 
-    {
-      id: 1,
-      title: 'New Assignment',
-      message: 'You have been assigned incident INC-004.',
-      type: 'assignment',
-      time: '10 min ago',
-      read: false
-    },
+  notifications: any[] = [];
 
-    {
-      id: 2,
-      title: 'Supervisor Comment',
-      message: 'Supervisor requested additional photo evidence.',
-      type: 'comment',
-      time: '30 min ago',
-      read: false
-    },
+  loading = false;
 
-    {
-      id: 3,
-      title: 'SLA Alert',
-      message: 'Assignment ASS-002 is approaching SLA deadline.',
-      type: 'sla',
-      time: '1 hour ago',
-      read: false
-    },
 
-    {
-      id: 4,
-      title: 'Task Completed',
-      message: 'Your completion report was approved successfully.',
-      type: 'success',
-      time: 'Yesterday',
-      read: true
+  // =========================================================
+  // CONSTRUCTOR
+  // =========================================================
+
+  constructor(
+    private notificationService: NotificationService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+
+  // =========================================================
+  // INIT
+  // =========================================================
+
+  ngOnInit(): void {
+
+    this.loadNotifications();
+
+  }
+
+
+  // =========================================================
+  // LOAD NOTIFICATIONS
+  // =========================================================
+
+  loadNotifications(): void {
+
+    this.loading = true;
+
+    this.notificationService
+      .getAll()
+      .subscribe({
+
+        next: (data) => {
+
+          this.notifications =
+            data || [];
+
+          this.loading = false;
+
+          this.cdr.detectChanges();
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Failed to load notifications:',
+            error
+          );
+
+          this.loading = false;
+
+          this.cdr.detectChanges();
+
+        }
+
+      });
+
+  }
+
+
+  // =========================================================
+  // MARK AS READ
+  // =========================================================
+
+  markAsRead(
+    notification: any
+  ): void {
+
+    if (
+      !notification ||
+      notification.read
+    ) {
+
+      return;
+
     }
 
-  ];
 
-  markAsRead(notification: any) {
-    notification.read = true;
+    this.notificationService
+      .markAsRead(
+        notification.id
+      )
+      .subscribe({
+
+        next: () => {
+
+          notification.read = true;
+
+          this.cdr.detectChanges();
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Failed to mark notification as read:',
+            error
+          );
+
+        }
+
+      });
+
   }
 
-  markAllRead() {
-    this.notifications.forEach(n => n.read = true);
+
+  // =========================================================
+  // MARK ALL READ
+  // =========================================================
+
+  markAllRead(): void {
+
+    /*
+     * Backend currently does not provide
+     * a "mark all as read" endpoint.
+     *
+     * Therefore we update the current
+     * notification list locally.
+     */
+
+    this.notifications.forEach(
+      notification => {
+
+        notification.read = true;
+
+      }
+    );
+
+    this.cdr.detectChanges();
+
   }
 
-  deleteNotification(id: number) {
+
+  // =========================================================
+  // DELETE NOTIFICATION
+  // =========================================================
+
+  deleteNotification(
+    id: number
+  ): void {
+
+    /*
+     * Backend currently supports clearAll()
+     * but does not provide delete-by-id.
+     *
+     * So remove it from the current UI list.
+     */
+
     this.notifications =
-      this.notifications.filter(n => n.id !== id);
+      this.notifications.filter(
+        notification =>
+          notification.id !== id
+      );
+
+  }
+
+
+  // =========================================================
+  // GET NOTIFICATION TYPE
+  // =========================================================
+
+  getNotificationType(
+    notification: any
+  ): string {
+
+    return (
+      notification?.type ||
+      notification?.notificationType ||
+      'assignment'
+    ).toLowerCase();
+
+  }
+
+
+  // =========================================================
+  // ICON TYPE
+  // =========================================================
+
+  isType(
+    notification: any,
+    type: string
+  ): boolean {
+
+    return (
+      this.getNotificationType(
+        notification
+      ) === type
+    );
+
   }
 
 }

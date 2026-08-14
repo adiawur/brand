@@ -14,24 +14,24 @@ import {
 
 import {
   User,
-  UserService
+  UserService,
+  UpdateUserRequest
 } from '../../services/user.service';
 
 import {
   AlertService
 } from '../../services/alert.service';
 
-import {
-  AuthService
-} from '../../services/auth.service';
 
 @Component({
   selector: 'app-admin-profile',
   standalone: true,
+
   imports: [
     CommonModule,
     FormsModule
   ],
+
   templateUrl: './admin-profile.html',
   styleUrl: './admin-profile.css'
 })
@@ -43,12 +43,17 @@ export class AdminProfile implements OnInit {
 
   admin: User | null = null;
 
+
   constructor(
     private userService: UserService,
     private alertService: AlertService,
-    private authService: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
+
+
+  // =====================================================
+  // INIT
+  // =====================================================
 
   ngOnInit(): void {
 
@@ -56,25 +61,17 @@ export class AdminProfile implements OnInit {
 
   }
 
+
+  // =====================================================
+  // LOAD MY PROFILE
+  // =====================================================
+
   loadProfile(): void {
-
-    const userId =
-      this.authService.getUserId();
-
-    if (!userId) {
-
-      this.alertService.error(
-        'Profile Error',
-        'Unable to identify the logged-in user.'
-      );
-
-      return;
-    }
 
     this.loading = true;
 
     this.userService
-      .getById(userId)
+      .getMyProfile()
       .subscribe({
 
         next: (user) => {
@@ -103,6 +100,11 @@ export class AdminProfile implements OnInit {
 
   }
 
+
+  // =====================================================
+  // EDIT
+  // =====================================================
+
   toggleEdit(): void {
 
     this.editMode =
@@ -110,17 +112,27 @@ export class AdminProfile implements OnInit {
 
   }
 
+
+  // =====================================================
+  // SAVE
+  // =====================================================
+
   saveProfile(): void {
 
     if (!this.admin) {
       return;
     }
 
+
+    // ---------------------------------------------------
+    // VALIDATION
+    // ---------------------------------------------------
+
     if (
-      !this.admin.fullName.trim() ||
-      !this.admin.username.trim() ||
-      !this.admin.email.trim() ||
-      !this.admin.phone.trim()
+      !this.admin.fullName?.trim() ||
+      !this.admin.username?.trim() ||
+      !this.admin.email?.trim() ||
+      !this.admin.phone?.trim()
     ) {
 
       this.alertService.warning(
@@ -131,9 +143,11 @@ export class AdminProfile implements OnInit {
       return;
     }
 
+
     this.loading = true;
 
-    const data = {
+
+    const data: UpdateUserRequest = {
 
       fullName:
         this.admin.fullName,
@@ -154,15 +168,16 @@ export class AdminProfile implements OnInit {
         this.admin.specialization,
 
       zone:
-        this.admin.zone
+        this.admin.zone,
+
+      imageUrl:
+        this.admin.imageUrl
 
     };
 
+
     this.userService
-      .update(
-        this.admin.id,
-        data
-      )
+      .updateMyProfile(data)
       .subscribe({
 
         next: (updatedUser) => {
@@ -201,10 +216,45 @@ export class AdminProfile implements OnInit {
 
   }
 
+
+  // =====================================================
+  // PROFILE IMAGE
+  // =====================================================
+
   getProfileImage(): string {
 
-    return this.admin?.imageUrl ||
-      '/img/admin.png';
+    if (
+      this.admin?.imageUrl
+    ) {
+
+      return this.getImageUrl(
+        this.admin.imageUrl
+      );
+
+    }
+
+    return '/img/admin.png';
+
+  }
+
+
+  // =====================================================
+  // IMAGE URL
+  // =====================================================
+
+  private getImageUrl(
+    imageUrl: string
+  ): string {
+
+    if (
+      imageUrl.startsWith('http')
+    ) {
+
+      return imageUrl;
+
+    }
+
+    return `http://localhost:8182${imageUrl}`;
 
   }
 

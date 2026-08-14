@@ -1,39 +1,63 @@
 <div class="layout-wrapper">
 
-    <!-- MOBILE OVERLAY -->
 
-    <div class="overlay"
-         *ngIf="mobileSidebarOpen"
-         (click)="closeMobileSidebar()">
+    <!-- =====================================================
+         MOBILE OVERLAY
+    ====================================================== -->
+
+    <div
+        class="overlay"
+        *ngIf="mobileSidebarOpen"
+        (click)="closeMobileSidebar()">
     </div>
 
-    <!-- SIDEBAR -->
 
-    <aside class="sidebar"
-           [class.collapsed]="sidebarCollapsed"
-           [class.mobile-open]="mobileSidebarOpen">
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside
+        class="sidebar"
+
+        [class.collapsed]="sidebarCollapsed"
+
+        [class.mobile-open]="mobileSidebarOpen">
+
 
         <!-- LOGO -->
 
         <div class="logo-section">
 
-            <img src="/img/favicon-tr.png" alt="logo">
+            <img
+                src="/img/favicon-tr.png"
+                alt="ZECO Help Desk">
 
-            <div class="logo-text"
-                 *ngIf="!sidebarCollapsed">
+            <div
+                class="logo-text"
+                *ngIf="!sidebarCollapsed">
 
-                <h6>zeco help desk</h6>
-                <span>Technician Panel</span>
+                <h6>
+                    zeco help desk
+                </h6>
+
+                <span>
+                    Technician Panel
+                </span>
 
             </div>
 
         </div>
 
+
         <!-- MENU -->
 
         <ul class="menu">
 
-            <li routerLink="dashboard"
+
+            <!-- DASHBOARD -->
+
+            <li
+                routerLink="dashboard"
                 routerLinkActive="active"
                 (click)="closeMobileSidebar()">
 
@@ -45,7 +69,11 @@
 
             </li>
 
-            <li routerLink="assignments"
+
+            <!-- ASSIGNMENTS -->
+
+            <li
+                routerLink="assignments"
                 routerLinkActive="active"
                 (click)="closeMobileSidebar()">
 
@@ -57,7 +85,11 @@
 
             </li>
 
-            <li routerLink="notifications"
+
+            <!-- NOTIFICATIONS -->
+
+            <li
+                routerLink="notifications"
                 routerLinkActive="active"
                 (click)="closeMobileSidebar()">
 
@@ -69,7 +101,11 @@
 
             </li>
 
-            <li routerLink="profile"
+
+            <!-- PROFILE -->
+
+            <li
+                routerLink="profile"
                 routerLinkActive="active"
                 (click)="closeMobileSidebar()">
 
@@ -80,7 +116,14 @@
                 </span>
 
             </li>
-            <li (click)="logout()">
+
+
+            <!-- LOGOUT -->
+
+            <li
+                class="logout-item"
+                (click)="logout()">
+
                 <i class="fa-solid fa-right-from-bracket"></i>
 
                 <span *ngIf="!sidebarCollapsed">
@@ -93,59 +136,121 @@
 
     </aside>
 
-    <!-- MAIN -->
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
 
     <div class="main-content">
 
-        <!-- TOPBAR -->
+
+        <!-- =================================================
+             TOPBAR
+        ================================================== -->
 
         <header class="topbar">
 
+
+            <!-- LEFT -->
+
             <div class="left-section">
 
-                <button class="mobile-btn"
-                        (click)="toggleMobileSidebar()">
+
+                <!-- MOBILE -->
+
+                <button
+                    class="mobile-btn"
+                    type="button"
+                    (click)="toggleMobileSidebar()">
 
                     <i class="fa-solid fa-bars"></i>
 
                 </button>
 
-                <button class="collapse-btn"
-                        (click)="toggleSidebar()">
+
+                <!-- DESKTOP -->
+
+                <button
+                    class="collapse-btn"
+                    type="button"
+                    (click)="toggleSidebar()">
 
                     <i class="fa-solid fa-bars"></i>
 
                 </button>
+
 
                 <div>
 
-                    <h2>Technician Panel</h2>
-                    <p>Manage your field assignments</p>
+                    <h2>
+                        Technician Panel
+                    </h2>
+
+                    <p>
+                        Manage your field assignments
+                    </p>
 
                 </div>
 
             </div>
 
+
+            <!-- RIGHT -->
+
             <div class="right-section">
 
-                <button class="notification-btn">
+
+                <!-- NOTIFICATION -->
+
+                <button
+                    class="notification-btn"
+                    type="button"
+                    routerLink="notifications">
 
                     <i class="fa-regular fa-bell"></i>
 
-                    <span class="badge">3</span>
-
                 </button>
 
-                <div class="profile">
 
-                    <img src="/img/tech.jfif">
+                <!-- USER -->
+
+                <div
+                    class="profile"
+                    *ngIf="technician">
+
+
+                    <img
+                        [src]="profileImage"
+                        alt="Profile Photo">
+
 
                     <div class="profile-info">
 
-                        <h4>Juma Salim</h4>
-                        <span>Field Technician</span>
+                        <h4>
+                            {{technician.fullName}}
+                        </h4>
+
+                        <span>
+                            {{technician.role}}
+                        </span>
 
                     </div>
+
+                </div>
+
+
+                <!-- PROFILE LOADING -->
+
+                <div
+                    class="profile-loading"
+                    *ngIf="
+                        !technician &&
+                        loadingProfile
+                    ">
+
+                    <i
+                        class="fa-solid fa-spinner fa-spin">
+                    </i>
 
                 </div>
 
@@ -153,7 +258,10 @@
 
         </header>
 
-        <!-- CHILD PAGES -->
+
+        <!-- =================================================
+             CHILD PAGES
+        ================================================== -->
 
         <div class="page-content">
 

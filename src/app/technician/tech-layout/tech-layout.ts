@@ -1,45 +1,170 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit
+} from '@angular/core';
+
+import {
+  Router,
+  RouterModule
+} from '@angular/router';
+
+import {
+  AuthService
+} from '../../services/auth.service';
+
+import {
+  User,
+  UserService
+} from '../../services/user.service';
+
 
 @Component({
   selector: 'app-tech-layout',
+  standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet,
-    RouterLink,
-    RouterLinkActive
+    RouterModule
   ],
   templateUrl: './tech-layout.html',
   styleUrl: './tech-layout.css',
 })
-export class TechLayout {
+export class TechLayout implements OnInit {
 
-  constructor(
-    private authService:AuthService,
-    private router:Router
-  ){}
+  // =========================================================
+  // SIDEBAR
+  // =========================================================
 
   sidebarCollapsed = false;
+
   mobileSidebarOpen = false;
 
-    toggleSidebar() {
+
+  // =========================================================
+  // USER
+  // =========================================================
+
+  technician: User | null = null;
+
+  loadingProfile = true;
+
+
+  // =========================================================
+  // CONSTRUCTOR
+  // =========================================================
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+
+  // =========================================================
+  // INIT
+  // =========================================================
+
+  ngOnInit(): void {
+
+    this.loadProfile();
+
+  }
+
+
+  // =========================================================
+  // LOAD LOGGED-IN USER
+  // =========================================================
+
+  loadProfile(): void {
+
+    this.userService
+      .getMyProfile()
+      .subscribe({
+
+        next: (user: User) => {
+
+          this.technician = user;
+
+          this.loadingProfile = false;
+
+          this.cdr.detectChanges();
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Failed to load logged-in technician:',
+            error
+          );
+
+          this.loadingProfile = false;
+
+          this.cdr.detectChanges();
+
+        }
+
+      });
+
+  }
+
+
+  // =========================================================
+  // SIDEBAR
+  // =========================================================
+
+  toggleSidebar(): void {
+
     this.sidebarCollapsed =
-    !this.sidebarCollapsed;
+      !this.sidebarCollapsed;
+
   }
 
-  toggleMobileSidebar() {
-    this.mobileSidebarOpen = !this.mobileSidebarOpen;
+
+  toggleMobileSidebar(): void {
+
+    this.mobileSidebarOpen =
+      !this.mobileSidebarOpen;
+
   }
 
-  closeMobileSidebar() {
+
+  closeMobileSidebar(): void {
+
     this.mobileSidebarOpen = false;
+
   }
 
-  logout(){
+
+  // =========================================================
+  // LOGOUT
+  // =========================================================
+
+  logout(): void {
+
     this.authService.logout();
-    this.router.navigate(['/login']);
+
+    this.router.navigate([
+      '/login'
+    ]);
+
+  }
+
+
+  // =========================================================
+  // PROFILE IMAGE
+  // =========================================================
+
+  get profileImage(): string {
+
+    return this.technician?.imageUrl
+      || '/img/default-user.png';
+
   }
 
 }

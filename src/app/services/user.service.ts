@@ -27,13 +27,14 @@ zone?: string;
 }
 
 export interface UpdateUserRequest {
-fullName: string;
-username: string;
-email: string;
-phone: string;
-role: string;
-specialization?: string;
-zone?: string;
+  fullName: string;
+  username: string;
+  email: string;
+  phone: string;
+  role: string;
+  specialization?: string;
+  zone?: string;
+  imageUrl?: string | null;
 }
 
 @Injectable({
@@ -88,6 +89,23 @@ getTechnicians(): Observable<User[]> {
 
   return this.http.get<User[]>(
     'http://localhost:8182/api/supervisor/technicians'
+  );
+
+}
+
+getMyProfile(): Observable<User> {
+
+  return this.http.get<User>(
+    'http://localhost:8182/api/profile/me'
+  );
+
+}
+
+updateMyProfile(data: UpdateUserRequest): Observable<User> {
+
+  return this.http.put<User>(
+    'http://localhost:8182/api/profile/me',
+    data
   );
 
 }

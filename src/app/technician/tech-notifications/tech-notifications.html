@@ -1,5 +1,7 @@
 <div class="notifications-page">
 
+    <!-- HEADER -->
+
     <div class="page-header">
 
         <div>
@@ -12,8 +14,11 @@
 
         </div>
 
-        <button class="mark-btn"
-                (click)="markAllRead()">
+
+        <button
+            class="mark-btn"
+            type="button"
+            (click)="markAllRead()">
 
             <i class="fa-solid fa-check-double"></i>
 
@@ -23,33 +28,118 @@
 
     </div>
 
-    <div class="notification-list">
 
-        <div class="notification-card"
+    <!-- LOADING -->
 
-             *ngFor="let notification of notifications"
+    <div
+        class="loading-state"
+        *ngIf="loading">
 
-             [class.unread]="!notification.read">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+
+        <span>
+            Loading notifications...
+        </span>
+
+    </div>
+
+
+    <!-- NOTIFICATIONS -->
+
+    <div
+        class="notification-list"
+        *ngIf="!loading">
+
+
+        <!-- NOTIFICATION -->
+
+        <div
+            class="notification-card"
+
+            *ngFor="
+                let notification of notifications
+            "
+
+            [class.unread]="
+                !notification.read
+            ">
+
 
             <!-- ICON -->
 
-            <div class="icon"
+            <div
+                class="icon"
 
-                 [class.assignment]="notification.type==='assignment'"
-                 [class.comment]="notification.type==='comment'"
-                 [class.sla]="notification.type==='sla'"
-                 [class.success]="notification.type==='success'">
+                [class.assignment]="
+                    isType(notification, 'assignment')
+                "
 
-                <i class="fa-solid"
+                [class.comment]="
+                    isType(notification, 'comment')
+                "
 
-                   [class.fa-list-check]="notification.type==='assignment'"
-                   [class.fa-comments]="notification.type==='comment'"
-                   [class.fa-clock]="notification.type==='sla'"
-                   [class.fa-circle-check]="notification.type==='success'">
+                [class.sla]="
+                    isType(notification, 'sla')
+                "
+
+                [class.success]="
+                    isType(notification, 'success')
+                "
+
+                [class.incident]="
+                    isType(notification, 'incident')
+                "
+
+                [class.warning]="
+                    isType(notification, 'warning')
+                ">
+
+
+                <i
+                    class="fa-solid"
+
+                    [class.fa-list-check]="
+                        isType(notification, 'assignment')
+                    "
+
+                    [class.fa-comments]="
+                        isType(notification, 'comment')
+                    "
+
+                    [class.fa-clock]="
+                        isType(notification, 'sla')
+                    "
+
+                    [class.fa-circle-check]="
+                        isType(notification, 'success')
+                    "
+
+                    [class.fa-bolt]="
+                        isType(notification, 'incident')
+                    "
+
+                    [class.fa-triangle-exclamation]="
+                        isType(notification, 'warning')
+                    "
+
+                    [class.fa-bell]="
+                        !isType(notification, 'assignment')
+                        &&
+                        !isType(notification, 'comment')
+                        &&
+                        !isType(notification, 'sla')
+                        &&
+                        !isType(notification, 'success')
+                        &&
+                        !isType(notification, 'incident')
+                        &&
+                        !isType(notification, 'warning')
+                    ">
 
                 </i>
 
             </div>
+
 
             <!-- CONTENT -->
 
@@ -57,38 +147,112 @@
 
                 <div class="top-row">
 
-                    <h4>{{notification.title}}</h4>
+                    <h4>
+                        {{notification.title}}
+                    </h4>
 
-                    <span>{{notification.time}}</span>
+                    <span>
+
+                        {{
+                            notification.time ||
+                            notification.createdAt ||
+                            'Recently'
+                        }}
+
+                    </span>
 
                 </div>
 
-                <p>{{notification.message}}</p>
+
+                <p>
+                    {{notification.message}}
+                </p>
 
             </div>
+
 
             <!-- ACTIONS -->
 
             <div class="actions">
 
-                <button class="read-btn"
-                        *ngIf="!notification.read"
-                        (click)="markAsRead(notification)">
 
-                    <i class="fa-solid fa-check"></i>
+                <!-- MARK READ -->
+
+                <button
+                    class="read-btn"
+
+                    type="button"
+
+                    *ngIf="
+                        !notification.read
+                    "
+
+                    title="Mark as read"
+
+                    (click)="
+                        markAsRead(notification)
+                    ">
+
+                    <i
+                        class="fa-solid fa-check">
+                    </i>
 
                 </button>
 
-                <button class="delete-btn"
-                        (click)="deleteNotification(notification.id)">
 
-                    <i class="fa-solid fa-trash"></i>
+                <!-- DELETE FROM CURRENT LIST -->
+
+                <button
+                    class="delete-btn"
+
+                    type="button"
+
+                    title="Remove notification"
+
+                    (click)="
+                        deleteNotification(
+                            notification.id
+                        )
+                    ">
+
+                    <i
+                        class="fa-solid fa-trash">
+                    </i>
 
                 </button>
 
             </div>
 
         </div>
+
+
+        <!-- EMPTY -->
+
+        <div
+            class="empty-state"
+
+            *ngIf="
+                notifications.length === 0
+            ">
+
+            <div class="empty-icon">
+
+                <i
+                    class="fa-regular fa-bell-slash">
+                </i>
+
+            </div>
+
+            <h3>
+                No Notifications
+            </h3>
+
+            <p>
+                You don't have any notifications at the moment.
+            </p>
+
+        </div>
+
 
     </div>
 

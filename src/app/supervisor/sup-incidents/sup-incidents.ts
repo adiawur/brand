@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {Incident,IncidentService} from '../../services/incident.service';
+
+import {
+  Incident,
+  IncidentService
+} from '../../services/incident.service';
 
 import {
   AssignmentService
@@ -16,6 +20,7 @@ import {
   AlertService
 } from '../../services/alert.service';
 
+
 @Component({
   selector: 'app-sup-incidents',
   standalone: true,
@@ -28,13 +33,35 @@ import {
 })
 export class SupIncidents implements OnInit {
 
+
+  // =========================================================
+  // MODALS
+  // =========================================================
+
   showDetailsModal = false;
 
   showAssignModal = false;
 
+
+  // =========================================================
+  // SELECTED DATA
+  // =========================================================
+
   selectedIncident: Incident | null = null;
 
+
+  // =========================================================
+  // INCIDENT DATA
+  // =========================================================
+
   incidents: Incident[] = [];
+
+  filteredIncidents: Incident[] = [];
+
+
+  // =========================================================
+  // TECHNICIANS
+  // =========================================================
 
   technicians: User[] = [];
 
@@ -42,11 +69,49 @@ export class SupIncidents implements OnInit {
 
   selectedTechnician = '';
 
+
+  // =========================================================
+  // LOADING
+  // =========================================================
+
   loading = false;
 
+
+  // =========================================================
+  // SEARCH & FILTERS
+  // =========================================================
+
+  searchTerm = '';
+
+  selectedStatus = '';
+
+  selectedPriority = '';
+
+  selectedType = '';
+
+
+  // =========================================================
+  // CONSTRUCTOR
+  // =========================================================
+
   constructor(
-    private incidentService: IncidentService,private assignmentService: AssignmentService,private userService: UserService,private alertService: AlertService,private cdr: ChangeDetectorRef
+
+    private incidentService: IncidentService,
+
+    private assignmentService: AssignmentService,
+
+    private userService: UserService,
+
+    private alertService: AlertService,
+
+    private cdr: ChangeDetectorRef
+
   ) {}
+
+
+  // =========================================================
+  // INIT
+  // =========================================================
 
   ngOnInit(): void {
 
@@ -55,6 +120,11 @@ export class SupIncidents implements OnInit {
     this.loadTechnicians();
 
   }
+
+
+  // =========================================================
+  // LOAD INCIDENTS
+  // =========================================================
 
   loadIncidents(): void {
 
@@ -66,9 +136,12 @@ export class SupIncidents implements OnInit {
 
         next: (incidents) => {
 
-          this.incidents = incidents;
+          this.incidents = incidents || [];
+
+          this.applyFilters();
 
           this.loading = false;
+
           this.cdr.detectChanges();
 
         },
@@ -88,31 +161,152 @@ export class SupIncidents implements OnInit {
 
   }
 
+
+  // =========================================================
+  // LOAD TECHNICIANS
+  // =========================================================
+
   loadTechnicians(): void {
 
-  this.userService
-    .getTechnicians()
-    .subscribe({
+    this.userService
+      .getTechnicians()
+      .subscribe({
 
-      next: (users) => {
+        next: (users) => {
 
-        this.technicians = users;
-        this.cdr.detectChanges();
+          this.technicians = users || [];
 
-      },
+          this.cdr.detectChanges();
 
-      error: () => {
+        },
 
-        this.alertService.error(
-          'Operation Failed',
-          'Unable to load technicians.'
-        );
+        error: () => {
 
-      }
+          this.alertService.error(
+            'Operation Failed',
+            'Unable to load technicians.'
+          );
 
-    });
+        }
 
-}
+      });
+
+  }
+
+
+  // =========================================================
+  // APPLY SEARCH & FILTERS
+  // =========================================================
+
+  applyFilters(): void {
+
+    const search =
+      this.searchTerm
+        .trim()
+        .toLowerCase();
+
+
+    this.filteredIncidents =
+      this.incidents.filter(
+        incident => {
+
+
+          // -------------------------------------------------
+          // SEARCH
+          // -------------------------------------------------
+
+          const matchesSearch =
+            !search ||
+
+            incident.ticketId
+              ?.toLowerCase()
+              .includes(search) ||
+
+            incident.reporterName
+              ?.toLowerCase()
+              .includes(search) ||
+
+            incident.phone
+              ?.toLowerCase()
+              .includes(search) ||
+
+            incident.location
+              ?.toLowerCase()
+              .includes(search) ||
+
+            incident.description
+              ?.toLowerCase()
+              .includes(search);
+
+
+          // -------------------------------------------------
+          // STATUS
+          // -------------------------------------------------
+
+          const matchesStatus =
+            !this.selectedStatus ||
+
+            incident.status ===
+            this.selectedStatus;
+
+
+          // -------------------------------------------------
+          // PRIORITY
+          // -------------------------------------------------
+
+          const matchesPriority =
+            !this.selectedPriority ||
+
+            incident.priority ===
+            this.selectedPriority;
+
+
+          // -------------------------------------------------
+          // TYPE
+          // -------------------------------------------------
+
+          const matchesType =
+            !this.selectedType ||
+
+            incident.incidentType ===
+            this.selectedType;
+
+
+          return (
+            matchesSearch &&
+            matchesStatus &&
+            matchesPriority &&
+            matchesType
+          );
+
+        }
+      );
+
+  }
+
+
+  // =========================================================
+  // CLEAR FILTERS
+  // =========================================================
+
+  clearFilters(): void {
+
+    this.searchTerm = '';
+
+    this.selectedStatus = '';
+
+    this.selectedPriority = '';
+
+    this.selectedType = '';
+
+    this.applyFilters();
+
+  }
+
+
+  // =========================================================
+  // DETAILS
+  // =========================================================
 
   openDetails(
     incident: Incident
@@ -125,6 +319,7 @@ export class SupIncidents implements OnInit {
 
   }
 
+
   closeDetails(): void {
 
     this.showDetailsModal = false;
@@ -132,6 +327,11 @@ export class SupIncidents implements OnInit {
     this.selectedIncident = null;
 
   }
+
+
+  // =========================================================
+  // MAP
+  // =========================================================
 
   openMap(
     incident: Incident
@@ -150,6 +350,11 @@ export class SupIncidents implements OnInit {
 
   }
 
+
+  // =========================================================
+  // OPEN ASSIGN MODAL
+  // =========================================================
+
   openAssignModal(
     incident: Incident
   ): void {
@@ -160,12 +365,26 @@ export class SupIncidents implements OnInit {
     this.selectedTechnician =
       '';
 
+
+    // -------------------------------------------------------
+    // ONLY ACTIVE TECHNICIANS
+    // -------------------------------------------------------
+
     this.availableTechnicians =
-      this.technicians;
+      this.technicians.filter(
+        technician =>
+          technician.active === true
+      );
+
 
     this.showAssignModal = true;
 
   }
+
+
+  // =========================================================
+  // CLOSE ASSIGN MODAL
+  // =========================================================
 
   closeAssignModal(): void {
 
@@ -173,7 +392,14 @@ export class SupIncidents implements OnInit {
 
     this.selectedTechnician = '';
 
+    this.selectedIncident = null;
+
   }
+
+
+  // =========================================================
+  // ASSIGN TECHNICIAN
+  // =========================================================
 
   assignTechnician(): void {
 
@@ -191,15 +417,19 @@ export class SupIncidents implements OnInit {
 
     }
 
+
     const data = {
 
       incidentId:
         this.selectedIncident.id,
 
       technicianId:
-        Number(this.selectedTechnician)
+        Number(
+          this.selectedTechnician
+        )
 
     };
+
 
     this.assignmentService
       .assign(data)
@@ -212,16 +442,20 @@ export class SupIncidents implements OnInit {
             'Technician assigned successfully.'
           );
 
+
           this.closeAssignModal();
+
 
           this.loadIncidents();
 
         },
 
+
         error: (error) => {
 
           this.alertService.error(
             'Assignment Failed',
+
             error?.error?.message ||
             'Unable to assign technician.'
           );
@@ -232,35 +466,64 @@ export class SupIncidents implements OnInit {
 
   }
 
+
+  // =========================================================
+  // FORMAT INCIDENT TYPE
+  // =========================================================
+
   formatType(
     type: string
   ): string {
 
+    if (!type) {
+      return '';
+    }
+
     return type
       .replace(/_/g, ' ')
       .toLowerCase()
-      .replace(/\b\w/g, char =>
-        char.toUpperCase()
+      .replace(
+        /\b\w/g,
+        char => char.toUpperCase()
       );
 
   }
+
+
+  // =========================================================
+  // FORMAT STATUS
+  // =========================================================
 
   formatStatus(
     status: string
   ): string {
 
+    if (!status) {
+      return '';
+    }
+
     return status
       .replace(/_/g, ' ')
       .toLowerCase()
-      .replace(/\b\w/g, char =>
-        char.toUpperCase()
+      .replace(
+        /\b\w/g,
+        char => char.toUpperCase()
       );
 
   }
 
+
+  // =========================================================
+  // FORMAT PRIORITY
+  // =========================================================
+
   formatPriority(
     priority: string
   ): string {
+
+    if (!priority) {
+      return '';
+    }
 
     return priority
       .charAt(0)

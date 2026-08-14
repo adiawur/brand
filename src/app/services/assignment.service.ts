@@ -35,30 +35,130 @@ export interface Assignment {
 })
 export class AssignmentService {
 
-  private apiUrl =
+  private supervisorApiUrl =
     'http://localhost:8182/api/supervisor/assignments';
+
+  private technicianApiUrl =
+    'http://localhost:8182/api/technician/assignments';
+
 
   constructor(
     private http: HttpClient
   ) {}
+
+
+  // =========================================================
+  // SUPERVISOR
+  // =========================================================
 
   assign(
     data: AssignmentRequest
   ): Observable<Assignment> {
 
     return this.http.post<Assignment>(
-      this.apiUrl,
+      this.supervisorApiUrl,
       data
     );
 
   }
 
+
   getAll(): Observable<Assignment[]> {
 
     return this.http.get<Assignment[]>(
-      this.apiUrl
+      this.supervisorApiUrl
     );
 
   }
+
+
+  // =========================================================
+  // TECHNICIAN
+  // GET MY ASSIGNMENTS
+  // =========================================================
+
+  getMyAssignments(): Observable<Assignment[]> {
+
+    return this.http.get<Assignment[]>(
+      this.technicianApiUrl
+    );
+
+  }
+
+
+  // =========================================================
+  // TECHNICIAN
+  // GET ASSIGNMENT BY ID
+  // =========================================================
+
+  getMyAssignmentById(
+    id: number
+  ): Observable<Assignment> {
+
+    return this.http.get<Assignment>(
+      `${this.technicianApiUrl}/${id}`
+    );
+
+  }
+
+
+  // =========================================================
+  // TECHNICIAN
+  // START WORK
+  // =========================================================
+
+  startWork(
+    id: number
+  ): Observable<Assignment> {
+
+    return this.http.patch<Assignment>(
+      `${this.technicianApiUrl}/${id}/start`,
+      {}
+    );
+
+  }
+
+
+  // =========================================================
+  // TECHNICIAN
+  // COMPLETE WORK
+  // =========================================================
+
+  completeWork(
+    id: number,
+    notes: string,
+    photo?: File
+  ): Observable<Assignment> {
+
+    const formData = new FormData();
+
+    const data = {
+      notes: notes
+    };
+
+    formData.append(
+      'data',
+      JSON.stringify(data)
+    );
+
+    if (photo) {
+
+      formData.append(
+        'photo',
+        photo
+      );
+
+    }
+
+    return this.http.post<Assignment>(
+      `${this.technicianApiUrl}/${id}/complete`,
+      formData
+    );
+
+  }
+
+  
+
+
 
 }

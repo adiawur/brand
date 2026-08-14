@@ -1,163 +1,560 @@
-<div class="page-header">
+<div class="incidents-page">
 
-    <div>
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
 
-        <h2>Incident Management</h2>
+    <div class="page-header">
 
-        <p>
-            Assign technicians and monitor incidents
-        </p>
+        <div>
+            <h2>Incident Management</h2>
+
+            <p>
+                Assign technicians and monitor incidents
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FILTER TOOLBAR
+    ====================================================== -->
+
+    <div class="filters-card">
+
+        <!-- SEARCH -->
+
+        <div class="search-wrapper">
+
+            <label>
+                Search Incidents
+            </label>
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="text"
+                    [(ngModel)]="searchTerm"
+                    (ngModelChange)="applyFilters()"
+                    placeholder="Search ID, customer, phone or location...">
+
+                <button
+                    *ngIf="searchTerm"
+                    class="clear-search"
+                    type="button"
+                    (click)="searchTerm=''; applyFilters()">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="filter-group">
+
+            <label>
+                Status
+            </label>
+
+            <div class="select-wrapper">
+
+                <select
+                    [(ngModel)]="selectedStatus"
+                    (ngModelChange)="applyFilters()">
+
+                    <option value="">
+                        All Status
+                    </option>
+
+                    <option value="REPORTED">
+                        Reported
+                    </option>
+
+                    <option value="ASSIGNED">
+                        Assigned
+                    </option>
+
+                    <option value="IN_PROGRESS">
+                        In Progress
+                    </option>
+
+                    <option value="COMPLETED">
+                        Completed
+                    </option>
+
+                    <option value="RESOLVED">
+                        Resolved
+                    </option>
+
+                    <option value="CLOSED">
+                        Closed
+                    </option>
+
+                </select>
+
+                <i class="fa-solid fa-chevron-down"></i>
+
+            </div>
+
+        </div>
+
+
+        <!-- PRIORITY -->
+
+        <div class="filter-group">
+
+            <label>
+                Priority
+            </label>
+
+            <div class="select-wrapper">
+
+                <select
+                    [(ngModel)]="selectedPriority"
+                    (ngModelChange)="applyFilters()">
+
+                    <option value="">
+                        All Priority
+                    </option>
+
+                    <option value="HIGH">
+                        High
+                    </option>
+
+                    <option value="MEDIUM">
+                        Medium
+                    </option>
+
+                    <option value="LOW">
+                        Low
+                    </option>
+
+                </select>
+
+                <i class="fa-solid fa-chevron-down"></i>
+
+            </div>
+
+        </div>
+
+
+        <!-- INCIDENT TYPE -->
+
+        <div class="filter-group">
+
+            <label>
+                Incident Type
+            </label>
+
+            <div class="select-wrapper">
+
+                <select
+                    [(ngModel)]="selectedType"
+                    (ngModelChange)="applyFilters()">
+
+                    <option value="">
+                        All Types
+                    </option>
+
+                    <option value="POWER_OUTAGE">
+                        Power Outage
+                    </option>
+
+                    <option value="TRANSFORMER_FAULT">
+                        Transformer Fault
+                    </option>
+
+                    <option value="BROKEN_POLE">
+                        Broken Pole
+                    </option>
+
+                    <option value="EXPOSED_WIRES">
+                        Exposed Wires
+                    </option>
+
+                    <option value="FIRE_HAZARD">
+                        Fire Hazard
+                    </option>
+
+                    <option value="VOLTAGE_FLUCTUATION">
+                        Voltage Fluctuation
+                    </option>
+
+                    <option value="METER_ISSUE">
+                        Meter Issue
+                    </option>
+
+                    <option value="BILLING_ISSUE">
+                        Billing Issue
+                    </option>
+
+                    <option value="STREET_LIGHT_FAULT">
+                        Street Light Fault
+                    </option>
+
+                    <option value="OTHER">
+                        Other
+                    </option>
+
+                </select>
+
+                <i class="fa-solid fa-chevron-down"></i>
+
+            </div>
+
+        </div>
+
+
+        <!-- CLEAR -->
+
+        <button
+            type="button"
+            class="clear-filter-btn"
+            (click)="clearFilters()">
+
+            <i class="fa-solid fa-filter-circle-xmark"></i>
+
+            <span>
+                Clear
+            </span>
+
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         RESULT INFORMATION
+    ====================================================== -->
+
+    <div class="result-bar">
+
+        <div class="result-count">
+
+            <i class="fa-solid fa-list"></i>
+
+            <span>
+
+                Showing
+
+                <strong>
+                    {{ filteredIncidents.length }}
+                </strong>
+
+                of
+
+                <strong>
+                    {{ incidents.length }}
+                </strong>
+
+                incidents
+
+            </span>
+
+        </div>
+
+
+        <div
+            class="active-filter"
+            *ngIf="
+                searchTerm ||
+                selectedStatus ||
+                selectedPriority ||
+                selectedType
+            ">
+
+            <i class="fa-solid fa-filter"></i>
+
+            Filters applied
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         TABLE
+    ====================================================== -->
+
+    <div class="table-card">
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Customer</th>
+
+                        <th>Type</th>
+
+                        <th>Priority</th>
+
+                        <th>Status</th>
+
+                        <th>Location</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    <tr
+                        *ngFor="
+                            let incident
+                            of filteredIncidents
+                        ">
+
+
+                        <!-- ID -->
+
+                        <td>
+                            {{ incident.ticketId }}
+                        </td>
+
+
+                        <!-- CUSTOMER -->
+
+                        <td>
+
+                            <div class="customer-cell">
+
+                                <strong>
+                                    {{ incident.reporterName }}
+                                </strong>
+
+                                <small>
+                                    {{ incident.phone }}
+                                </small>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- TYPE -->
+
+                        <td>
+
+                            {{ formatType(
+                                incident.incidentType
+                            ) }}
+
+                        </td>
+
+
+                        <!-- PRIORITY -->
+
+                        <td>
+
+                            <span
+                                class="priority"
+
+                                [class.high]="
+                                    incident.priority === 'HIGH'
+                                "
+
+                                [class.medium]="
+                                    incident.priority === 'MEDIUM'
+                                "
+
+                                [class.low]="
+                                    incident.priority === 'LOW'
+                                ">
+
+                                {{ formatPriority(
+                                    incident.priority
+                                ) }}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            <span
+                                class="status"
+
+                                [class.reported]="
+                                    incident.status === 'REPORTED'
+                                "
+
+                                [class.assigned]="
+                                    incident.status === 'ASSIGNED'
+                                "
+
+                                [class.progress]="
+                                    incident.status === 'IN_PROGRESS'
+                                "
+
+                                [class.completed]="
+                                    incident.status === 'COMPLETED'
+                                "
+
+                                [class.resolved]="
+                                    incident.status === 'RESOLVED'
+                                "
+
+                                [class.closed]="
+                                    incident.status === 'CLOSED'
+                                ">
+
+                                {{ formatStatus(
+                                    incident.status
+                                ) }}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- LOCATION -->
+
+                        <td>
+
+                            <span class="location-text">
+
+                                {{ incident.location }}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- ACTIONS -->
+
+                        <td>
+
+                            <div class="actions">
+
+                                <button
+                                    class="view-btn"
+                                    title="View Incident"
+                                    (click)="openDetails(incident)">
+
+                                    <i class="fa fa-eye"></i>
+
+                                </button>
+
+
+                                <button
+                                    class="map-btn"
+                                    title="View Location"
+                                    (click)="openMap(incident)">
+
+                                    <i class="fa fa-location-dot"></i>
+
+                                </button>
+
+
+                                <button
+                                    class="assign-btn"
+                                    title="Assign Technician"
+                                    *ngIf="
+                                        incident.status === 'REPORTED'
+                                    "
+                                    (click)="openAssignModal(incident)">
+
+                                    <i class="fa fa-user-plus"></i>
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    <!-- EMPTY -->
+
+                    <tr
+                        *ngIf="
+                            !loading &&
+                            filteredIncidents.length === 0
+                        ">
+
+                        <td
+                            colspan="7"
+                            class="empty-row">
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+
+                                    <i class="fa-solid fa-bolt"></i>
+
+                                </div>
+
+                                <strong>
+                                    No incidents found
+                                </strong>
+
+                                <span>
+                                    Try changing your search or filters.
+                                </span>
+
+                                <button
+                                    type="button"
+                                    (click)="clearFilters()">
+
+                                    Clear Filters
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
 
     </div>
 
 </div>
 
-<div class="table-card">
 
-    <div class="table-responsive">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>ID</th>
-
-                    <th>Customer</th>
-
-                    <th>Type</th>
-
-                    <th>Priority</th>
-
-                    <th>Status</th>
-
-                    <th>Location</th>
-
-                    <th>Actions</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                <tr
-                    *ngFor="let incident of incidents">
-
-                    <td>
-                        {{incident.ticketId}}
-                    </td>
-
-                    <td>
-                        {{incident.reporterName}}
-                    </td>
-
-                    <td>
-                        {{formatType(incident.incidentType)}}
-                    </td>
-
-                    <td>
-
-                        <span
-                            class="priority"
-                            [class.high]="incident.priority === 'HIGH'"
-                            [class.medium]="incident.priority === 'MEDIUM'"
-                            [class.low]="incident.priority === 'LOW'">
-
-                            {{formatPriority(incident.priority)}}
-
-                        </span>
-
-                    </td>
-
-                    <td>
-
-                        <span
-                            class="status"
-                            [class.reported]="incident.status === 'REPORTED'"
-                            [class.assigned]="incident.status === 'ASSIGNED'"
-                            [class.progress]="incident.status === 'IN_PROGRESS'"
-                            [class.resolved]="incident.status === 'RESOLVED'">
-
-                            {{formatStatus(incident.status)}}
-
-                        </span>
-
-                    </td>
-
-                    <td>
-                        {{incident.location}}
-                    </td>
-
-                    <td>
-
-                        <div class="actions">
-
-                            <button
-                                class="view-btn"
-                                (click)="openDetails(incident)">
-
-                                <i class="fa fa-eye"></i>
-
-                            </button>
-
-                            <button
-                                class="map-btn"
-                                (click)="openMap(incident)">
-
-                                <i class="fa fa-location-dot"></i>
-
-                            </button>
-
-                            <button
-                                class="assign-btn"
-                                *ngIf="incident.status === 'REPORTED'"
-                                (click)="openAssignModal(incident)">
-
-                                <i class="fa fa-user-plus"></i>
-
-                            </button>
-
-                        </div>
-
-                    </td>
-
-                </tr>
-
-                <tr
-                    *ngIf="!loading && incidents.length === 0">
-
-                    <td
-                        colspan="7"
-                        style="text-align:center;">
-
-                        No incidents found.
-
-                    </td>
-
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div>
-
-
-<!-- DETAILS MODAL -->
+<!-- =========================================================
+     DETAILS MODAL
+========================================================= -->
 
 <div
     class="modal-backdrop"
     *ngIf="showDetailsModal">
 
-    <div class="modal">
+    <div class="modal details-modal">
 
         <div class="modal-header">
 
-            <h3>Incident Details</h3>
+            <h3>
+                Incident Details
+            </h3>
 
             <button
                 (click)="closeDetails()">
@@ -168,47 +565,121 @@
 
         </div>
 
+
         <div class="modal-body">
 
-            <p>
-                <strong>ID:</strong>
-                {{selectedIncident?.ticketId}}
-            </p>
+            <div class="detail-grid">
 
-            <p>
-                <strong>Customer:</strong>
-                {{selectedIncident?.reporterName}}
-            </p>
+                <div class="detail-item">
 
-            <p>
-                <strong>Phone:</strong>
-                {{selectedIncident?.phone}}
-            </p>
+                    <label>
+                        Incident ID
+                    </label>
 
-            <p>
-                <strong>Type:</strong>
-                {{formatType(selectedIncident?.incidentType || '')}}
-            </p>
+                    <strong>
+                        {{ selectedIncident?.ticketId }}
+                    </strong>
 
-            <p>
-                <strong>Priority:</strong>
-                {{formatPriority(selectedIncident?.priority || '')}}
-            </p>
+                </div>
 
-            <p>
-                <strong>Status:</strong>
-                {{formatStatus(selectedIncident?.status || '')}}
-            </p>
 
-            <p>
-                <strong>Location:</strong>
-                {{selectedIncident?.location}}
-            </p>
+                <div class="detail-item">
 
-            <p>
-                <strong>Description:</strong>
-                {{selectedIncident?.description}}
-            </p>
+                    <label>
+                        Customer
+                    </label>
+
+                    <strong>
+                        {{ selectedIncident?.reporterName }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <label>
+                        Phone
+                    </label>
+
+                    <strong>
+                        {{ selectedIncident?.phone }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <label>
+                        Type
+                    </label>
+
+                    <strong>
+                        {{ formatType(
+                            selectedIncident?.incidentType || ''
+                        ) }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <label>
+                        Priority
+                    </label>
+
+                    <strong>
+                        {{ formatPriority(
+                            selectedIncident?.priority || ''
+                        ) }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <strong>
+                        {{ formatStatus(
+                            selectedIncident?.status || ''
+                        ) }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item full">
+
+                    <label>
+                        Location
+                    </label>
+
+                    <strong>
+                        {{ selectedIncident?.location }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item full">
+
+                    <label>
+                        Description
+                    </label>
+
+                    <p>
+                        {{ selectedIncident?.description }}
+                    </p>
+
+                </div>
+
+            </div>
 
         </div>
 
@@ -217,7 +688,9 @@
 </div>
 
 
-<!-- ASSIGN MODAL -->
+<!-- =========================================================
+     ASSIGN MODAL
+========================================================= -->
 
 <div
     class="modal-backdrop"
@@ -227,7 +700,9 @@
 
         <div class="modal-header">
 
-            <h3>Assign Technician</h3>
+            <h3>
+                Assign Technician
+            </h3>
 
             <button
                 (click)="closeAssignModal()">
@@ -238,28 +713,53 @@
 
         </div>
 
+
         <div class="modal-body">
 
             <div class="incident-summary">
 
-                <h4>
-                    {{selectedIncident?.ticketId}}
-                </h4>
+                <div>
 
-                <p>
-                    {{formatType(
-                        selectedIncident?.incidentType || ''
-                    )}}
-                </p>
+                    <span>
+                        Incident
+                    </span>
 
-                <small>
+                    <h4>
+                        {{ selectedIncident?.ticketId }}
+                    </h4>
 
-                    Location:
-                    {{selectedIncident?.location}}
+                </div>
 
-                </small>
+
+                <div>
+
+                    <span>
+                        Type
+                    </span>
+
+                    <p>
+                        {{ formatType(
+                            selectedIncident?.incidentType || ''
+                        ) }}
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Location
+                    </span>
+
+                    <p>
+                        {{ selectedIncident?.location }}
+                    </p>
+
+                </div>
 
             </div>
+
 
             <div class="form-group">
 
@@ -275,17 +775,21 @@
                     </option>
 
                     <option
-                        *ngFor="let tech of availableTechnicians"
+                        *ngFor="
+                            let tech
+                            of availableTechnicians
+                        "
                         [value]="tech.id">
 
-                        {{tech.fullName}}
+                        {{ tech.fullName }}
 
-                        <span
+                        <ng-container
                             *ngIf="tech.specialization">
 
-                            - {{tech.specialization}}
+                            -
+                            {{ tech.specialization }}
 
-                        </span>
+                        </ng-container>
 
                     </option>
 
@@ -293,7 +797,23 @@
 
             </div>
 
+
+            <div
+                class="no-technicians"
+                *ngIf="
+                    availableTechnicians.length === 0
+                ">
+
+                <i class="fa-solid fa-user-slash"></i>
+
+                <span>
+                    No active technicians available.
+                </span>
+
+            </div>
+
         </div>
+
 
         <div class="modal-footer">
 
@@ -305,11 +825,15 @@
 
             </button>
 
+
             <button
                 class="save-btn"
+                [disabled]="!selectedTechnician"
                 (click)="assignTechnician()">
 
-                Assign
+                <i class="fa-solid fa-user-check"></i>
+
+                Assign Technician
 
             </button>
 

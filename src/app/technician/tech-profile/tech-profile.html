@@ -1,217 +1,382 @@
 <div class="profile-page">
 
-    <!-- PROFILE CARD -->
+    <!-- =====================================================
+         LOADING
+    ====================================================== -->
 
-    <div class="profile-card">
+    <div
+        class="loading-state"
+        *ngIf="loading">
 
-        <div class="profile-header">
+        <i class="fa-solid fa-spinner fa-spin"></i>
 
-            <img [src]="technician.image">
+        <span>
+            Loading profile...
+        </span>
 
-            <div>
+    </div>
 
-                <h2>{{technician.fullName}}</h2>
 
-                <span>{{technician.role}}</span>
+    <!-- =====================================================
+         PROFILE CONTENT
+    ====================================================== -->
 
-                <div class="availability">
+    <ng-container *ngIf="!loading">
 
-                    <span class="status-dot"
-                          [class.available]="technician.status === 'Available'"
-                          [class.busy]="technician.status === 'Busy'"
-                          [class.offline]="technician.status === 'Offline'">
+
+        <!-- PROFILE CARD -->
+
+        <div class="profile-card">
+
+            <div class="profile-header">
+
+                <img
+                    [src]="profileImage"
+                    alt="Profile Photo">
+
+                <div>
+
+                    <h2>
+                        {{technician.fullName}}
+                    </h2>
+
+                    <span>
+                        {{technician.role}}
                     </span>
 
-                    {{technician.status}}
+
+                    <div class="availability">
+
+                        <span
+                            class="status-dot"
+                            [class.available]="
+                                technician.active
+                            "
+                            [class.offline]="
+                                !technician.active
+                            ">
+                        </span>
+
+                        {{availabilityStatus}}
+
+                    </div>
 
                 </div>
 
             </div>
 
+
+            <!-- IMAGE URL -->
+
+            <div class="photo-section">
+
+                <label>
+                    Profile Photo URL
+                </label>
+
+                <input
+                    type="url"
+                    [(ngModel)]="technician.imageUrl"
+                    [readonly]="!editMode"
+                    placeholder="https://example.com/profile.jpg">
+
+            </div>
+
         </div>
 
-        <button class="photo-btn">
 
-            <i class="fa-solid fa-camera"></i>
+        <!-- =================================================
+             PROFILE INFORMATION
+        ================================================== -->
 
-            Change Photo
+        <div class="details-card">
 
-        </button>
+            <div class="card-header">
 
-    </div>
+                <div>
 
-    <!-- DETAILS -->
+                    <h3>
+                        Profile Information
+                    </h3>
 
-    <div class="details-card">
+                    <p>
+                        Manage your personal and work information
+                    </p>
 
-        <div class="card-header">
+                </div>
 
-            <h3>Profile Information</h3>
 
-            <button class="edit-btn"
+                <button
+                    class="edit-btn"
                     *ngIf="!editMode"
+                    type="button"
                     (click)="toggleEdit()">
 
-                <i class="fa-solid fa-pen"></i>
+                    <i class="fa-solid fa-pen"></i>
 
-                Edit Profile
+                    Edit Profile
 
-            </button>
-
-        </div>
-
-        <div class="form-grid">
-
-            <div class="form-group">
-
-                <label>Full Name</label>
-
-                <input
-                    [(ngModel)]="technician.fullName"
-                    [readonly]="!editMode">
+                </button>
 
             </div>
 
-            <div class="form-group">
 
-                <label>Username</label>
+            <div class="form-grid">
 
-                <input
-                    [(ngModel)]="technician.username"
-                    [readonly]="!editMode">
+
+                <!-- FULL NAME -->
+
+                <div class="form-group">
+
+                    <label>
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        [(ngModel)]="technician.fullName"
+                        [readonly]="!editMode">
+
+                </div>
+
+
+                <!-- USERNAME -->
+
+                <div class="form-group">
+
+                    <label>
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        [(ngModel)]="technician.username"
+                        [readonly]="!editMode">
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label>
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        [(ngModel)]="technician.email"
+                        [readonly]="!editMode">
+
+                </div>
+
+
+                <!-- PHONE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="text"
+                        [(ngModel)]="technician.phone"
+                        [readonly]="!editMode">
+
+                </div>
+
+
+                <!-- SPECIALIZATION -->
+
+                <div class="form-group">
+
+                    <label>
+                        Specialization
+                    </label>
+
+                    <input
+                        type="text"
+                        [(ngModel)]="technician.specialization"
+                        [readonly]="!editMode">
+
+                </div>
+
+
+                <!-- ZONE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Assigned Zone
+                    </label>
+
+                    <input
+                        type="text"
+                        [(ngModel)]="technician.zone"
+                        [readonly]="!editMode">
+
+                </div>
+
+
+                <!-- AVAILABILITY -->
+
+                <div class="form-group">
+
+                    <label>
+                        Availability
+                    </label>
+
+                    <input
+                        type="text"
+                        [value]="availabilityStatus"
+                        readonly>
+
+                </div>
+
+
+                <!-- ROLE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Role
+                    </label>
+
+                    <input
+                        type="text"
+                        [value]="technician.role"
+                        readonly>
+
+                </div>
 
             </div>
 
-            <div class="form-group">
 
-                <label>Email Address</label>
+            <!-- ACTIONS -->
 
-                <input
-                    [(ngModel)]="technician.email"
-                    [readonly]="!editMode">
+            <div
+                class="actions"
+                *ngIf="editMode">
 
-            </div>
+                <button
+                    class="cancel-btn"
+                    type="button"
+                    (click)="cancelEdit()">
 
-            <div class="form-group">
+                    Cancel
 
-                <label>Phone Number</label>
+                </button>
 
-                <input
-                    [(ngModel)]="technician.phone"
-                    [readonly]="!editMode">
 
-            </div>
-
-            <div class="form-group">
-
-                <label>Specialization</label>
-
-                <input
-                    [(ngModel)]="technician.specialization"
-                    [readonly]="!editMode">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Assigned Zone</label>
-
-                <input
-                    [(ngModel)]="technician.zone"
-                    [readonly]="!editMode">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Availability Status</label>
-
-                <select
-                    [(ngModel)]="technician.status"
-                    [disabled]="!editMode">
-
-                    <option>Available</option>
-                    <option>Busy</option>
-                    <option>Offline</option>
-
-                </select>
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Role</label>
-
-                <input
-                    [value]="technician.role"
-                    readonly>
-
-            </div>
-
-        </div>
-
-        <div class="actions"
-             *ngIf="editMode">
-
-            <button class="cancel-btn"
-                    (click)="toggleEdit()">
-
-                Cancel
-
-            </button>
-
-            <button class="save-btn"
+                <button
+                    class="save-btn"
+                    type="button"
+                    [disabled]="saving"
                     (click)="saveProfile()">
 
-                Save Changes
+                    <i
+                        *ngIf="saving"
+                        class="fa-solid fa-spinner fa-spin">
+                    </i>
+
+                    <i
+                        *ngIf="!saving"
+                        class="fa-solid fa-check">
+                    </i>
+
+                    {{ saving
+                        ? 'Saving...'
+                        : 'Save Changes'
+                    }}
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PASSWORD
+        ================================================== -->
+
+        <div class="password-card">
+
+            <div class="password-header">
+
+                <div>
+
+                    <h3>
+                        Change Password
+                    </h3>
+
+                    <p>
+                        Update your account password
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="password-grid">
+
+                <div class="form-group">
+
+                    <label>
+                        Current Password
+                    </label>
+
+                    <input
+                        type="password"
+                        placeholder="Enter current password">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        New Password
+                    </label>
+
+                    <input
+                        type="password"
+                        placeholder="Enter new password">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Confirm Password
+                    </label>
+
+                    <input
+                        type="password"
+                        placeholder="Confirm new password">
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="save-btn password-btn"
+                type="button"
+                (click)="updatePassword()">
+
+                <i class="fa-solid fa-key"></i>
+
+                Update Password
 
             </button>
 
         </div>
 
-    </div>
-
-    <!-- PASSWORD -->
-
-    <div class="password-card">
-
-        <h3>Change Password</h3>
-
-        <div class="password-grid">
-
-            <div class="form-group">
-
-                <label>Current Password</label>
-
-                <input type="password">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>New Password</label>
-
-                <input type="password">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Confirm Password</label>
-
-                <input type="password">
-
-            </div>
-
-        </div>
-
-        <button class="save-btn"
-                (click)="updatePassword()">
-
-            Update Password
-
-        </button>
-
-    </div>
+    </ng-container>
 
 </div>

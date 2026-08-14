@@ -1,287 +1,459 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-:host{
-    display:block;
-    font-family:'Inter',sans-serif;
+:host {
+    display: block;
+    font-family: 'Inter', sans-serif;
 }
 
-.wrapper{
-    display:flex;
-    height:100vh;
-    background:#f5f7fb;
+.wrapper {
+    display: flex;
+
+    height: 100vh;
+
+    background: #f5f7fb;
+
     overflow: hidden;
 }
 
-/* ================= SIDEBAR ================= */
 
-.sidebar{
-    width:260px;
-    background:linear-gradient(
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    width: 260px;
+
+    background: linear-gradient(
         180deg,
         #6C9BCF,
         #4F7FB5
     );
 
-    color:#fff;
-    transition:.3s ease;
-    overflow:hidden;
-    z-index:1000;
+    color: #fff;
+
+    transition: .3s ease;
+
+    overflow: hidden;
+
+    z-index: 1000;
 }
 
-.sidebar.collapsed{
-    width:90px;
+.sidebar.collapsed {
+    width: 90px;
 }
 
-.logo-area{
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo-area {
     height: 80px;
-    padding:20px;
 
-    display:flex;
-    align-items:center;
-    gap:15px;
+    padding: 12px 20px;
 
-    border-bottom:1px solid rgba(255,255,255,.15);
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.15);
 }
 
-.logo-area img{
-    width:55px;
-    height:55px;
-    object-fit:contain;
+.logo-area img {
+    width: 55px;
+    height: 55px;
+
+    object-fit: contain;
 }
 
-.logo-area h6{
+.logo-area h6 {
     font-size: .89rem;
-    margin-bottom:3px;
+
+    margin-bottom: 3px;
+
     text-transform: capitalize;
 }
 
-.logo-area span{
-    font-size:.85rem;
-    color:#eaf2ff;
+.logo-area span {
+    font-size: .85rem;
+
+    color: #eaf2ff;
 }
 
-.sidebar ul{
-    list-style:none;
-    padding:20px 12px;
+
+/* =========================================================
+   SIDEBAR MENU
+========================================================= */
+
+.sidebar ul {
+    list-style: none;
+
+    padding: 20px 12px;
 }
 
-.sidebar li{
-    display:flex;
-    align-items:center;
-    gap:15px;
+.sidebar li {
+    display: flex;
 
-    padding:15px;
-    margin-bottom:8px;
+    align-items: center;
 
-    border-radius:14px;
-    cursor:pointer;
+    gap: 15px;
 
-    transition:.3s;
+    padding: 15px;
+
+    margin-bottom: 8px;
+
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    transition: .3s;
 }
 
-.sidebar li:hover{
-    background:rgba(255,255,255,.15);
+.sidebar li:hover {
+    background:
+        rgba(255,255,255,.15);
 }
 
-.sidebar li.active{
-    background:#ffffff;
-    color:#4F7FB5;
-    font-weight:600;
+.sidebar li.active {
+    background: #fff;
+
+    color: #4F7FB5;
+
+    font-weight: 600;
 }
 
-.sidebar li i{
-    min-width:25px;
-    font-size:1.1rem;
+.sidebar li i {
+    min-width: 25px;
+
+    font-size: 1.1rem;
 }
 
-/* ================= MAIN ================= */
 
-.main-content{
-    flex:1;
-    display:flex;
-    flex-direction:column;
+/* LOGOUT */
+
+.sidebar li.logout-item {
+    margin-top: 25px;
+
+    color: #fff;
+}
+
+.sidebar li.logout-item:hover {
+    background: rgba(255,255,255,.15);
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main-content {
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
     height: 100%;
-    overflow: scroll;
+
+    min-width: 0;
+
+    overflow: hidden;
 }
 
-/* ================= TOPBAR ================= */
 
-.topbar{
-    height:80px;
-    background:#fff;
+/* =========================================================
+   TOPBAR
+========================================================= */
 
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+.topbar {
+    height: 80px;
 
-    padding:35px 30px;
+    flex-shrink: 0;
 
-    box-shadow:0 2px 15px rgba(0,0,0,.05);
+    background: #fff;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 30px;
+
+    box-shadow:
+        0 2px 15px
+        rgba(0,0,0,.05);
 }
 
 .left,
-.right{
-    display:flex;
-    align-items:center;
-    gap:15px;
+.right {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
 }
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
 
 .desktop-btn,
 .mobile-btn,
-.notification-btn{
+.notification-btn {
 
-    width:45px;
-    height:45px;
+    width: 45px;
+    height: 45px;
 
-    border:none;
-    border-radius:12px;
+    border: none;
 
-    background:#eef4fb;
-    color:#4F7FB5;
+    border-radius: 12px;
 
-    cursor:pointer;
-    transition:.3s;
+    background: #eef4fb;
+
+    color: #4F7FB5;
+
+    cursor: pointer;
+
+    transition: .3s;
 }
 
 .desktop-btn:hover,
 .mobile-btn:hover,
-.notification-btn:hover{
+.notification-btn:hover {
 
-    background:#4F7FB5;
-    color:#fff;
+    background: #4F7FB5;
+
+    color: #fff;
 }
 
-.notification-btn{
-    position:relative;
+.mobile-btn {
+    display: none;
 }
 
-.notification-btn::after{
-    content:'';
-    position:absolute;
 
-    top:10px;
-    right:12px;
+/* =========================================================
+   NOTIFICATION
+========================================================= */
 
-    width:10px;
-    height:10px;
-
-    border-radius:50%;
-    background:#ff5d5d;
+.notification-btn {
+    position: relative;
 }
 
-/* ================= USER INFO ================= */
+.notification-btn::after {
 
-.user{
-    display:flex;
-    align-items:center;
-    gap:12px;
+    content: '';
+
+    position: absolute;
+
+    top: 9px;
+    right: 10px;
+
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: #ff5d5d;
 }
 
-.user img{
-    width:48px;
-    height:48px;
 
-    border-radius:50%;
-    object-fit:cover;
+/* =========================================================
+   DATE
+========================================================= */
 
-    border:3px solid #dce8f7;
+.top-date {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #777;
+
+    font-size: .85rem;
+
+    padding-right: 5px;
 }
 
-.user h4{
-    font-size:.95rem;
-    color:#222;
+.top-date i {
+    color: #4F7FB5;
 }
 
-.user small{
-    color:#777;
-    font-size:.8rem;
+
+/* =========================================================
+   USER
+========================================================= */
+
+.user {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
 }
 
-/* ================= CONTENT ================= */
+.user img {
 
-.page-content{
-    padding:25px;
+    width: 48px;
+    height: 48px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 3px solid #dce8f7;
 }
 
-/* ================= OVERLAY ================= */
+.user h4 {
 
-.overlay{
-    display:none;
+    font-size: .95rem;
+
+    color: #222;
 }
 
-/* ================= MOBILE ================= */
+.user small {
 
-.mobile-btn{
-    display:none;
+    color: #777;
+
+    font-size: .8rem;
 }
 
-@media(max-width:992px){
 
-    .sidebar{
-        position:fixed;
-        top:0;
-        left:-280px;
+/* =========================================================
+   PAGE CONTENT
+========================================================= */
 
-        width:260px;
-        height:100%;
+.page-content {
 
-        z-index:1000;
+    padding: 25px;
+
+    flex: 1;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   OVERLAY
+========================================================= */
+
+.overlay {
+    display: none;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media(max-width: 992px) {
+
+    .sidebar {
+
+        position: fixed;
+
+        top: 0;
+        left: -280px;
+
+        width: 260px;
+
+        height: 100%;
+
+        z-index: 1000;
     }
 
-    .sidebar.mobile-open{
-        left:0;
+    .sidebar.mobile-open {
+        left: 0;
     }
 
-    .mobile-btn{
-        display:block;
+    .mobile-btn {
+        display: block;
     }
 
-    .desktop-btn{
-        display:none;
+    .desktop-btn {
+        display: none;
     }
 
-    .overlay{
-        display:block;
-        position:fixed;
-        inset:0;
+    .overlay {
 
-        background:rgba(0,0,0,.4);
-        z-index:999;
+        display: block;
+
+        position: fixed;
+
+        inset: 0;
+
+        background:
+            rgba(0,0,0,.4);
+
+        z-index: 999;
     }
+
 }
 
-@media(max-width:768px){
 
-    .topbar{
-        padding:0 15px;
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width: 768px) {
+
+    .topbar {
+
+        padding: 0 15px;
     }
 
-    .user small{
-        display:none;
+    .top-date {
+
+        display: none;
     }
 
-    .page-content{
-        padding:15px;
+    .user small {
+
+        display: none;
     }
+
+    .page-content {
+
+        padding: 15px;
+    }
+
 }
 
-@media(max-width:576px){
 
-    .user h4{
-        font-size:.85rem;
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media(max-width: 576px) {
+
+    .user h4 {
+
+        font-size: .85rem;
     }
 
-    .topbar{
-        height:70px;
+    .topbar {
+
+        height: 70px;
     }
 
     .notification-btn,
-    .mobile-btn{
-        width:42px;
-        height:42px;
+    .mobile-btn {
+
+        width: 42px;
+        height: 42px;
     }
+
 }

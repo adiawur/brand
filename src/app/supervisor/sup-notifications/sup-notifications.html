@@ -1,12 +1,16 @@
 <div class="notifications-page">
 
-    <!-- HEADER -->
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
     <div class="page-header">
 
         <div>
 
-            <h2>Notifications</h2>
+            <h2>
+                Notifications
+            </h2>
 
             <p>
                 Monitor incidents, technician updates and SLA alerts
@@ -14,81 +18,278 @@
 
         </div>
 
-        <button class="mark-btn"
-                (click)="markAllRead()">
 
-            <i class="fa-solid fa-check-double"></i>
+        <div class="header-actions">
 
-            Mark All Read
+            <button
+                class="mark-btn"
+                (click)="markAllRead()"
+                [disabled]="
+                    notifications.length === 0
+                ">
+
+                <i class="fa-solid fa-check-double"></i>
+
+                Mark All Read
+
+            </button>
+
+
+            <button
+                class="clear-btn"
+                (click)="clearAll()"
+                [disabled]="
+                    notifications.length === 0
+                ">
+
+                <i class="fa-solid fa-trash"></i>
+
+                Clear All
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ERROR
+    ====================================================== -->
+
+    <div
+        class="error-card"
+        *ngIf="errorMessage">
+
+        <i
+            class="fa-solid fa-circle-exclamation">
+        </i>
+
+        <div>
+
+            <strong>
+                Unable to load notifications
+            </strong>
+
+            <p>
+                {{ errorMessage }}
+            </p>
+
+        </div>
+
+        <button
+            (click)="retry()">
+
+            Retry
 
         </button>
 
     </div>
 
-    <!-- NOTIFICATIONS -->
 
-    <div class="notification-list">
+    <!-- =====================================================
+         LOADING
+    ====================================================== -->
 
-        <div class="notification-card"
+    <div
+        class="loading-card"
+        *ngIf="loading">
 
-             *ngFor="let notification of notifications"
+        <i
+            class="fa-solid fa-spinner fa-spin">
+        </i>
 
-             [class.unread]="!notification.read">
+        <span>
+            Loading notifications...
+        </span>
 
-            <!-- ICON -->
+    </div>
 
-            <div class="icon"
 
-                 [class.incident]="notification.type==='NEW_INCIDENT'"
-                 [class.sla]="notification.type==='SLA_ALERT'"
-                 [class.tech]="notification.type==='TECHNICIAN_UPDATE'"
-                 [class.resolved]="notification.type==='RESOLVED'"
-                 [class.escalated]="notification.type==='ESCALATED'">
+    <!-- =====================================================
+         EMPTY
+    ====================================================== -->
 
-                <i class="fa-solid"
+    <div
+        class="empty-card"
+        *ngIf="
+            !loading &&
+            !errorMessage &&
+            notifications.length === 0
+        ">
 
-                   [class.fa-bolt]="notification.type==='NEW_INCIDENT'"
-                   [class.fa-clock]="notification.type==='SLA_ALERT'"
-                   [class.fa-user-gear]="notification.type==='TECHNICIAN_UPDATE'"
-                   [class.fa-circle-check]="notification.type==='RESOLVED'"
-                   [class.fa-triangle-exclamation]="notification.type==='ESCALATED'">
+        <div class="empty-icon">
+
+            <i
+                class="fa-regular fa-bell">
+            </i>
+
+        </div>
+
+        <h3>
+            No Notifications
+        </h3>
+
+        <p>
+            You're all caught up. New notifications will appear here.
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         NOTIFICATIONS
+    ====================================================== -->
+
+    <div
+        class="notification-list"
+        *ngIf="
+            !loading &&
+            !errorMessage &&
+            notifications.length > 0
+        ">
+
+
+        <div
+            class="notification-card"
+
+            *ngFor="
+                let notification
+                of notifications
+            "
+
+            [class.unread]="
+                !notification.read
+            ">
+
+
+            <!-- =================================================
+                 ICON
+            ================================================== -->
+
+            <div
+                class="icon"
+
+                [ngClass]="
+                    getTypeClass(
+                        notification.type
+                    )
+                ">
+
+                <i
+                    class="fa-solid"
+
+                    [ngClass]="{
+
+                        'fa-bolt':
+                            notification.type === 'NEW_INCIDENT',
+
+                        'fa-clock':
+                            notification.type === 'SLA_ALERT',
+
+                        'fa-user-gear':
+                            notification.type === 'TECHNICIAN_UPDATE',
+
+                        'fa-circle-check':
+                            notification.type === 'RESOLVED',
+
+                        'fa-triangle-exclamation':
+                            notification.type === 'ESCALATED',
+
+                        'fa-bell':
+                            notification.type === 'GENERAL'
+
+                    }">
+
                 </i>
 
             </div>
 
-            <!-- CONTENT -->
+
+            <!-- =================================================
+                 CONTENT
+            ================================================== -->
 
             <div class="content">
 
                 <div class="top-row">
 
-                    <h4>{{notification.title}}</h4>
+                    <h4>
 
-                    <span>{{notification.time}}</span>
+                        {{ notification.title }}
+
+                        <span
+                            class="unread-dot"
+                            *ngIf="
+                                !notification.read
+                            ">
+                        </span>
+
+                    </h4>
+
+                    <span class="time">
+
+                        {{ notification.time }}
+
+                    </span>
 
                 </div>
 
-                <p>{{notification.message}}</p>
+
+                <p>
+
+                    {{ notification.message }}
+
+                </p>
 
             </div>
 
-            <!-- ACTIONS -->
+
+            <!-- =================================================
+                 ACTIONS
+            ================================================== -->
 
             <div class="actions">
 
-                <button
-                    *ngIf="!notification.read"
-                    class="read-btn"
-                    (click)="markAsRead(notification)">
 
-                    <i class="fa-solid fa-check"></i>
+                <!-- MARK READ -->
+
+                <button
+                    *ngIf="
+                        !notification.read
+                    "
+
+                    class="read-btn"
+
+                    title="Mark as read"
+
+                    (click)="
+                        markAsRead(notification)
+                    ">
+
+                    <i
+                        class="fa-solid fa-check">
+                    </i>
 
                 </button>
 
-                <button class="delete-btn"
-                        (click)="deleteNotification(notification.id)">
 
-                    <i class="fa-solid fa-trash"></i>
+                <!-- DELETE -->
+
+                <button
+                    class="delete-btn"
+
+                    title="Remove notification"
+
+                    (click)="
+                        deleteNotification(
+                            notification.id
+                        )
+                    ">
+
+                    <i
+                        class="fa-solid fa-trash">
+                    </i>
 
                 </button>
 

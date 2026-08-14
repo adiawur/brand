@@ -5,13 +5,17 @@
     <div class="page-header">
 
         <div>
+
             <h2>My Assignments</h2>
+
             <p>
                 Manage and update assigned field tasks
             </p>
+
         </div>
 
     </div>
+
 
     <!-- TABLE -->
 
@@ -26,75 +30,303 @@
                     <tr>
 
                         <th>ID</th>
+
                         <th>Customer</th>
+
                         <th>Type</th>
+
                         <th>Priority</th>
+
                         <th>Status</th>
+
                         <th>Location</th>
+
                         <th>Actions</th>
 
                     </tr>
 
                 </thead>
 
+
                 <tbody>
 
-                    <tr *ngFor="let item of assignments">
+                    <!-- LOADING -->
 
-                        <td>{{item.id}}</td>
+                    <tr *ngIf="loading">
 
-                        <td>{{item.customer}}</td>
+                        <td
+                            colspan="7"
+                            class="loading-cell">
 
-                        <td>{{item.type}}</td>
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+
+                            Loading assignments...
+
+                        </td>
+
+                    </tr>
+
+
+                    <!-- DATA -->
+
+                    <tr
+                        *ngFor="let item of assignments">
+
+
+                        <!-- ID -->
 
                         <td>
 
-                            <span class="priority"
-                                  [class.high]="item.priority==='High'"
-                                  [class.medium]="item.priority==='Medium'">
+                            <strong>
+                                {{item.ticketId}}
+                            </strong>
 
-                                {{item.priority}}
+                        </td>
+
+
+                        <!-- CUSTOMER -->
+
+                        <td>
+
+                            <div class="customer-cell">
+
+                                <strong>
+                                    {{item.incident?.reporterName}}
+                                </strong>
+
+                                <small>
+                                    {{item.incident?.phone}}
+                                </small>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- TYPE -->
+
+                        <td>
+
+                            {{
+                                formatType(
+                                    item.incident?.incidentType || ''
+                                )
+                            }}
+
+                        </td>
+
+
+                        <!-- PRIORITY -->
+
+                        <td>
+
+                            <span
+                                class="priority"
+
+                                [class.high]="
+                                    item.incident?.priority === 'HIGH'
+                                "
+
+                                [class.medium]="
+                                    item.incident?.priority === 'MEDIUM'
+                                "
+
+                                [class.low]="
+                                    item.incident?.priority === 'LOW'
+                                "
+
+                            >
+
+                                {{
+                                    formatPriority(
+                                        item.incident?.priority || ''
+                                    )
+                                }}
 
                             </span>
 
                         </td>
 
+
+                        <!-- STATUS -->
+
                         <td>
 
-                            <span class="status">
+                            <span
 
-                                {{item.status}}
+                                class="status"
+
+                                [class.assigned]="
+                                    item.incident?.status === 'ASSIGNED'
+                                "
+
+                                [class.progress]="
+                                    item.incident?.status === 'IN_PROGRESS'
+                                "
+
+                                [class.completed]="
+                                    item.incident?.status === 'COMPLETED'
+                                "
+
+                                [class.resolved]="
+                                    item.incident?.status === 'RESOLVED'
+                                "
+
+                            >
+
+                                {{
+                                    formatStatus(
+                                        item.incident?.status || ''
+                                    )
+                                }}
 
                             </span>
 
                         </td>
 
-                        <td>{{item.location}}</td>
+
+                        <!-- LOCATION -->
+
+                        <td>
+
+                            <span class="location-text">
+
+                                {{item.incident?.location}}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- ACTIONS -->
 
                         <td>
 
                             <div class="actions">
 
-                                <button class="view-btn"
-                                        (click)="openDetails(item)">
 
-                                    <i class="fa-solid fa-eye"></i>
+                                <!-- VIEW -->
+
+                                <button
+                                    class="view-btn"
+
+                                    title="View Details"
+
+                                    (click)="openDetails(item)"
+                                >
+
+                                    <i
+                                        class="fa-solid fa-eye">
+                                    </i>
+
+                                </button>
+
+
+                                <!-- MAP -->
+
+                                <button
+                                    class="map-btn"
+
+                                    title="Open Map"
+
+                                    (click)="openMap(item)"
+                                >
+
+                                    <i
+                                        class="fa-solid fa-location-dot">
+                                    </i>
 
                                 </button>
 
-                                <button class="map-btn"
-                                        (click)="openMap(item)">
 
-                                    <i class="fa-solid fa-location-dot"></i>
+                                <!-- START / UPDATE -->
+
+                                <button
+
+                                    *ngIf="
+                                        isAssigned(item)
+                                        ||
+                                        isInProgress(item)
+                                    "
+
+                                    class="update-btn"
+
+                                    [title]="
+                                        isAssigned(item)
+                                        ? 'Start Work'
+                                        : 'Complete Work'
+                                    "
+
+                                    (click)="openUpdate(item)"
+                                >
+
+                                    <i
+                                        class="fa-solid"
+
+                                        [class.fa-play]="
+                                            isAssigned(item)
+                                        "
+
+                                        [class.fa-pen]="
+                                            isInProgress(item)
+                                        "
+                                    >
+                                    </i>
 
                                 </button>
 
-                                <button class="update-btn"
-                                        (click)="openUpdate(item)">
 
-                                    <i class="fa-solid fa-pen"></i>
+                                <!-- COMPLETED -->
 
-                                </button>
+                                <span
+
+                                    *ngIf="isCompleted(item)"
+
+                                    class="completed-icon"
+
+                                    title="Completed"
+                                >
+
+                                    <i
+                                        class="fa-solid fa-check">
+                                    </i>
+
+                                </span>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    <!-- EMPTY -->
+
+                    <tr
+                        *ngIf="
+                            !loading &&
+                            assignments.length === 0
+                        "
+                    >
+
+                        <td
+                            colspan="7"
+                            class="empty-cell"
+                        >
+
+                            <div class="empty-state">
+
+                                <i
+                                    class="fa-solid fa-clipboard-check">
+                                </i>
+
+                                <strong>
+                                    No assignments
+                                </strong>
+
+                                <span>
+                                    You currently have no assigned incidents.
+                                </span>
 
                             </div>
 
@@ -113,39 +345,218 @@
 </div>
 
 
-<!-- DETAILS MODAL -->
 
-<div class="modal-backdrop"
-     *ngIf="showDetailsModal">
+<!-- =========================================================
+     DETAILS MODAL
+========================================================= -->
 
-    <div class="modal">
+<div
+    class="modal-backdrop"
+
+    *ngIf="showDetailsModal"
+>
+
+    <div class="modal details-modal">
+
+
+        <!-- HEADER -->
 
         <div class="modal-header">
 
-            <h3>Assignment Details</h3>
+            <div>
 
-            <button (click)="closeDetails()">
-                <i class="fa-solid fa-xmark"></i>
+                <span class="modal-label">
+                    ASSIGNMENT DETAILS
+                </span>
+
+                <h3>
+                    {{selectedAssignment?.ticketId}}
+                </h3>
+
+            </div>
+
+
+            <button
+                (click)="closeDetails()"
+            >
+
+                <i
+                    class="fa-solid fa-xmark">
+                </i>
+
             </button>
 
         </div>
 
+
+        <!-- BODY -->
+
         <div class="modal-body">
 
-            <p><strong>ID:</strong>
-                {{selectedAssignment?.id}}</p>
 
-            <p><strong>Customer:</strong>
-                {{selectedAssignment?.customer}}</p>
+            <div class="detail-grid">
 
-            <p><strong>Type:</strong>
-                {{selectedAssignment?.type}}</p>
 
-            <p><strong>Location:</strong>
-                {{selectedAssignment?.location}}</p>
+                <div class="detail-item">
 
-            <p><strong>Description:</strong>
-                {{selectedAssignment?.description}}</p>
+                    <label>Customer</label>
+
+                    <strong>
+                        {{
+                            selectedAssignment?.incident?.reporterName
+                        }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <label>Phone</label>
+
+                    <strong>
+                        {{
+                            selectedAssignment?.incident?.phone
+                        }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <label>Incident Type</label>
+
+                    <strong>
+
+                        {{
+                            formatType(
+                                selectedAssignment?.incident?.incidentType || ''
+                            )
+                        }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <label>Priority</label>
+
+                    <strong>
+
+                        {{
+                            formatPriority(
+                                selectedAssignment?.incident?.priority || ''
+                            )
+                        }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <label>Status</label>
+
+                    <strong>
+
+                        {{
+                            formatStatus(
+                                selectedAssignment?.incident?.status || ''
+                            )
+                        }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <label>Location</label>
+
+                    <strong>
+
+                        {{
+                            selectedAssignment?.incident?.location
+                        }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item full">
+
+                    <label>Description</label>
+
+                    <p>
+
+                        {{
+                            selectedAssignment?.incident?.description
+                        }}
+
+                    </p>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <label>Assigned At</label>
+
+                    <strong>
+
+                        {{
+                            selectedAssignment?.assignedAt
+                            | date:'dd MMM yyyy, HH:mm'
+                        }}
+
+                    </strong>
+
+                </div>
+
+
+                <div
+                    class="detail-item"
+
+                    *ngIf="selectedAssignment?.completedAt"
+                >
+
+                    <label>Completed At</label>
+
+                    <strong>
+
+                        {{
+                            selectedAssignment?.completedAt
+                            | date:'dd MMM yyyy, HH:mm'
+                        }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FOOTER -->
+
+        <div class="modal-footer">
+
+            <button
+                class="cancel-btn"
+
+                (click)="closeDetails()"
+            >
+
+                Close
+
+            </button>
 
         </div>
 
@@ -154,75 +565,301 @@
 </div>
 
 
-<!-- UPDATE MODAL -->
 
-<div class="modal-backdrop"
-     *ngIf="showUpdateModal">
+<!-- =========================================================
+     WORK MODAL
+========================================================= -->
 
-    <div class="modal">
+<div
+    class="modal-backdrop"
+
+    *ngIf="showUpdateModal"
+>
+
+    <div class="modal work-modal">
+
+
+        <!-- HEADER -->
 
         <div class="modal-header">
 
-            <h3>Update Assignment</h3>
+            <div>
 
-            <button (click)="closeUpdate()">
-                <i class="fa-solid fa-xmark"></i>
+                <span class="modal-label">
+                    FIELD WORK
+                </span>
+
+                <h3>
+
+                    {{selectedAssignment?.ticketId}}
+
+                </h3>
+
+            </div>
+
+
+            <button
+                (click)="closeUpdate()"
+            >
+
+                <i
+                    class="fa-solid fa-xmark">
+                </i>
+
             </button>
 
         </div>
 
+
+        <!-- BODY -->
+
         <div class="modal-body">
 
-            <div class="form-group">
 
-                <label>Status</label>
+            <!-- SUMMARY -->
 
-                <select [(ngModel)]="updateData.status">
+            <div class="assignment-summary">
 
-                    <option>Assigned</option>
-                    <option>In Progress</option>
-                    <option>Completed</option>
+                <div class="summary-icon">
 
-                </select>
+                    <i
+                        class="fa-solid fa-bolt">
+                    </i>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+
+                        {{
+                            formatType(
+                                selectedAssignment?.incident?.incidentType || ''
+                            )
+                        }}
+
+                    </strong>
+
+                    <span>
+
+                        {{
+                            selectedAssignment?.incident?.location
+                        }}
+
+                    </span>
+
+                </div>
 
             </div>
 
-            <div class="form-group">
 
-                <label>Work Notes</label>
+            <!-- ASSIGNED -->
 
-                <textarea rows="5"
-                          [(ngModel)]="updateData.notes">
+            <div
+                *ngIf="
+                    selectedAssignment &&
+                    isAssigned(selectedAssignment)
+                "
 
-                </textarea>
+                class="start-work-section"
+            >
+
+                <div class="work-status-icon">
+
+                    <i
+                        class="fa-solid fa-play">
+                    </i>
+
+                </div>
+
+                <h4>
+                    Ready to Start
+                </h4>
+
+                <p>
+
+                    Start the field work when you arrive
+                    and begin working on this incident.
+
+                </p>
+
+
+                <button
+
+                    class="start-btn"
+
+                    [disabled]="submitting"
+
+                    (click)="startWork()"
+                >
+
+                    <i
+                        class="fa-solid fa-play"
+                        *ngIf="!submitting">
+                    </i>
+
+                    <i
+                        class="fa-solid fa-spinner fa-spin"
+                        *ngIf="submitting">
+                    </i>
+
+                    {{submitting ? 'Starting...' : 'Start Work'}}
+
+                </button>
 
             </div>
 
-            <div class="form-group">
 
-                <label>Photo Evidence</label>
+            <!-- IN PROGRESS -->
 
-                <input
-                    type="file"
-                    (change)="onFileSelected($event)">
+            <div
+                *ngIf="
+                    selectedAssignment &&
+                    isInProgress(selectedAssignment)
+                "
+            >
+
+                <div class="progress-banner">
+
+                    <i
+                        class="fa-solid fa-person-digging">
+                    </i>
+
+                    <div>
+
+                        <strong>
+                            Work In Progress
+                        </strong>
+
+                        <span>
+                            Complete the task after finishing the field work.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Completion Notes
+                    </label>
+
+                    <textarea
+
+                        rows="5"
+
+                        [(ngModel)]="completionNotes"
+
+                        placeholder="Describe the work performed and the resolution..."
+                    >
+                    </textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Photo Evidence
+                    </label>
+
+                    <div class="file-upload">
+
+                        <input
+
+                            id="completionPhoto"
+
+                            type="file"
+
+                            accept="image/*"
+
+                            (change)="onFileSelected($event)"
+                        >
+
+                        <label
+                            for="completionPhoto"
+                            class="file-label"
+                        >
+
+                            <i
+                                class="fa-solid fa-camera">
+                            </i>
+
+                            <span>
+
+                                {{
+                                    selectedFile
+                                    ? selectedFile.name
+                                    : 'Choose completion photo'
+                                }}
+
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                    <small class="form-hint">
+
+                        Upload a photo showing the completed field work.
+
+                    </small>
+
+                </div>
 
             </div>
 
         </div>
 
+
+        <!-- FOOTER -->
+
         <div class="modal-footer">
 
-            <button class="cancel-btn"
-                    (click)="closeUpdate()">
+
+            <button
+                class="cancel-btn"
+
+                (click)="closeUpdate()"
+            >
 
                 Cancel
 
             </button>
 
-            <button class="save-btn"
-                    (click)="submitUpdate()">
 
-                Submit Update
+            <button
+
+                *ngIf="
+                    selectedAssignment &&
+                    isInProgress(selectedAssignment)
+                "
+
+                class="save-btn"
+
+                [disabled]="submitting"
+
+                (click)="completeWork()"
+            >
+
+                <i
+                    class="fa-solid fa-check"
+                    *ngIf="!submitting">
+                </i>
+
+                <i
+                    class="fa-solid fa-spinner fa-spin"
+                    *ngIf="submitting">
+                </i>
+
+                {{
+                    submitting
+                    ? 'Submitting...'
+                    : 'Complete Work'
+                }}
 
             </button>
 

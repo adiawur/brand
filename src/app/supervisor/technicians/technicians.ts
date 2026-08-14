@@ -1,91 +1,168 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
+import {
+  User,
+  UserService
+} from '../../services/user.service';
+
+import {
+  AlertService
+} from '../../services/alert.service';
 
 @Component({
   selector: 'app-technicians',
-  imports: [CommonModule,FormsModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   templateUrl: './technicians.html',
   styleUrl: './technicians.css',
 })
-export class Technicians {
+export class Technicians implements OnInit {
 
-  showAddModal = false;
+  technicians: User[] = [];
+
+  selectedTechnician: User | null = null;
+
   showViewModal = false;
-  showEditModal = false;
 
-  selectedTechnician: any = null;
+  searchTerm = '';
 
-  technicians = [
+  loading = false;
 
-    {
-      name: 'Ali Hassan',
-      email: 'ali@zeco.co.tz',
-      phone: '+255712345678',
-      zone: 'Urban West',
-      status: 'Available',
-      image: 'assets/img/user.jpg'
-    },
+  constructor(
+    private userService: UserService,
+    private alertService: AlertService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-    {
-      name: 'Juma Salim',
-      email: 'juma@zeco.co.tz',
-      phone: '+255712345679',
-      zone: 'North A',
-      status: 'Busy',
-      image: 'assets/img/user.jpg'
-    },
+  ngOnInit(): void {
 
-    {
-      name: 'Fatma Omar',
-      email: 'fatma@zeco.co.tz',
-      phone: '+255712345680',
-      zone: 'Urban',
-      status: 'Offline',
-      image: 'assets/img/user.jpg'
+    this.loadTechnicians();
+
+  }
+
+  loadTechnicians(): void {
+
+    this.loading = true;
+
+    this.userService
+      .getTechnicians()
+      .subscribe({
+
+        next: (technicians) => {
+
+          this.technicians = technicians;
+
+          this.loading = false;
+          this.cdr.detectChanges();
+
+        },
+
+        error: (error) => {
+
+          this.loading = false;
+
+          this.alertService.error(
+            'Operation Failed',
+            this.getErrorMessage(
+              error,
+              'Unable to load technicians.'
+            )
+          );
+
+        }
+
+      });
+
+  }
+
+  get filteredTechnicians(): User[] {
+
+    const search =
+      this.searchTerm
+        .toLowerCase()
+        .trim();
+
+    if (!search) {
+
+      return this.technicians;
+
     }
 
-  ];
+    return this.technicians.filter(
+      technician =>
 
-  newTechnician = {
-    name: '',
-    email: '',
-    phone: '',
-    zone: ''
-  };
+        technician.fullName
+          .toLowerCase()
+          .includes(search) ||
 
-  openAddModal() {
-    this.showAddModal = true;
+        technician.username
+          .toLowerCase()
+          .includes(search) ||
+
+        technician.email
+          .toLowerCase()
+          .includes(search) ||
+
+        technician.phone
+          .toLowerCase()
+          .includes(search) ||
+
+        technician.zone
+          ?.toLowerCase()
+          .includes(search) ||
+
+        technician.specialization
+          ?.toLowerCase()
+          .includes(search)
+
+    );
+
   }
 
-  closeAddModal() {
-    this.showAddModal = false;
-  }
+  openViewModal(
+    technician: User
+  ): void {
 
-  saveTechnician() {
-    this.closeAddModal();
-  }
-
-  openViewModal(technician: any) {
     this.selectedTechnician = technician;
+
     this.showViewModal = true;
+
   }
 
-  closeViewModal() {
+  closeViewModal(): void {
+
     this.showViewModal = false;
+
+    this.selectedTechnician = null;
+
   }
 
-  openEditModal(technician: any) {
-    this.selectedTechnician = {...technician};
-    this.showEditModal = true;
-  }
+  private getErrorMessage(
+    error: any,
+    fallback: string
+  ): string {
 
-  closeEditModal() {
-    this.showEditModal = false;
-  }
+    if (error?.error?.message) {
 
-  updateTechnician() {
-    this.closeEditModal();
+      return error.error.message;
+
+    }
+
+    if (
+      typeof error?.error === 'string'
+    ) {
+
+      return error.error;
+
+    }
+
+    return fallback;
+
   }
 
 }

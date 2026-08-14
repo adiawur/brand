@@ -1,0 +1,869 @@
+<div class="tracking-page">
+
+    <!-- BACK TO HOME -->
+
+    <div class="top-navigation">
+
+        <button
+            class="back-home"
+            type="button">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Back to Home
+
+        </button>
+
+    </div>
+
+
+    <!-- HERO / INTRO -->
+
+    <section class="tracking-hero">
+
+        <div class="hero-icon">
+
+            <i class="fa-solid fa-location-crosshairs"></i>
+
+        </div>
+
+        <h1>Track Your Incident</h1>
+
+        <p>
+            Check the progress of incidents you have reported
+            and stay updated on their status.
+        </p>
+
+    </section>
+
+
+    <!-- SEARCH CARD -->
+
+    <section class="tracking-card">
+
+        <div class="card-heading">
+
+            <div>
+
+                <h2>Find Your Incidents</h2>
+
+                <p>
+                    Enter the details you used when reporting
+                    the incident.
+                </p>
+
+            </div>
+
+            <div class="secure-icon">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+            </div>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <form
+            class="tracking-form">
+
+            <!-- FULL NAME -->
+
+            <div class="form-group">
+
+                <label for="fullName">
+
+                    Full Name
+
+                    <span>*</span>
+
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-regular fa-user"></i>
+
+                    <input
+                        id="fullName"
+                        type="text"
+                        placeholder="Enter your full name">
+
+                </div>
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="form-group">
+
+                <label for="phone">
+
+                    Phone Number
+
+                    <span>*</span>
+
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-solid fa-phone"></i>
+
+                    <input
+                        id="phone"
+                        type="tel"
+                        placeholder="+255 7XX XXX XXX">
+
+                </div>
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label for="email">
+
+                    Email Address
+
+                    <small>(Optional)</small>
+
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-regular fa-envelope"></i>
+
+                    <input
+                        id="email"
+                        type="email"
+                        placeholder="example@email.com">
+
+                </div>
+
+            </div>
+
+
+            <!-- SUBMIT -->
+
+            <button
+                type="submit"
+                class="track-btn">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                Track My Incidents
+
+            </button>
+
+        </form>
+
+
+        <div class="privacy-note">
+
+            <i class="fa-solid fa-lock"></i>
+
+            <span>
+                Your information is only used to find
+                incidents reported using these details.
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- RESULTS SECTION -->
+    <!-- This section will be displayed after backend search -->
+    <!-- ================================================= -->
+
+    <section class="results-section">
+
+        <!-- RESULTS HEADER -->
+
+        <div class="results-header">
+
+            <div>
+
+                <span class="results-label">
+                    TRACKING RESULTS
+                </span>
+
+                <h2>Your Reported Incidents</h2>
+
+                <p>
+                    Incidents matching the information you provided.
+                </p>
+
+            </div>
+
+            <div class="results-count">
+
+                <strong>3</strong>
+
+                <span>Incidents</span>
+
+            </div>
+
+        </div>
+
+
+        <!-- INCIDENT LIST -->
+
+        <div class="incident-list">
+
+
+            <!-- ========================================= -->
+            <!-- INCIDENT 1 -->
+            <!-- ========================================= -->
+
+            <div class="incident-card overdue">
+
+                <!-- CARD HEADER -->
+
+                <div class="incident-top">
+
+                    <div class="incident-reference">
+
+                        <span>
+                            Incident ID
+                        </span>
+
+                        <strong>
+                            INC-00125
+                        </strong>
+
+                    </div>
+
+                    <span class="status overdue-status">
+
+                        <i class="fa-solid fa-clock"></i>
+
+                        Overdue
+
+                    </span>
+
+                </div>
+
+
+                <!-- INCIDENT DETAILS -->
+
+                <div class="incident-details">
+
+                    <div class="detail">
+
+                        <i class="fa-solid fa-bolt"></i>
+
+                        <div>
+
+                            <span>Incident Type</span>
+
+                            <strong>
+                                Power Outage
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <i class="fa-solid fa-location-dot"></i>
+
+                        <div>
+
+                            <span>Location</span>
+
+                            <strong>
+                                Kisauni
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <i class="fa-regular fa-calendar"></i>
+
+                        <div>
+
+                            <span>Reported</span>
+
+                            <strong>
+                                12 Aug 2026
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <i class="fa-solid fa-user-gear"></i>
+
+                        <div>
+
+                            <span>Assigned To</span>
+
+                            <strong>
+                                Technician Assigned
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PROGRESS -->
+
+                <div class="progress-area">
+
+                    <div class="progress-header">
+
+                        <span>
+                            Incident Progress
+                        </span>
+
+                        <strong>
+                            35%
+                        </strong>
+
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-fill"
+                            style="width:35%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TIMELINE -->
+
+                <div class="incident-timeline">
+
+                    <div class="timeline-item completed">
+
+                        <span class="timeline-dot"></span>
+
+                        <div>
+
+                            <strong>
+                                Incident Reported
+                            </strong>
+
+                            <small>
+                                12 Aug 2026 · 08:42 AM
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="timeline-item completed">
+
+                        <span class="timeline-dot"></span>
+
+                        <div>
+
+                            <strong>
+                                Incident Reviewed
+                            </strong>
+
+                            <small>
+                                12 Aug 2026 · 09:10 AM
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="timeline-item active">
+
+                        <span class="timeline-dot"></span>
+
+                        <div>
+
+                            <strong>
+                                Technician Assigned
+                            </strong>
+
+                            <small>
+                                Currently in progress
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="timeline-item">
+
+                        <span class="timeline-dot"></span>
+
+                        <div>
+
+                            <strong>
+                                Resolution
+                            </strong>
+
+                            <small>
+                                Pending
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- WARNING -->
+
+                <div class="delay-warning">
+
+                    <div>
+
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            This incident is taking longer than expected.
+                        </strong>
+
+                        <p>
+                            You can send a complaint or feedback
+                            regarding this incident.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTION -->
+
+                <div class="incident-actions">
+
+                    <button
+                        class="feedback-btn">
+
+                        <i class="fa-regular fa-comment-dots"></i>
+
+                        Send Feedback / Complaint
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================= -->
+            <!-- INCIDENT 2 -->
+            <!-- ========================================= -->
+
+            <div class="incident-card">
+
+                <div class="incident-top">
+
+                    <div class="incident-reference">
+
+                        <span>
+                            Incident ID
+                        </span>
+
+                        <strong>
+                            INC-00131
+                        </strong>
+
+                    </div>
+
+                    <span class="status progress-status">
+
+                        <i class="fa-solid fa-spinner"></i>
+
+                        In Progress
+
+                    </span>
+
+                </div>
+
+
+                <div class="incident-details">
+
+                    <div class="detail">
+
+                        <i class="fa-solid fa-bolt"></i>
+
+                        <div>
+
+                            <span>Incident Type</span>
+
+                            <strong>
+                                Transformer Fault
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <i class="fa-solid fa-location-dot"></i>
+
+                        <div>
+
+                            <span>Location</span>
+
+                            <strong>
+                                Mwera
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <i class="fa-regular fa-calendar"></i>
+
+                        <div>
+
+                            <span>Reported</span>
+
+                            <strong>
+                                13 Aug 2026
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <i class="fa-solid fa-user-gear"></i>
+
+                        <div>
+
+                            <span>Assigned To</span>
+
+                            <strong>
+                                Technician Assigned
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="progress-area">
+
+                    <div class="progress-header">
+
+                        <span>
+                            Incident Progress
+                        </span>
+
+                        <strong>
+                            65%
+                        </strong>
+
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-fill"
+                            style="width:65%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="incident-timeline">
+
+                    <div class="timeline-item completed">
+
+                        <span class="timeline-dot"></span>
+
+                        <div>
+
+                            <strong>
+                                Incident Reported
+                            </strong>
+
+                            <small>
+                                13 Aug 2026 · 10:15 AM
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="timeline-item completed">
+
+                        <span class="timeline-dot"></span>
+
+                        <div>
+
+                            <strong>
+                                Incident Reviewed
+                            </strong>
+
+                            <small>
+                                13 Aug 2026 · 10:35 AM
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="timeline-item active">
+
+                        <span class="timeline-dot"></span>
+
+                        <div>
+
+                            <strong>
+                                Technician Working
+                            </strong>
+
+                            <small>
+                                Currently in progress
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="timeline-item">
+
+                        <span class="timeline-dot"></span>
+
+                        <div>
+
+                            <strong>
+                                Resolution
+                            </strong>
+
+                            <small>
+                                Pending
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================= -->
+            <!-- INCIDENT 3 -->
+            <!-- ========================================= -->
+
+            <div class="incident-card completed-card">
+
+                <div class="incident-top">
+
+                    <div class="incident-reference">
+
+                        <span>
+                            Incident ID
+                        </span>
+
+                        <strong>
+                            INC-00098
+                        </strong>
+
+                    </div>
+
+                    <span class="status completed-status">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                        Completed
+
+                    </span>
+
+                </div>
+
+
+                <div class="incident-details">
+
+                    <div class="detail">
+
+                        <i class="fa-solid fa-bolt"></i>
+
+                        <div>
+
+                            <span>Incident Type</span>
+
+                            <strong>
+                                Meter Issue
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <i class="fa-solid fa-location-dot"></i>
+
+                        <div>
+
+                            <span>Location</span>
+
+                            <strong>
+                                Stone Town
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <i class="fa-regular fa-calendar"></i>
+
+                        <div>
+
+                            <span>Reported</span>
+
+                            <strong>
+                                08 Aug 2026
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                        <div>
+
+                            <span>Resolved</span>
+
+                            <strong>
+                                09 Aug 2026
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="progress-area">
+
+                    <div class="progress-header">
+
+                        <span>
+                            Incident Progress
+                        </span>
+
+                        <strong>
+                            100%
+                        </strong>
+
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-fill complete"
+                            style="width:100%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="resolved-message">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    <div>
+
+                        <strong>
+                            Incident Resolved
+                        </strong>
+
+                        <p>
+                            This incident has been successfully
+                            resolved by our technical team.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- NO RESULTS STATE -->
+
+    <section class="empty-state">
+
+        <div class="empty-icon">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+        </div>
+
+        <h3>No incidents found</h3>
+
+        <p>
+            We couldn't find any incidents matching the
+            information provided.
+        </p>
+
+        <button>
+            Try Again
+        </button>
+
+    </section>
+
+</div>

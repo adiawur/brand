@@ -1,96 +1,172 @@
 <div class="wrapper">
 
-    <!-- OVERLAY -->
+    <!-- =====================================================
+         MOBILE OVERLAY
+    ====================================================== -->
 
-    <div class="overlay"
-         *ngIf="mobileSidebar"
-         (click)="toggleMobileSidebar()">
+    <div
+        class="overlay"
+        *ngIf="mobileSidebar"
+        (click)="toggleMobileSidebar()">
     </div>
 
-    <!-- SIDEBAR -->
 
-    <aside class="sidebar"
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside
+        class="sidebar"
 
         [class.collapsed]="sidebarCollapsed"
+
         [class.mobile-open]="mobileSidebar">
+
+
+        <!-- LOGO -->
 
         <div class="logo-area">
 
-            <img src="/img/favicon-tr.png">
+            <img
+                src="/img/favicon-tr.png"
+                alt="ZECO">
 
-            <div *ngIf="!sidebarCollapsed" style="display: block;;">
+
+            <div
+                *ngIf="!sidebarCollapsed">
 
                 <div class="brand">
-                    <h6>zeco help desk</h6>
+
+                    <h6>
+                        zeco help desk
+                    </h6>
+
                 </div>
-                <!-- <small>help desk</small> -->
-                <span>Supervisor</span>
+
+                <span>
+                    Supervisor
+                </span>
 
             </div>
 
         </div>
 
+
+        <!-- MENU -->
+
         <ul>
 
-            <li routerLink="dashboard"
-                routerLinkActive="active">
+
+            <!-- DASHBOARD -->
+
+            <li
+                routerLink="dashboard"
+                routerLinkActive="active"
+                (click)="toggleMobileSidebar()">
 
                 <i class="fa-solid fa-gauge"></i>
-                <span *ngIf="!sidebarCollapsed">
+
+                <span
+                    *ngIf="!sidebarCollapsed">
+
                     Dashboard
+
                 </span>
 
             </li>
 
-            <li routerLink="technicians"
-                routerLinkActive="active">
+
+            <!-- TECHNICIANS -->
+
+            <li
+                routerLink="technicians"
+                routerLinkActive="active"
+                (click)="toggleMobileSidebar()">
 
                 <i class="fa-solid fa-user-gear"></i>
 
-                <span *ngIf="!sidebarCollapsed">
+                <span
+                    *ngIf="!sidebarCollapsed">
+
                     Technicians
+
                 </span>
 
             </li>
 
-            <li routerLink="incidents"
-                routerLinkActive="active">
+
+            <!-- INCIDENTS -->
+
+            <li
+                routerLink="incidents"
+                routerLinkActive="active"
+                (click)="toggleMobileSidebar()">
 
                 <i class="fa-solid fa-bolt"></i>
 
-                <span *ngIf="!sidebarCollapsed">
+                <span
+                    *ngIf="!sidebarCollapsed">
+
                     Incidents
+
                 </span>
 
             </li>
 
-            <li routerLink="notifications"
-                routerLinkActive="active">
+
+            <!-- NOTIFICATIONS -->
+
+            <li
+                routerLink="notifications"
+                routerLinkActive="active"
+                (click)="toggleMobileSidebar()">
 
                 <i class="fa-regular fa-bell"></i>
 
-                <span *ngIf="!sidebarCollapsed">
+                <span
+                    *ngIf="!sidebarCollapsed">
+
                     Notifications
+
                 </span>
 
             </li>
 
-            <li routerLink="profile"
-                routerLinkActive="active">
+
+            <!-- PROFILE -->
+
+            <li
+                routerLink="profile"
+                routerLinkActive="active"
+                (click)="toggleMobileSidebar()">
 
                 <i class="fa-solid fa-user"></i>
 
-                <span *ngIf="!sidebarCollapsed">
+                <span
+                    *ngIf="!sidebarCollapsed">
+
                     Profile
+
                 </span>
 
             </li>
 
-             <li (click)="logout()">
-                <i class="fa-solid fa-right-from-bracket"></i>
 
-                <span *ngIf="!sidebarCollapsed">
+            <!-- LOGOUT -->
+
+            <li
+                class="logout-item"
+                (click)="logout()">
+
+                <i
+                    class="fa-solid fa-right-from-bracket">
+                </i>
+
+                <span
+                    *ngIf="!sidebarCollapsed">
+
                     Logout
+
                 </span>
 
             </li>
@@ -99,48 +175,101 @@
 
     </aside>
 
-    <!-- MAIN -->
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
 
     <div class="main-content">
 
-        <!-- TOPBAR -->
+
+        <!-- =================================================
+             TOPBAR
+        ================================================== -->
 
         <header class="topbar">
 
+
+            <!-- LEFT -->
+
             <div class="left">
 
-                <button class="mobile-btn"
-                        (click)="toggleMobileSidebar()">
+
+                <!-- MOBILE -->
+
+                <button
+                    class="mobile-btn"
+                    (click)="toggleMobileSidebar()">
 
                     <i class="fa-solid fa-bars"></i>
 
                 </button>
 
-                <button class="desktop-btn"
-                        (click)="toggleSidebar()">
+
+                <!-- DESKTOP -->
+
+                <button
+                    class="desktop-btn"
+                    (click)="toggleSidebar()">
 
                     <i class="fa-solid fa-bars"></i>
 
                 </button>
+
 
             </div>
 
+
+            <!-- RIGHT -->
+
             <div class="right">
 
-                <button class="notification-btn">
 
-                    <i class="fa-regular fa-bell"></i>
+                <!-- DATE -->
+
+                <div class="top-date">
+
+                    <i
+                        class="fa-regular fa-calendar">
+                    </i>
+
+                    <span>
+                        {{ today | date:'dd MMM yyyy' }}
+                    </span>
+
+                </div>
+
+
+                <!-- NOTIFICATIONS -->
+
+                <button
+                    class="notification-btn">
+
+                    <i
+                        class="fa-regular fa-bell">
+                    </i>
 
                 </button>
 
+
+                <!-- USER -->
+
                 <div class="user">
 
-                    <img src="/img/sup.jfif">
+                    <img
+                        src="/img/sup.jfif"
+                        alt="Supervisor">
+
 
                     <div>
 
-                        <h4>Supervisor</h4>
-                        <small>ZECO Staff</small>
+                        <h4>
+                            Supervisor
+                        </h4>
+
+                        <small>
+                            ZECO Staff
+                        </small>
 
                     </div>
 
@@ -150,7 +279,10 @@
 
         </header>
 
-        <!-- CHILD -->
+
+        <!-- =================================================
+             CHILD PAGES
+        ================================================== -->
 
         <div class="page-content">
 
