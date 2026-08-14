@@ -27,51 +27,50 @@ export type Priority =
   | 'MEDIUM'
   | 'HIGH';
 
-export interface Incident {
+export interface TrackIncidentRequest {
 
-  id: number;
-
-  ticketId: string;
-
-  reporterName: string;
+  fullName: string;
 
   phone: string;
 
   email?: string;
+}
+export interface Incident {
+
+  id: number;
+  ticketId: string;
+  reporterName: string;
+  phone: string;
+  email?: string;
 
   incidentType: IncidentType;
-
   description: string;
-
   location: string;
-
   landmark?: string;
 
   latitude: number;
-
   longitude: number;
 
   attachment?: string;
 
   priority: Priority;
-
   status: IncidentStatus;
 
   reportedAt: string;
-
   updatedAt?: string;
 
   slaDeadline?: string;
-
   slaStatus: string;
 
   elapsedMinutes: number;
-
   remainingMinutes?: number;
 
   resolutionNotes?: string;
 
   slaAlertSent: boolean;
+
+  // Complaint / Feedback
+  complaintAllowed?: boolean;
 }
 
 @Injectable({
@@ -139,5 +138,40 @@ export class IncidentService {
     );
 
   }
+
+  // ==========================================
+  // TRACK INCIDENTS
+  // ==========================================
+
+  trackIncidents(
+    request: TrackIncidentRequest
+  ): Observable<Incident[]> {
+
+    return this.http.post<Incident[]>(
+      `${this.apiUrl}/track`,
+      request
+    );
+
+  }
+
+  submitComplaint(request: {
+
+  ticketId: string;
+
+  fullName: string;
+
+  phone: string;
+
+  email?: string;
+
+  message: string;
+
+}): Observable<any> {
+
+  return this.http.post<any>(
+    `${this.apiUrl}/complaint`,
+    request
+  );
+}
 
 }

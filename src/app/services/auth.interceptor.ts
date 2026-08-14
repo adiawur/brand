@@ -6,15 +6,36 @@ import {
 export const authInterceptor: HttpInterceptorFn =
   (req, next) => {
 
+
     // =====================================================
-    // DO NOT ATTACH TOKEN TO LOGIN/AUTH
+    // PUBLIC ENDPOINTS
+    // DO NOT ATTACH JWT
     // =====================================================
 
     if (
+
+      // Authentication
       req.url.includes('/api/auth/')
+
+      ||
+
+      // Public incident reporting
+      req.url.includes('/api/incidents/report')
+
+      ||
+
+      // Public incident tracking
+      req.url.includes('/api/incidents/track')
+
+      ||
+
+      // Public customer complaint / feedback
+      req.url.includes('/api/incidents/complaint')
+
     ) {
 
       return next(req);
+
     }
 
 
@@ -35,6 +56,7 @@ export const authInterceptor: HttpInterceptorFn =
     if (!token) {
 
       return next(req);
+
     }
 
 
@@ -56,4 +78,5 @@ export const authInterceptor: HttpInterceptorFn =
 
 
     return next(authRequest);
+
   };

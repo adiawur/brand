@@ -1,12 +1,15 @@
 <div class="tracking-page">
 
-    <!-- BACK TO HOME -->
+    <!-- ================================================= -->
+    <!-- TOP NAVIGATION -->
+    <!-- ================================================= -->
 
     <div class="top-navigation">
 
         <button
             class="back-home"
-            type="button">
+            type="button"
+            (click)="goBackHome()">
 
             <i class="fa-solid fa-arrow-left"></i>
 
@@ -17,17 +20,19 @@
     </div>
 
 
+    <!-- ================================================= -->
     <!-- HERO / INTRO -->
+    <!-- ================================================= -->
 
     <section class="tracking-hero">
 
         <div class="hero-icon">
-
             <i class="fa-solid fa-location-crosshairs"></i>
-
         </div>
 
-        <h1>Track Your Incident</h1>
+        <h1>
+            Track Your Incident
+        </h1>
 
         <p>
             Check the progress of incidents you have reported
@@ -37,7 +42,9 @@
     </section>
 
 
+    <!-- ================================================= -->
     <!-- SEARCH CARD -->
+    <!-- ================================================= -->
 
     <section class="tracking-card">
 
@@ -45,7 +52,9 @@
 
             <div>
 
-                <h2>Find Your Incidents</h2>
+                <h2>
+                    Find Your Incidents
+                </h2>
 
                 <p>
                     Enter the details you used when reporting
@@ -63,10 +72,15 @@
         </div>
 
 
-        <!-- FORM -->
+        <!-- ================================================= -->
+        <!-- TRACKING FORM -->
+        <!-- ================================================= -->
 
         <form
-            class="tracking-form">
+            class="tracking-form"
+            (ngSubmit)="trackIncidents()"
+            #trackingForm="ngForm">
+
 
             <!-- FULL NAME -->
 
@@ -86,8 +100,11 @@
 
                     <input
                         id="fullName"
+                        name="fullName"
                         type="text"
-                        placeholder="Enter your full name">
+                        placeholder="Enter your full name"
+                        [(ngModel)]="fullName"
+                        required>
 
                 </div>
 
@@ -112,8 +129,11 @@
 
                     <input
                         id="phone"
+                        name="phone"
                         type="tel"
-                        placeholder="+255 7XX XXX XXX">
+                        placeholder="+255 7XX XXX XXX"
+                        [(ngModel)]="phone"
+                        required>
 
                 </div>
 
@@ -128,7 +148,9 @@
 
                     Email Address
 
-                    <small>(Optional)</small>
+                    <small>
+                        (Optional)
+                    </small>
 
                 </label>
 
@@ -138,10 +160,27 @@
 
                     <input
                         id="email"
+                        name="email"
                         type="email"
-                        placeholder="example@email.com">
+                        placeholder="example@email.com"
+                        [(ngModel)]="email">
 
                 </div>
+
+            </div>
+
+
+            <!-- ERROR -->
+
+            <div
+                class="tracking-error"
+                *ngIf="errorMessage">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <span>
+                    {{ errorMessage }}
+                </span>
 
             </div>
 
@@ -150,16 +189,29 @@
 
             <button
                 type="submit"
-                class="track-btn">
+                class="track-btn"
+                [disabled]="loading">
 
-                <i class="fa-solid fa-magnifying-glass"></i>
+                <i
+                    *ngIf="!loading"
+                    class="fa-solid fa-magnifying-glass">
+                </i>
 
-                Track My Incidents
+                <i
+                    *ngIf="loading"
+                    class="fa-solid fa-spinner fa-spin">
+                </i>
+
+                <span>
+                    {{ loading ? 'Searching...' : 'Track My Incidents' }}
+                </span>
 
             </button>
 
         </form>
 
+
+        <!-- PRIVACY -->
 
         <div class="privacy-note">
 
@@ -176,11 +228,39 @@
 
 
     <!-- ================================================= -->
-    <!-- RESULTS SECTION -->
-    <!-- This section will be displayed after backend search -->
+    <!-- LOADING -->
     <!-- ================================================= -->
 
-    <section class="results-section">
+    <section
+        class="loading-state"
+        *ngIf="loading">
+
+        <div class="loading-icon">
+
+            <i class="fa-solid fa-spinner fa-spin"></i>
+
+        </div>
+
+        <h3>
+            Searching for your incidents...
+        </h3>
+
+        <p>
+            Please wait while we retrieve your
+            incident information.
+        </p>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- RESULTS -->
+    <!-- ================================================= -->
+
+    <section
+        class="results-section"
+        *ngIf="searched && incidents.length > 0">
+
 
         <!-- RESULTS HEADER -->
 
@@ -192,37 +272,48 @@
                     TRACKING RESULTS
                 </span>
 
-                <h2>Your Reported Incidents</h2>
+                <h2>
+                    Your Reported Incidents
+                </h2>
 
                 <p>
-                    Incidents matching the information you provided.
+                    Incidents matching the information
+                    you provided.
                 </p>
 
             </div>
 
             <div class="results-count">
 
-                <strong>3</strong>
+                <strong>
+                    {{ incidents.length }}
+                </strong>
 
-                <span>Incidents</span>
+                <span>
+                    {{ incidents.length === 1 ? 'Incident' : 'Incidents' }}
+                </span>
 
             </div>
 
         </div>
 
 
+        <!-- ================================================= -->
         <!-- INCIDENT LIST -->
+        <!-- ================================================= -->
 
         <div class="incident-list">
 
+            <div
+                class="incident-card"
+                *ngFor="let incident of incidents"
 
-            <!-- ========================================= -->
-            <!-- INCIDENT 1 -->
-            <!-- ========================================= -->
+                [class.completed-card]="isCompleted(incident)"
 
-            <div class="incident-card overdue">
+                [class.overdue]="isOverdue(incident)">
 
-                <!-- CARD HEADER -->
+
+                <!-- INCIDENT HEADER -->
 
                 <div class="incident-top">
 
@@ -233,16 +324,66 @@
                         </span>
 
                         <strong>
-                            INC-00125
+                            {{ incident.ticketId }}
                         </strong>
 
                     </div>
 
-                    <span class="status overdue-status">
 
-                        <i class="fa-solid fa-clock"></i>
+                    <!-- STATUS -->
 
-                        Overdue
+                    <span class="status">
+
+                        <!-- COMPLETED -->
+
+                        <i
+                            *ngIf="isCompleted(incident)"
+                            class="fa-solid fa-circle-check">
+                        </i>
+
+
+                        <!-- IN PROGRESS -->
+
+                        <i
+                            *ngIf="
+                                incident.status === 'IN_PROGRESS'
+                            "
+                            class="fa-solid fa-spinner fa-spin">
+                        </i>
+
+
+                        <!-- ASSIGNED -->
+
+                        <i
+                            *ngIf="
+                                incident.status === 'ASSIGNED'
+                            "
+                            class="fa-solid fa-user-check">
+                        </i>
+
+
+                        <!-- REPORTED -->
+
+                        <i
+                            *ngIf="
+                                incident.status === 'REPORTED'
+                            "
+                            class="fa-solid fa-clock">
+                        </i>
+
+
+                        <!-- OVERDUE -->
+
+                        <i
+                            *ngIf="
+                                !isCompleted(incident) &&
+                                isOverdue(incident)
+                            "
+                            class="fa-solid fa-triangle-exclamation">
+                        </i>
+
+
+                        {{ getStatusLabel(incident) }}
 
                     </span>
 
@@ -253,22 +394,32 @@
 
                 <div class="incident-details">
 
+                    <!-- TYPE -->
+
                     <div class="detail">
 
                         <i class="fa-solid fa-bolt"></i>
 
                         <div>
 
-                            <span>Incident Type</span>
+                            <span>
+                                Incident Type
+                            </span>
 
                             <strong>
-                                Power Outage
+                                {{
+                                    getIncidentTypeLabel(
+                                        incident.incidentType
+                                    )
+                                }}
                             </strong>
 
                         </div>
 
                     </div>
 
+
+                    <!-- LOCATION -->
 
                     <div class="detail">
 
@@ -276,16 +427,20 @@
 
                         <div>
 
-                            <span>Location</span>
+                            <span>
+                                Location
+                            </span>
 
                             <strong>
-                                Kisauni
+                                {{ incident.location }}
                             </strong>
 
                         </div>
 
                     </div>
 
+
+                    <!-- DATE -->
 
                     <div class="detail">
 
@@ -293,10 +448,15 @@
 
                         <div>
 
-                            <span>Reported</span>
+                            <span>
+                                Reported
+                            </span>
 
                             <strong>
-                                12 Aug 2026
+                                {{
+                                    incident.reportedAt
+                                    | date:'dd MMM yyyy'
+                                }}
                             </strong>
 
                         </div>
@@ -304,19 +464,61 @@
                     </div>
 
 
+                    <!-- PRIORITY -->
+
                     <div class="detail">
 
-                        <i class="fa-solid fa-user-gear"></i>
+                        <i class="fa-solid fa-flag"></i>
 
                         <div>
 
-                            <span>Assigned To</span>
+                            <span>
+                                Priority
+                            </span>
 
                             <strong>
-                                Technician Assigned
+                                {{ incident.priority }}
                             </strong>
 
                         </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="incident-description">
+
+                    <span>
+                        Description
+                    </span>
+
+                    <p>
+                        {{ incident.description }}
+                    </p>
+
+                </div>
+
+
+                <!-- LANDMARK -->
+
+                <div
+                    class="incident-landmark"
+                    *ngIf="incident.landmark">
+
+                    <i class="fa-solid fa-location-dot"></i>
+
+                    <div>
+
+                        <span>
+                            Landmark
+                        </span>
+
+                        <strong>
+                            {{ incident.landmark }}
+                        </strong>
 
                     </div>
 
@@ -334,7 +536,7 @@
                         </span>
 
                         <strong>
-                            35%
+                            {{ getProgress(incident) }}%
                         </strong>
 
                     </div>
@@ -343,7 +545,14 @@
 
                         <div
                             class="progress-fill"
-                            style="width:35%">
+
+                            [class.complete]="
+                                getProgress(incident) === 100
+                            "
+
+                            [style.width.%]="
+                                getProgress(incident)
+                            ">
                         </div>
 
                     </div>
@@ -351,13 +560,24 @@
                 </div>
 
 
-                <!-- TIMELINE -->
+                <!-- STATUS STEPS -->
 
-                <div class="incident-timeline">
+                <div class="incident-status-info">
 
-                    <div class="timeline-item completed">
 
-                        <span class="timeline-dot"></span>
+                    <!-- REPORTED -->
+
+                    <div
+                        class="status-step"
+                        [class.completed]="
+                            getProgress(incident) >= 15
+                        ">
+
+                        <div class="status-step-icon">
+
+                            <i class="fa-solid fa-file-circle-plus"></i>
+
+                        </div>
 
                         <div>
 
@@ -366,7 +586,12 @@
                             </strong>
 
                             <small>
-                                12 Aug 2026 · 08:42 AM
+
+                                {{
+                                    incident.reportedAt
+                                    | date:'dd MMM yyyy · hh:mm a'
+                                }}
+
                             </small>
 
                         </div>
@@ -374,28 +599,19 @@
                     </div>
 
 
-                    <div class="timeline-item completed">
+                    <!-- ASSIGNED -->
 
-                        <span class="timeline-dot"></span>
+                    <div
+                        class="status-step"
+                        [class.completed]="
+                            getProgress(incident) >= 35
+                        ">
 
-                        <div>
+                        <div class="status-step-icon">
 
-                            <strong>
-                                Incident Reviewed
-                            </strong>
-
-                            <small>
-                                12 Aug 2026 · 09:10 AM
-                            </small>
+                            <i class="fa-solid fa-user-check"></i>
 
                         </div>
-
-                    </div>
-
-
-                    <div class="timeline-item active">
-
-                        <span class="timeline-dot"></span>
 
                         <div>
 
@@ -403,8 +619,22 @@
                                 Technician Assigned
                             </strong>
 
-                            <small>
-                                Currently in progress
+                            <small
+                                *ngIf="
+                                    getProgress(incident) >= 35
+                                ">
+
+                                Technician assigned
+
+                            </small>
+
+                            <small
+                                *ngIf="
+                                    getProgress(incident) < 35
+                                ">
+
+                                Pending
+
                             </small>
 
                         </div>
@@ -412,9 +642,62 @@
                     </div>
 
 
-                    <div class="timeline-item">
+                    <!-- WORKING -->
 
-                        <span class="timeline-dot"></span>
+                    <div
+                        class="status-step"
+                        [class.completed]="
+                            getProgress(incident) >= 65
+                        ">
+
+                        <div class="status-step-icon">
+
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Technician Working
+                            </strong>
+
+                            <small
+                                *ngIf="
+                                    getProgress(incident) >= 65
+                                ">
+
+                                Currently in progress
+
+                            </small>
+
+                            <small
+                                *ngIf="
+                                    getProgress(incident) < 65
+                                ">
+
+                                Pending
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- RESOLUTION -->
+
+                    <div
+                        class="status-step"
+                        [class.completed]="
+                            getProgress(incident) === 100
+                        ">
+
+                        <div class="status-step-icon">
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                        </div>
 
                         <div>
 
@@ -422,8 +705,22 @@
                                 Resolution
                             </strong>
 
-                            <small>
+                            <small
+                                *ngIf="
+                                    getProgress(incident) === 100
+                                ">
+
+                                Incident resolved
+
+                            </small>
+
+                            <small
+                                *ngIf="
+                                    getProgress(incident) < 100
+                                ">
+
                                 Pending
+
                             </small>
 
                         </div>
@@ -433,11 +730,86 @@
                 </div>
 
 
-                <!-- WARNING -->
+                <!-- ================================================= -->
+                <!-- SLA -->
+                <!-- ================================================= -->
 
-                <div class="delay-warning">
+                <div
+                    class="sla-info"
+                    *ngIf="incident.slaDeadline">
 
-                    <div>
+                    <div class="sla-icon">
+
+                        <i class="fa-solid fa-stopwatch"></i>
+
+                    </div>
+
+                    <div class="sla-content">
+
+                        <span>
+                            SLA Status
+                        </span>
+
+                        <strong>
+                            {{ incident.slaStatus }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- REMAINING -->
+
+                    <div
+                        class="sla-time"
+                        *ngIf="
+                            incident.remainingMinutes !== undefined &&
+                            incident.remainingMinutes > 0
+                        ">
+
+                        <span>
+                            Remaining
+                        </span>
+
+                        <strong>
+                            {{ incident.remainingMinutes }} min
+                        </strong>
+
+                    </div>
+
+
+                    <!-- ELAPSED -->
+
+                    <div
+                        class="sla-time"
+                        *ngIf="
+                            incident.elapsedMinutes !== undefined
+                        ">
+
+                        <span>
+                            Elapsed
+                        </span>
+
+                        <strong>
+                            {{ incident.elapsedMinutes }} min
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- OVERDUE WARNING -->
+                <!-- ================================================= -->
+
+                <div
+                    class="delay-warning"
+                    *ngIf="
+                        !isCompleted(incident) &&
+                        isOverdue(incident)
+                    ">
+
+                    <div class="warning-icon">
 
                         <i class="fa-solid fa-triangle-exclamation"></i>
 
@@ -450,8 +822,8 @@
                         </strong>
 
                         <p>
-                            You can send a complaint or feedback
-                            regarding this incident.
+                            You can send a complaint regarding
+                            the delay or current progress.
                         </p>
 
                     </div>
@@ -459,365 +831,13 @@
                 </div>
 
 
-                <!-- ACTION -->
-
-                <div class="incident-actions">
-
-                    <button
-                        class="feedback-btn">
-
-                        <i class="fa-regular fa-comment-dots"></i>
-
-                        Send Feedback / Complaint
-
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- ========================================= -->
-            <!-- INCIDENT 2 -->
-            <!-- ========================================= -->
-
-            <div class="incident-card">
-
-                <div class="incident-top">
-
-                    <div class="incident-reference">
-
-                        <span>
-                            Incident ID
-                        </span>
-
-                        <strong>
-                            INC-00131
-                        </strong>
-
-                    </div>
-
-                    <span class="status progress-status">
-
-                        <i class="fa-solid fa-spinner"></i>
-
-                        In Progress
-
-                    </span>
-
-                </div>
-
-
-                <div class="incident-details">
-
-                    <div class="detail">
-
-                        <i class="fa-solid fa-bolt"></i>
-
-                        <div>
-
-                            <span>Incident Type</span>
-
-                            <strong>
-                                Transformer Fault
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="detail">
-
-                        <i class="fa-solid fa-location-dot"></i>
-
-                        <div>
-
-                            <span>Location</span>
-
-                            <strong>
-                                Mwera
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="detail">
-
-                        <i class="fa-regular fa-calendar"></i>
-
-                        <div>
-
-                            <span>Reported</span>
-
-                            <strong>
-                                13 Aug 2026
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="detail">
-
-                        <i class="fa-solid fa-user-gear"></i>
-
-                        <div>
-
-                            <span>Assigned To</span>
-
-                            <strong>
-                                Technician Assigned
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="progress-area">
-
-                    <div class="progress-header">
-
-                        <span>
-                            Incident Progress
-                        </span>
-
-                        <strong>
-                            65%
-                        </strong>
-
-                    </div>
-
-                    <div class="progress-bar">
-
-                        <div
-                            class="progress-fill"
-                            style="width:65%">
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="incident-timeline">
-
-                    <div class="timeline-item completed">
-
-                        <span class="timeline-dot"></span>
-
-                        <div>
-
-                            <strong>
-                                Incident Reported
-                            </strong>
-
-                            <small>
-                                13 Aug 2026 · 10:15 AM
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="timeline-item completed">
-
-                        <span class="timeline-dot"></span>
-
-                        <div>
-
-                            <strong>
-                                Incident Reviewed
-                            </strong>
-
-                            <small>
-                                13 Aug 2026 · 10:35 AM
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="timeline-item active">
-
-                        <span class="timeline-dot"></span>
-
-                        <div>
-
-                            <strong>
-                                Technician Working
-                            </strong>
-
-                            <small>
-                                Currently in progress
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="timeline-item">
-
-                        <span class="timeline-dot"></span>
-
-                        <div>
-
-                            <strong>
-                                Resolution
-                            </strong>
-
-                            <small>
-                                Pending
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- ========================================= -->
-            <!-- INCIDENT 3 -->
-            <!-- ========================================= -->
-
-            <div class="incident-card completed-card">
-
-                <div class="incident-top">
-
-                    <div class="incident-reference">
-
-                        <span>
-                            Incident ID
-                        </span>
-
-                        <strong>
-                            INC-00098
-                        </strong>
-
-                    </div>
-
-                    <span class="status completed-status">
-
-                        <i class="fa-solid fa-circle-check"></i>
-
-                        Completed
-
-                    </span>
-
-                </div>
-
-
-                <div class="incident-details">
-
-                    <div class="detail">
-
-                        <i class="fa-solid fa-bolt"></i>
-
-                        <div>
-
-                            <span>Incident Type</span>
-
-                            <strong>
-                                Meter Issue
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="detail">
-
-                        <i class="fa-solid fa-location-dot"></i>
-
-                        <div>
-
-                            <span>Location</span>
-
-                            <strong>
-                                Stone Town
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="detail">
-
-                        <i class="fa-regular fa-calendar"></i>
-
-                        <div>
-
-                            <span>Reported</span>
-
-                            <strong>
-                                08 Aug 2026
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="detail">
-
-                        <i class="fa-solid fa-circle-check"></i>
-
-                        <div>
-
-                            <span>Resolved</span>
-
-                            <strong>
-                                09 Aug 2026
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="progress-area">
-
-                    <div class="progress-header">
-
-                        <span>
-                            Incident Progress
-                        </span>
-
-                        <strong>
-                            100%
-                        </strong>
-
-                    </div>
-
-                    <div class="progress-bar">
-
-                        <div
-                            class="progress-fill complete"
-                            style="width:100%">
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="resolved-message">
+                <!-- ================================================= -->
+                <!-- RESOLVED MESSAGE -->
+                <!-- ================================================= -->
+
+                <div
+                    class="resolved-message"
+                    *ngIf="isCompleted(incident)">
 
                     <i class="fa-solid fa-circle-check"></i>
 
@@ -828,11 +848,52 @@
                         </strong>
 
                         <p>
-                            This incident has been successfully
-                            resolved by our technical team.
+                            {{
+                                incident.resolutionNotes ||
+                                'This incident has been successfully resolved by our technical team.'
+                            }}
                         </p>
 
                     </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- ACTIONS -->
+                <!-- ================================================= -->
+
+                <div class="incident-actions">
+
+
+                    <!-- VIEW DETAILS -->
+
+                    <button
+                        type="button"
+                        class="view-details-btn"
+                        (click)="openDetails(incident)">
+
+                        <i class="fa-solid fa-eye"></i>
+
+                        View Details
+
+                    </button>
+
+
+                    <!-- FEEDBACK / COMPLAINT -->
+
+                    <button
+                        type="button"
+                        class="feedback-btn"
+                        (click)="openComplaint(incident)">
+
+                        <i
+                            class="fa-regular fa-comment-dots">
+                        </i>
+
+                        {{ getFeedbackButtonLabel(incident) }}
+
+                    </button>
 
                 </div>
 
@@ -843,9 +904,17 @@
     </section>
 
 
-    <!-- NO RESULTS STATE -->
+    <!-- ================================================= -->
+    <!-- NO RESULTS -->
+    <!-- ================================================= -->
 
-    <section class="empty-state">
+    <section
+        class="empty-state"
+        *ngIf="
+            searched &&
+            !loading &&
+            incidents.length === 0
+        ">
 
         <div class="empty-icon">
 
@@ -853,17 +922,542 @@
 
         </div>
 
-        <h3>No incidents found</h3>
+        <h3>
+            No incidents found
+        </h3>
 
         <p>
             We couldn't find any incidents matching the
             information provided.
         </p>
 
-        <button>
+        <button
+            type="button"
+            (click)="searched = false">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
             Try Again
+
         </button>
 
     </section>
+
+
+    <!-- ================================================= -->
+    <!-- INITIAL HELP -->
+    <!-- ================================================= -->
+
+    <section
+        class="tracking-help"
+        *ngIf="
+            !searched &&
+            !loading
+        ">
+
+        <div class="help-icon">
+
+            <i class="fa-solid fa-circle-info"></i>
+
+        </div>
+
+        <div>
+
+            <h3>
+                How tracking works
+            </h3>
+
+            <p>
+                Enter the same full name and phone number
+                you provided when reporting your incident.
+                Your email address is optional.
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- INCIDENT DETAILS MODAL -->
+<!-- ================================================= -->
+
+<div
+    class="modal-overlay"
+    *ngIf="showDetailsModal && selectedIncident"
+    (click)="closeDetails()">
+
+    <div
+        class="details-modal"
+        (click)="$event.stopPropagation()">
+
+
+        <!-- HEADER -->
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="modal-label">
+                    INCIDENT DETAILS
+                </span>
+
+                <h2>
+                    {{ selectedIncident.ticketId }}
+                </h2>
+
+            </div>
+
+            <button
+                type="button"
+                class="modal-close"
+                (click)="closeDetails()">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="modal-status-row">
+
+            <span class="status">
+
+                <i
+                    class="fa-solid fa-circle-check"
+                    *ngIf="isCompleted(selectedIncident)">
+                </i>
+
+                <i
+                    class="fa-solid fa-user-check"
+                    *ngIf="
+                        selectedIncident.status === 'ASSIGNED'
+                    ">
+                </i>
+
+                <i
+                    class="fa-solid fa-spinner"
+                    *ngIf="
+                        selectedIncident.status === 'IN_PROGRESS'
+                    ">
+                </i>
+
+                <i
+                    class="fa-solid fa-clock"
+                    *ngIf="
+                        selectedIncident.status === 'REPORTED'
+                    ">
+                </i>
+
+                <i
+                    class="fa-solid fa-triangle-exclamation"
+                    *ngIf="
+                        !isCompleted(selectedIncident) &&
+                        isOverdue(selectedIncident)
+                    ">
+                </i>
+
+                {{ getStatusLabel(selectedIncident) }}
+
+            </span>
+
+
+            <span class="priority-badge">
+
+                {{ selectedIncident.priority }}
+
+            </span>
+
+        </div>
+
+
+        <!-- DETAILS GRID -->
+
+        <div class="modal-details-grid">
+
+            <div class="modal-detail">
+
+                <i class="fa-solid fa-bolt"></i>
+
+                <div>
+
+                    <span>
+                        Incident Type
+                    </span>
+
+                    <strong>
+                        {{
+                            getIncidentTypeLabel(
+                                selectedIncident.incidentType
+                            )
+                        }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-detail">
+
+                <i class="fa-solid fa-location-dot"></i>
+
+                <div>
+
+                    <span>
+                        Location
+                    </span>
+
+                    <strong>
+                        {{ selectedIncident.location }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-detail">
+
+                <i class="fa-regular fa-calendar"></i>
+
+                <div>
+
+                    <span>
+                        Reported
+                    </span>
+
+                    <strong>
+                        {{
+                            selectedIncident.reportedAt
+                            | date:'dd MMM yyyy · hh:mm a'
+                        }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-detail">
+
+                <i class="fa-solid fa-flag"></i>
+
+                <div>
+
+                    <span>
+                        Priority
+                    </span>
+
+                    <strong>
+                        {{ selectedIncident.priority }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="modal-section">
+
+            <span>
+                Description
+            </span>
+
+            <p>
+                {{ selectedIncident.description }}
+            </p>
+
+        </div>
+
+
+        <!-- LANDMARK -->
+
+        <div
+            class="modal-section"
+            *ngIf="selectedIncident.landmark">
+
+            <span>
+                Landmark
+            </span>
+
+            <p>
+                {{ selectedIncident.landmark }}
+            </p>
+
+        </div>
+
+
+        <!-- PROGRESS -->
+
+        <div class="modal-section">
+
+            <div class="modal-progress-header">
+
+                <span>
+                    Incident Progress
+                </span>
+
+                <strong>
+                    {{ getProgress(selectedIncident) }}%
+                </strong>
+
+            </div>
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    [class.complete]="
+                        getProgress(selectedIncident) === 100
+                    "
+                    [style.width.%]="
+                        getProgress(selectedIncident)
+                    ">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RESOLUTION -->
+
+        <div
+            class="modal-resolution"
+            *ngIf="isCompleted(selectedIncident)">
+
+            <i class="fa-solid fa-circle-check"></i>
+
+            <div>
+
+                <strong>
+                    Incident Resolved
+                </strong>
+
+                <p>
+                    {{
+                        selectedIncident.resolutionNotes ||
+                        'This incident has been successfully resolved by our technical team.'
+                    }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- MODAL ACTIONS -->
+        <!-- ================================================= -->
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="modal-secondary-btn"
+                (click)="closeDetails()">
+
+                Close
+
+            </button>
+
+
+            <button
+                type="button"
+                class="modal-feedback-btn"
+                (click)="
+                    openComplaintFromDetails()
+                ">
+
+                <i class="fa-regular fa-comment-dots"></i>
+
+                {{ getFeedbackButtonLabel(selectedIncident) }}
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- COMPLAINT / FEEDBACK MODAL -->
+<!-- ================================================= -->
+
+<div
+    class="modal-overlay"
+    *ngIf="showComplaintModal && selectedIncident"
+    (click)="closeComplaint()">
+
+    <div
+        class="complaint-modal"
+        (click)="$event.stopPropagation()">
+
+
+        <!-- HEADER -->
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="modal-label">
+
+                    {{
+                        isCompleted(selectedIncident)
+                            ? 'CUSTOMER FEEDBACK'
+                            : 'CUSTOMER COMPLAINT'
+                    }}
+
+                </span>
+
+                <h2>
+
+                    {{
+                        isCompleted(selectedIncident)
+                            ? 'Send Feedback'
+                            : 'Send Complaint'
+                    }}
+
+                </h2>
+
+            </div>
+
+            <button
+                type="button"
+                class="modal-close"
+                (click)="closeComplaint()">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <!-- INCIDENT INFO -->
+
+        <div class="complaint-info">
+
+            <i class="fa-solid fa-ticket"></i>
+
+            <div>
+
+                <span>
+                    Incident
+                </span>
+
+                <strong>
+                    {{ selectedIncident.ticketId }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- MESSAGE -->
+
+        <div class="complaint-form">
+
+            <label for="complaintMessage">
+
+                {{
+                    isCompleted(selectedIncident)
+                        ? 'Your Feedback'
+                        : 'Your Complaint'
+                }}
+
+                <span>*</span>
+
+            </label>
+
+
+            <textarea
+                id="complaintMessage"
+                name="complaintMessage"
+                [(ngModel)]="complaintMessage"
+                rows="6"
+
+                [placeholder]="
+                    isCompleted(selectedIncident)
+                        ? 'Tell us about your experience with the resolution of this incident...'
+                        : 'Describe your complaint, delay, or issue regarding this incident...'
+                ">
+            </textarea>
+
+
+            <!-- ERROR -->
+
+            <div
+                class="complaint-error"
+                *ngIf="complaintError">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                {{ complaintError }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="complaint-actions">
+
+            <button
+                type="button"
+                class="modal-secondary-btn"
+                [disabled]="complaintLoading"
+                (click)="closeComplaint()">
+
+                Cancel
+
+            </button>
+
+
+            <button
+                type="button"
+                class="modal-feedback-btn"
+                [disabled]="complaintLoading"
+                (click)="submitComplaint()">
+
+                <i
+                    *ngIf="!complaintLoading"
+                    class="fa-solid fa-paper-plane">
+                </i>
+
+                <i
+                    *ngIf="complaintLoading"
+                    class="fa-solid fa-spinner fa-spin">
+                </i>
+
+                {{
+                    complaintLoading
+                        ? 'Submitting...'
+                        : (
+                            isCompleted(selectedIncident)
+                                ? 'Submit Feedback'
+                                : 'Submit Complaint'
+                        )
+                }}
+
+            </button>
+
+        </div>
+
+    </div>
 
 </div>
