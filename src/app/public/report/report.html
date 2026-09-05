@@ -18,6 +18,7 @@
 
         </div>
 
+
         <div
             class="location-status"
             [class.detected]="locationDetected">
@@ -30,17 +31,24 @@
             </i>
 
             <span *ngIf="detectingLocation">
+
                 Detecting your location...
+
             </span>
 
             <span *ngIf="locationDetected">
+
                 Location detected automatically
+
             </span>
 
         </div>
 
+
         <form
-            (ngSubmit)="submitIncident()">
+            #reportForm="ngForm"
+            (ngSubmit)="submitIncident(reportForm)">
+
 
             <div class="grid">
 
@@ -58,6 +66,7 @@
 
                 </div>
 
+
                 <div class="form-group">
 
                     <label>
@@ -74,6 +83,7 @@
 
             </div>
 
+
             <div class="form-group">
 
                 <label>
@@ -87,6 +97,7 @@
                     placeholder="example@gmail.com">
 
             </div>
+
 
             <div class="form-group">
 
@@ -111,6 +122,7 @@
 
             </div>
 
+
             <div class="form-group">
 
                 <label>
@@ -126,7 +138,9 @@
 
             </div>
 
-            <!-- <div class="form-group">
+
+            <!--
+            <div class="form-group">
 
                 <label>
                     Nearby Landmark
@@ -138,7 +152,9 @@
                     name="landmark"
                     placeholder="Near Kisauni Market">
 
-            </div> -->
+            </div>
+            -->
+
 
             <div
                 class="form-group"
@@ -162,6 +178,7 @@
 
             </div>
 
+
             <div class="actions">
 
                 <button
@@ -171,6 +188,7 @@
                     Cancel
 
                 </button>
+
 
                 <button
                     type="submit"
@@ -186,9 +204,11 @@
 
             </div>
 
+
         </form>
 
     </div>
+
 
     <!-- RIGHT -->
 
@@ -203,6 +223,7 @@
             Reporting Tips
 
         </h3>
+
 
         <ul>
 
@@ -227,6 +248,7 @@
             </li>
 
         </ul>
+
 
         <div class="illustration">
 

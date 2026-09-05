@@ -8,7 +8,8 @@ import {
 } from '@angular/common';
 
 import {
-  FormsModule
+  FormsModule,
+  NgForm
 } from '@angular/forms';
 
 import {
@@ -18,6 +19,7 @@ import {
 import {
   AlertService
 } from '../../services/alert.service';
+
 
 @Component({
   selector: 'app-report',
@@ -43,6 +45,7 @@ export class Report implements OnInit {
 
   showImageUpload = false;
 
+
   incident = {
 
     reporterName: '',
@@ -59,6 +62,7 @@ export class Report implements OnInit {
     landmark: ''
 
   };
+
 
   incidentTypes = [
 
@@ -114,10 +118,12 @@ export class Report implements OnInit {
 
   ];
 
+
   constructor(
     private incidentService: IncidentService,
     private alertService: AlertService
   ) {}
+
 
   ngOnInit(): void {
 
@@ -127,11 +133,17 @@ export class Report implements OnInit {
 
   }
 
+
+  // =========================================================
+  // AUTOMATIC LOCATION DETECTION
+  // =========================================================
+
   detectLocation(): void {
 
     this.detectingLocation = true;
 
     this.locationDetected = false;
+
 
     if (!navigator.geolocation) {
 
@@ -144,6 +156,7 @@ export class Report implements OnInit {
 
       return;
     }
+
 
     navigator.geolocation.getCurrentPosition(
 
@@ -185,6 +198,11 @@ export class Report implements OnInit {
 
   }
 
+
+  // =========================================================
+  // INCIDENT TYPE CHANGE
+  // =========================================================
+
   onIncidentTypeChange(): void {
 
     this.showImageUpload = [
@@ -203,12 +221,18 @@ export class Report implements OnInit {
 
   }
 
+
+  // =========================================================
+  // FILE SELECTION
+  // =========================================================
+
   onFileSelected(
     event: Event
   ): void {
 
     const input =
       event.target as HTMLInputElement;
+
 
     if (
       !input.files ||
@@ -219,12 +243,24 @@ export class Report implements OnInit {
 
     }
 
+
     this.selectedFile =
       input.files[0];
 
   }
 
-  submitIncident(): void {
+
+  // =========================================================
+  // SUBMIT INCIDENT
+  // =========================================================
+
+  submitIncident(
+    form?: NgForm
+  ): void {
+
+    // -----------------------------------------------------
+    // REQUIRED FIELDS
+    // -----------------------------------------------------
 
     if (
       !this.incident.reporterName.trim() ||
@@ -241,6 +277,11 @@ export class Report implements OnInit {
 
     }
 
+
+    // -----------------------------------------------------
+    // LOCATION
+    // -----------------------------------------------------
+
     if (!this.locationDetected) {
 
       this.alertService.warning(
@@ -253,6 +294,11 @@ export class Report implements OnInit {
       return;
 
     }
+
+
+    // -----------------------------------------------------
+    // PHOTO REQUIREMENT
+    // -----------------------------------------------------
 
     if (
       this.showImageUpload &&
@@ -268,25 +314,30 @@ export class Report implements OnInit {
 
     }
 
+
+    // -----------------------------------------------------
+    // REQUEST DATA
+    // -----------------------------------------------------
+
     const data = {
 
       reporterName:
-        this.incident.reporterName,
+        this.incident.reporterName.trim(),
 
       phone:
-        this.incident.phone,
+        this.incident.phone.trim(),
 
       email:
-        this.incident.email,
+        this.incident.email.trim(),
 
       incidentType:
         this.incident.incidentType,
 
       description:
-        this.incident.description,
+        this.incident.description.trim(),
 
       landmark:
-        this.incident.landmark,
+        this.incident.landmark.trim(),
 
       latitude:
         this.latitude,
@@ -296,6 +347,11 @@ export class Report implements OnInit {
 
     };
 
+
+    // -----------------------------------------------------
+    // SUBMIT
+    // -----------------------------------------------------
+
     this.incidentService
       .report(
         data,
@@ -303,16 +359,35 @@ export class Report implements OnInit {
       )
       .subscribe({
 
+        // -------------------------------------------------
+        // SUCCESS
+        // -------------------------------------------------
+
         next: (incident) => {
+
+          // Reset Angular form controls first.
+          if (form) {
+
+            form.resetForm();
+
+          }
+
+
+          // Reset component data.
+          this.resetForm();
+
 
           this.alertService.success(
             'Incident Submitted',
             `Your incident has been submitted successfully. Ticket ID: ${incident.ticketId}`
           );
 
-          this.resetForm();
-
         },
+
+
+        // -------------------------------------------------
+        // ERROR
+        // -------------------------------------------------
 
         error: (error) => {
 
@@ -328,7 +403,16 @@ export class Report implements OnInit {
 
   }
 
+
+  // =========================================================
+  // RESET FORM
+  // =========================================================
+
   resetForm(): void {
+
+    // -----------------------------------------------------
+    // RESET INCIDENT DATA
+    // -----------------------------------------------------
 
     this.incident = {
 
@@ -347,8 +431,18 @@ export class Report implements OnInit {
 
     };
 
+
+    // -----------------------------------------------------
+    // RESET FILE
+    // -----------------------------------------------------
+
     this.selectedFile =
       undefined;
+
+
+    // -----------------------------------------------------
+    // RESET IMAGE UPLOAD VISIBILITY
+    // -----------------------------------------------------
 
     this.onIncidentTypeChange();
 
