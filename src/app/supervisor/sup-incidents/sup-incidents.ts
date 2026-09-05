@@ -128,70 +128,70 @@ export class SupIncidents implements OnInit {
 
   loadIncidents(): void {
 
-    this.loading = true;
+  this.loading = true;
 
-    this.incidentService
-      .getAll()
-      .subscribe({
+  this.incidentService
+    .getSupervisorIncidents()
+    .subscribe({
 
-        next: (incidents) => {
+      next: (incidents) => {
 
-          this.incidents = incidents || [];
+        this.incidents =
+          incidents || [];
 
-          this.applyFilters();
+        this.applyFilters();
 
-          this.loading = false;
+        this.loading = false;
 
-          this.cdr.detectChanges();
+        this.cdr.detectChanges();
 
-        },
+      },
 
-        error: () => {
+      error: () => {
 
-          this.loading = false;
+        this.loading = false;
 
-          this.alertService.error(
-            'Operation Failed',
-            'Unable to load incidents.'
-          );
+        this.alertService.error(
+          'Operation Failed',
+          'Unable to load incidents from your zone.'
+        );
 
-        }
+      }
 
-      });
+    });
 
-  }
+}
 
 
   // =========================================================
   // LOAD TECHNICIANS
   // =========================================================
+loadTechnicians(): void {
 
-  loadTechnicians(): void {
+  this.userService
+    .getSupervisorTechnicians()
+    .subscribe({
 
-    this.userService
-      .getTechnicians()
-      .subscribe({
+      next: (users) => {
 
-        next: (users) => {
+        this.technicians = users || [];
 
-          this.technicians = users || [];
+        this.cdr.detectChanges();
 
-          this.cdr.detectChanges();
+      },
 
-        },
+      error: () => {
 
-        error: () => {
+        this.alertService.error(
+          'Operation Failed',
+          'Unable to load technicians.'
+        );
 
-          this.alertService.error(
-            'Operation Failed',
-            'Unable to load technicians.'
-          );
+      }
 
-        }
+    });
 
-      });
-
-  }
+}
 
 
   // =========================================================
@@ -355,31 +355,20 @@ export class SupIncidents implements OnInit {
   // OPEN ASSIGN MODAL
   // =========================================================
 
-  openAssignModal(
-    incident: Incident
-  ): void {
+ openAssignModal(
+  incident: Incident
+): void {
 
-    this.selectedIncident =
-      incident;
+  this.selectedIncident = incident;
 
-    this.selectedTechnician =
-      '';
+  this.selectedTechnician = '';
 
+  this.availableTechnicians =
+    this.technicians;
 
-    // -------------------------------------------------------
-    // ONLY ACTIVE TECHNICIANS
-    // -------------------------------------------------------
+  this.showAssignModal = true;
 
-    this.availableTechnicians =
-      this.technicians.filter(
-        technician =>
-          technician.active === true
-      );
-
-
-    this.showAssignModal = true;
-
-  }
+}
 
 
   // =========================================================

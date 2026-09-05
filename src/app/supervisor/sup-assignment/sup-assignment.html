@@ -1,0 +1,576 @@
+<p>sup-assignment works!</p>
+<div class="assignment-page">
+
+  <!-- =========================================
+       HEADER
+  ========================================== -->
+
+  <div class="page-header">
+
+    <div>
+
+      <span class="eyebrow">
+        SUPERVISOR
+      </span>
+
+      <h1>
+        Technician Assignments
+      </h1>
+
+      <p>
+        Monitor incidents assigned to technicians
+        within your zone.
+      </p>
+
+    </div>
+
+    <button
+      class="refresh-btn"
+      type="button"
+      (click)="loadAssignments()"
+    >
+      <i class="fa-solid fa-rotate"></i>
+      Refresh
+    </button>
+
+  </div>
+
+
+  <!-- =========================================
+       ALERTS
+  ========================================== -->
+
+  <div
+    class="alert success"
+    *ngIf="successMessage"
+  >
+
+    <i class="fa-solid fa-circle-check"></i>
+
+    <span>
+      {{ successMessage }}
+    </span>
+
+    <button
+      type="button"
+      (click)="successMessage = ''"
+    >
+      ×
+    </button>
+
+  </div>
+
+
+  <div
+    class="alert error"
+    *ngIf="errorMessage"
+  >
+
+    <i class="fa-solid fa-circle-exclamation"></i>
+
+    <span>
+      {{ errorMessage }}
+    </span>
+
+    <button
+      type="button"
+      (click)="errorMessage = ''"
+    >
+      ×
+    </button>
+
+  </div>
+
+
+  <!-- =========================================
+       SUMMARY
+  ========================================== -->
+
+  <div class="summary-grid">
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        <i class="fa-solid fa-list-check"></i>
+      </div>
+
+      <div>
+
+        <span>
+          Total Assignments
+        </span>
+
+        <strong>
+          {{ assignments.length }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <div class="summary-icon orange">
+        <i class="fa-solid fa-spinner"></i>
+      </div>
+
+      <div>
+
+        <span>
+          In Progress
+        </span>
+
+        <strong>
+          {{
+            assignments.filter(
+              a => a.status === 'IN_PROGRESS'
+            ).length
+          }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <div class="summary-icon green">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+
+      <div>
+
+        <span>
+          Completed
+        </span>
+
+        <strong>
+          {{
+            assignments.filter(
+              a => a.status === 'COMPLETED'
+            ).length
+          }}
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================
+       TABLE
+  ========================================== -->
+
+  <div class="table-card">
+
+    <div class="table-header">
+
+      <div>
+
+        <h2>
+          Assigned Incidents
+        </h2>
+
+        <span>
+          Assignments from your zone
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- LOADING -->
+
+    <div
+      class="loading"
+      *ngIf="loading"
+    >
+
+      <i class="fa-solid fa-spinner fa-spin"></i>
+
+      <span>
+        Loading assignments...
+      </span>
+
+    </div>
+
+
+    <!-- EMPTY -->
+
+    <div
+      class="empty"
+      *ngIf="
+        !loading &&
+        assignments.length === 0
+      "
+    >
+
+      <div class="empty-icon">
+
+        <i class="fa-solid fa-clipboard-check"></i>
+
+      </div>
+
+      <h3>
+        No assignments found
+      </h3>
+
+      <p>
+        There are currently no technician
+        assignments in your zone.
+      </p>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div
+      class="table-wrapper"
+      *ngIf="
+        !loading &&
+        assignments.length > 0
+      "
+    >
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Ticket
+            </th>
+
+            <th>
+              Technician
+            </th>
+
+            <th>
+              Specialization
+            </th>
+
+            <th>
+              Assigned At
+            </th>
+
+            <th>
+              Completed At
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th>
+              Action
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="
+              let assignment of assignments;
+              trackBy: trackById
+            "
+          >
+
+            <td>
+
+              <strong class="ticket">
+                {{ assignment.ticketId }}
+              </strong>
+
+            </td>
+
+
+            <td>
+
+              <div class="technician">
+
+                <div class="avatar">
+
+                  <i class="fa-solid fa-user"></i>
+
+                </div>
+
+                <span>
+                  {{ assignment.technicianName }}
+                </span>
+
+              </div>
+
+            </td>
+
+
+            <td>
+
+              <span class="specialization">
+
+                {{
+                  assignment.specialization ||
+                  'General'
+                }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              {{
+                assignment.assignedAt
+                  | date:'dd MMM yyyy, HH:mm'
+              }}
+
+            </td>
+
+
+            <td>
+
+              <span
+                *ngIf="assignment.completedAt"
+              >
+
+                {{
+                  assignment.completedAt
+                    | date:'dd MMM yyyy, HH:mm'
+                }}
+
+              </span>
+
+              <span
+                class="not-completed"
+                *ngIf="!assignment.completedAt"
+              >
+                Not completed
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <span
+                class="status"
+                [ngClass]="
+                  getStatusClass(assignment)
+                "
+              >
+
+                {{
+                  formatStatus(
+                    assignment.status
+                  )
+                }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <button
+                class="reassign-btn"
+                type="button"
+                *ngIf="
+                  assignment.status !== 'COMPLETED' &&
+                  assignment.status !== 'RESOLVED'
+                "
+                (click)="openReassign(assignment)"
+              >
+
+                <i class="fa-solid fa-right-left"></i>
+
+                Reassign
+
+              </button>
+
+              <span
+                class="locked"
+                *ngIf="
+                  assignment.status === 'COMPLETED' ||
+                  assignment.status === 'RESOLVED'
+                "
+              >
+                Completed
+              </span>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================
+     REASSIGN MODAL
+========================================== -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showReassignModal"
+  (click)="closeReassign()"
+>
+
+  <div
+    class="reassign-modal"
+    (click)="$event.stopPropagation()"
+  >
+
+    <div class="modal-header">
+
+      <div>
+
+        <span class="modal-label">
+          REASSIGN INCIDENT
+        </span>
+
+        <h2>
+          Assign to another technician
+        </h2>
+
+      </div>
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeReassign()"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+      <div class="incident-info">
+
+        <span>
+          Incident
+        </span>
+
+        <strong>
+          {{ selectedAssignment?.ticketId }}
+        </strong>
+
+      </div>
+
+
+      <div class="incident-info">
+
+        <span>
+          Current Technician
+        </span>
+
+        <strong>
+          {{ selectedAssignment?.technicianName }}
+        </strong>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Select New Technician
+        </label>
+
+        <select
+          [(ngModel)]="selectedTechnicianId"
+        >
+
+          <option
+            [ngValue]="null"
+          >
+            Select technician
+          </option>
+
+          <option
+            *ngFor="let technician of technicians"
+            [ngValue]="technician.id"
+          >
+
+            {{ technician.fullName }}
+
+            <span
+              *ngIf="technician.specialization"
+            >
+              —
+              {{ technician.specialization }}
+            </span>
+
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="cancel-btn"
+        (click)="closeReassign()"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        class="confirm-btn"
+        [disabled]="
+          !selectedTechnicianId ||
+          reassigning
+        "
+        (click)="reassign()"
+      >
+
+        <i
+          *ngIf="reassigning"
+          class="fa-solid fa-spinner fa-spin"
+        ></i>
+
+        <i
+          *ngIf="!reassigning"
+          class="fa-solid fa-right-left"
+        ></i>
+
+        {{
+          reassigning
+            ? 'Reassigning...'
+            : 'Reassign Incident'
+        }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

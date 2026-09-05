@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { User, UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
 
+
 @Component({
 selector: 'app-users',
 standalone: true,
@@ -37,6 +38,77 @@ specialization: '',
 zone: '',
 imageUrl: ''
 };
+
+
+zones = [
+  {
+    value: 'URBAN_WEST',
+    label: 'Urban West'
+  },
+  {
+    value: 'UNGUJA_NORTH',
+    label: 'Unguja North'
+  },
+  {
+    value: 'UNGUJA_SOUTH',
+    label: 'Unguja South'
+  },
+  {
+    value: 'PEMBA_NORTH',
+    label: 'Pemba North'
+  },
+  {
+    value: 'PEMBA_SOUTH',
+    label: 'Pemba South'
+  },
+  {
+    value: 'ZANZIBAR',
+    label: 'Zanzibar'
+  }
+];
+
+incidentTypes = [
+  {
+    value: 'POWER_OUTAGE',
+    label: 'Power Outage'
+  },
+  {
+    value: 'TRANSFORMER_FAULT',
+    label: 'Transformer Fault'
+  },
+  {
+    value: 'BROKEN_POLE',
+    label: 'Broken Pole'
+  },
+  {
+    value: 'EXPOSED_WIRES',
+    label: 'Exposed Wires'
+  },
+  {
+    value: 'FIRE_HAZARD',
+    label: 'Fire Hazard'
+  },
+  {
+    value: 'VOLTAGE_FLUCTUATION',
+    label: 'Voltage Fluctuation'
+  },
+  {
+    value: 'METER_ISSUE',
+    label: 'Meter Issue'
+  },
+  {
+    value: 'BILLING_ISSUE',
+    label: 'Billing Issue'
+  },
+  {
+    value: 'STREET_LIGHT_FAULT',
+    label: 'Street Light Fault'
+  },
+  {
+    value: 'OTHER',
+    label: 'Other'
+  }
+];
 
 constructor(
 private userService: UserService,
@@ -177,152 +249,303 @@ this.selectedUser = null;
 
 }
 
+// =========================================================
 // CREATE USER
+// =========================================================
+
 saveUser(): void {
 
-if (
-!this.newUser.fullName.trim() ||
-!this.newUser.username.trim() ||
-!this.newUser.email.trim() ||
-!this.newUser.phone.trim() ||
-!this.newUser.password.trim() ||
-!this.newUser.specialization.trim() ||
-!this.newUser.zone.trim()
-) {
+  // -------------------------------------------------------
+  // BASIC REQUIRED FIELDS
+  // -------------------------------------------------------
 
-this.alertService.warning(
-'Missing Information',
-'Please fill in all required fields.'
-);
+  if (
+    !this.newUser.fullName.trim() ||
+    !this.newUser.username.trim() ||
+    !this.newUser.email.trim() ||
+    !this.newUser.phone.trim() ||
+    !this.newUser.password.trim()
+  ) {
 
-return;
+    this.alertService.warning(
+      'Missing Information',
+      'Please fill in all required fields.'
+    );
+
+    return;
+  }
+
+
+  // -------------------------------------------------------
+  // SUPERVISOR / TECHNICIAN MUST HAVE ZONE
+  // -------------------------------------------------------
+
+  if (
+    (
+      this.newUser.role === 'SUPERVISOR' ||
+      this.newUser.role === 'TECHNICIAN'
+    ) &&
+    !this.newUser.zone.trim()
+  ) {
+
+    this.alertService.warning(
+      'Zone Required',
+      'Please select a zone for this user.'
+    );
+
+    return;
+  }
+
+
+  // -------------------------------------------------------
+  // TECHNICIAN MUST HAVE SPECIALIZATION
+  // -------------------------------------------------------
+
+  if (
+    this.newUser.role === 'TECHNICIAN' &&
+    !this.newUser.specialization.trim()
+  ) {
+
+    this.alertService.warning(
+      'Specialization Required',
+      'Please select the technician specialization.'
+    );
+
+    return;
+  }
+
+
+  // -------------------------------------------------------
+  // START LOADING
+  // -------------------------------------------------------
+
+  this.loading = true;
+
+
+  // -------------------------------------------------------
+  // CREATE USER
+  // -------------------------------------------------------
+
+  this.userService
+    .create(this.newUser)
+    .subscribe({
+
+      // ===================================================
+      // SUCCESS
+      // ===================================================
+
+      next: (user) => {
+
+        this.users.unshift(user);
+
+        this.loading = false;
+
+        this.closeAddModal();
+
+        this.cdr.detectChanges();
+
+        this.alertService.success(
+          'User Created',
+          `${user.fullName} has been created successfully.`
+        );
+
+      },
+
+
+      // ===================================================
+      // ERROR
+      // ===================================================
+
+      error: (error) => {
+
+        this.loading = false;
+
+        this.showError(
+          error,
+          'Unable to create user.'
+        );
+
+      }
+
+    });
 
 }
-
-this.loading = true;
-
-this.userService.create(this.newUser).subscribe({
-
-next: (user) => {
-
-this.users.unshift(user);
-
-this.loading = false;
-
-this.closeAddModal();
-
-this.cdr.detectChanges();
-
-this.alertService.success(
-'User Created',
-`${user.fullName} has been created successfully.`
-);
-
-},
-
-error: (error) => {
-
-this.loading = false;
-
-this.showError(
-error,
-'Unable to create user.'
-);
-
-}
-
-});
-
-}
-
+// =========================================================
 // UPDATE USER
+// =========================================================
+
 updateUser(): void {
 
-if (!this.selectedUser) {
+  // -------------------------------------------------------
+  // CHECK SELECTED USER
+  // -------------------------------------------------------
 
-return;
+  if (!this.selectedUser) {
 
-}
+    return;
+  }
 
-if (
-!this.selectedUser.fullName.trim() ||
-!this.selectedUser.username.trim() ||
-!this.selectedUser.email.trim() ||
-!this.selectedUser.phone.trim() ||
-!this.selectedUser.specialization?.trim() ||
-!this.selectedUser.zone?.trim()
-) {
 
-this.alertService.warning(
-'Missing Information',
-'Please fill in all required fields.'
-);
+  // -------------------------------------------------------
+  // BASIC REQUIRED FIELDS
+  // -------------------------------------------------------
 
-return;
+  if (
+    !this.selectedUser.fullName.trim() ||
+    !this.selectedUser.username.trim() ||
+    !this.selectedUser.email.trim() ||
+    !this.selectedUser.phone.trim()
+  ) {
 
-}
+    this.alertService.warning(
+      'Missing Information',
+      'Please fill in all required fields.'
+    );
 
-const data = {
+    return;
+  }
 
-fullName: this.selectedUser.fullName,
 
-username: this.selectedUser.username,
+  // -------------------------------------------------------
+  // SUPERVISOR / TECHNICIAN MUST HAVE ZONE
+  // -------------------------------------------------------
 
-email: this.selectedUser.email,
+  if (
+    (
+      this.selectedUser.role === 'SUPERVISOR' ||
+      this.selectedUser.role === 'TECHNICIAN'
+    ) &&
+    !this.selectedUser.zone?.trim()
+  ) {
 
-phone: this.selectedUser.phone,
+    this.alertService.warning(
+      'Zone Required',
+      'Please select a zone for this user.'
+    );
 
-role: this.selectedUser.role,
+    return;
+  }
 
-specialization: this.selectedUser.specialization,
 
-zone: this.selectedUser.zone,
+  // -------------------------------------------------------
+  // TECHNICIAN MUST HAVE SPECIALIZATION
+  // -------------------------------------------------------
 
-imageUrl: this.selectedUser.imageUrl
+  if (
+    this.selectedUser.role === 'TECHNICIAN' &&
+    !this.selectedUser.specialization?.trim()
+  ) {
 
-};
+    this.alertService.warning(
+      'Specialization Required',
+      'Please select the technician specialization.'
+    );
 
-this.loading = true;
+    return;
+  }
 
-this.userService
-.update(
-this.selectedUser.id,
-data
-)
-.subscribe({
 
-next: (updatedUser) => {
+  // -------------------------------------------------------
+  // REQUEST DATA
+  // -------------------------------------------------------
 
-this.updateUserInList(updatedUser);
+  const data = {
 
-const fullName =
-updatedUser.fullName;
+    fullName:
+      this.selectedUser.fullName.trim(),
 
-this.loading = false;
+    username:
+      this.selectedUser.username.trim(),
 
-this.closeEditModal();
+    email:
+      this.selectedUser.email.trim(),
 
-this.cdr.detectChanges();
+    phone:
+      this.selectedUser.phone.trim(),
 
-this.alertService.success(
-'User Updated',
-`${fullName} has been updated successfully.`
-);
+    role:
+      this.selectedUser.role,
 
-},
+    specialization:
+      this.selectedUser.role === 'TECHNICIAN'
+        ? this.selectedUser.specialization
+        : '',
 
-error: (error) => {
+    zone:
+      (
+        this.selectedUser.role === 'SUPERVISOR' ||
+        this.selectedUser.role === 'TECHNICIAN'
+      )
+        ? this.selectedUser.zone
+        : '',
 
-this.loading = false;
+    imageUrl:
+      this.selectedUser.imageUrl
 
-this.showError(
-error,
-'Unable to update user.'
-);
+  };
 
-}
 
-});
+  // -------------------------------------------------------
+  // START LOADING
+  // -------------------------------------------------------
+
+  this.loading = true;
+
+
+  // -------------------------------------------------------
+  // UPDATE API
+  // -------------------------------------------------------
+
+  this.userService
+    .update(
+      this.selectedUser.id,
+      data
+    )
+    .subscribe({
+
+      // ===================================================
+      // SUCCESS
+      // ===================================================
+
+      next: (updatedUser) => {
+
+        this.updateUserInList(
+          updatedUser
+        );
+
+        const fullName =
+          updatedUser.fullName;
+
+        this.loading = false;
+
+        this.closeEditModal();
+
+        this.cdr.detectChanges();
+
+        this.alertService.success(
+          'User Updated',
+          `${fullName} has been updated successfully.`
+        );
+
+      },
+
+
+      // ===================================================
+      // ERROR
+      // ===================================================
+
+      error: (error) => {
+
+        this.loading = false;
+
+        this.showError(
+          error,
+          'Unable to update user.'
+        );
+
+      }
+
+    });
 
 }
 

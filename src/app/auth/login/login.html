@@ -68,14 +68,17 @@
             <i class="fa-solid fa-lock"></i>
 
             <input
-              type="password"
+               [type]="showPassword ? 'text' : 'password'"
               name="password"
               [(ngModel)]="password"
               placeholder="Enter your password"
               autocomplete="current-password"
             >
 
-            <i class="fa-regular fa-eye eye"></i>
+            <i class="fa-regular eye"
+             [class.fa-eye]="!showPassword"
+            [class.fa-eye-slash]="showPassword"
+            (click)="togglePassword()"></i>
 
           </div>
 

@@ -69,8 +69,8 @@
                 <tr>
 
                     <th>Name</th>
-                    <th>Email</th>
                     <th>Phone</th>
+                    <th>Zone</th>
                     <th>Role</th>
                     <th>Status</th>
                     <th>Actions</th>
@@ -110,12 +110,12 @@
 
 
                     <td>
-                        {{ user.email }}
+                        {{ user.phone }}
                     </td>
 
 
                     <td>
-                        {{ user.phone }}
+                        {{ user.zone }}
                     </td>
 
 
@@ -211,7 +211,6 @@
 
 </div>
 
-
 <!-- =========================================================
      ADD USER MODAL
      ========================================================= -->
@@ -229,6 +228,7 @@
             </h3>
 
             <button
+                type="button"
                 (click)="closeAddModal()">
 
                 <i class="fa-solid fa-xmark"></i>
@@ -249,6 +249,7 @@
                 </label>
 
                 <input
+                    type="text"
                     [(ngModel)]="newUser.fullName"
                     placeholder="Enter full name">
 
@@ -264,6 +265,7 @@
                 </label>
 
                 <input
+                    type="text"
                     [(ngModel)]="newUser.username"
                     placeholder="Enter username">
 
@@ -295,6 +297,7 @@
                 </label>
 
                 <input
+                    type="text"
                     [(ngModel)]="newUser.phone"
                     placeholder="Enter phone number">
 
@@ -325,7 +328,8 @@
                     Role
                 </label>
 
-                <select [(ngModel)]="newUser.role">
+                <select
+                    [(ngModel)]="newUser.role">
 
                     <option value="ADMIN">
                         Admin
@@ -344,32 +348,81 @@
             </div>
 
 
-            <!-- SPECIALIZATION -->
+            <!-- =================================================
+                 ZONE
+                 SUPERVISOR + TECHNICIAN ONLY
+                 ================================================= -->
 
-            <div class="form-group">
-
-                <label>
-                    Specialization
-                </label>
-
-                <input
-                    [(ngModel)]="newUser.specialization"
-                    placeholder="e.g. Electrical Technician">
-
-            </div>
-
-
-            <!-- ZONE -->
-
-            <div class="form-group">
+            <div
+                class="form-group"
+                *ngIf="
+                    newUser.role === 'SUPERVISOR' ||
+                    newUser.role === 'TECHNICIAN'
+                ">
 
                 <label>
                     Zone
                 </label>
 
-                <input
-                    [(ngModel)]="newUser.zone"
-                    placeholder="e.g. Urban West">
+                <select
+                    [(ngModel)]="newUser.zone">
+
+                    <option
+                        value=""
+                        disabled>
+
+                        Select zone
+
+                    </option>
+
+                    <option
+                        *ngFor="let zone of zones"
+                        [value]="zone.value">
+
+                        {{ zone.label }}
+
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- =================================================
+                 SPECIALIZATION
+                 TECHNICIAN ONLY
+                 ================================================= -->
+
+            <div
+                class="form-group"
+                *ngIf="
+                    newUser.role === 'TECHNICIAN'
+                ">
+
+                <label>
+                    Specialization
+                </label>
+
+                <select
+                    [(ngModel)]="newUser.specialization">
+
+                    <option
+                        value=""
+                        disabled>
+
+                        Select Specialization
+
+                    </option>
+
+                    <option
+                        *ngFor="let type of incidentTypes"
+                        [value]="type.value">
+
+                        {{ type.label }}
+
+                    </option>
+
+                </select>
 
             </div>
 
@@ -395,6 +448,7 @@
         <div class="modal-footer">
 
             <button
+                type="button"
                 class="cancel"
                 (click)="closeAddModal()">
 
@@ -404,6 +458,7 @@
 
 
             <button
+                type="button"
                 class="save"
                 (click)="saveUser()"
                 [disabled]="loading">
@@ -417,7 +472,6 @@
     </div>
 
 </div>
-
 
 <!-- =========================================================
      EDIT USER MODAL
@@ -436,6 +490,7 @@
             </h3>
 
             <button
+                type="button"
                 (click)="closeEditModal()">
 
                 <i class="fa-solid fa-xmark"></i>
@@ -456,6 +511,7 @@
                 </label>
 
                 <input
+                    type="text"
                     [(ngModel)]="selectedUser!.fullName"
                     placeholder="Enter full name">
 
@@ -471,6 +527,7 @@
                 </label>
 
                 <input
+                    type="text"
                     [(ngModel)]="selectedUser!.username"
                     placeholder="Enter username">
 
@@ -502,6 +559,7 @@
                 </label>
 
                 <input
+                    type="text"
                     [(ngModel)]="selectedUser!.phone"
                     placeholder="Enter phone number">
 
@@ -536,32 +594,81 @@
             </div>
 
 
-            <!-- SPECIALIZATION -->
+            <!-- =================================================
+                 ZONE
+                 SUPERVISOR + TECHNICIAN
+                 ================================================= -->
 
-            <div class="form-group">
-
-                <label>
-                    Specialization
-                </label>
-
-                <input
-                    [(ngModel)]="selectedUser!.specialization"
-                    placeholder="e.g. Electrical Technician">
-
-            </div>
-
-
-            <!-- ZONE -->
-
-            <div class="form-group">
+            <div
+                class="form-group"
+                *ngIf="
+                    selectedUser!.role === 'SUPERVISOR' ||
+                    selectedUser!.role === 'TECHNICIAN'
+                ">
 
                 <label>
                     Zone
                 </label>
 
-                <input
-                    [(ngModel)]="selectedUser!.zone"
-                    placeholder="e.g. Urban West">
+                <select
+                    [(ngModel)]="selectedUser!.zone">
+
+                    <option
+                        value=""
+                        disabled>
+
+                        Select zone
+
+                    </option>
+
+                    <option
+                        *ngFor="let zone of zones"
+                        [value]="zone.value">
+
+                        {{ zone.label }}
+
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- =================================================
+                 SPECIALIZATION
+                 TECHNICIAN ONLY
+                 ================================================= -->
+
+            <div
+                class="form-group"
+                *ngIf="
+                    selectedUser!.role === 'TECHNICIAN'
+                ">
+
+                <label>
+                    Specialization
+                </label>
+
+                <select
+                    [(ngModel)]="selectedUser!.specialization">
+
+                    <option
+                        value=""
+                        disabled>
+
+                        Select incident type
+
+                    </option>
+
+                    <option
+                        *ngFor="let type of incidentTypes"
+                        [value]="type.value">
+
+                        {{ type.label }}
+
+                    </option>
+
+                </select>
 
             </div>
 
@@ -587,6 +694,7 @@
         <div class="modal-footer">
 
             <button
+                type="button"
                 class="cancel"
                 (click)="closeEditModal()">
 
@@ -596,11 +704,12 @@
 
 
             <button
+                type="button"
                 class="save"
                 (click)="updateUser()"
                 [disabled]="loading">
 
-                {{ loading ? 'Updating...' : 'Update' }}
+                {{ loading ? 'Updating...' : 'Update User' }}
 
             </button>
 
@@ -609,7 +718,6 @@
     </div>
 
 </div>
-
 
 <!-- =========================================================
      VIEW USER MODAL

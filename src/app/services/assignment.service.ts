@@ -28,6 +28,8 @@ export interface Assignment {
 
   completedAt?: string;
 
+  status?: string;
+
 }
 
 @Injectable({
@@ -155,10 +157,28 @@ export class AssignmentService {
       formData
     );
 
+    
   }
 
   
+// =========================================================
+// SUPERVISOR
+// REASSIGN INCIDENT
+// =========================================================
 
+reassign(
+  assignmentId: number,
+  technicianId: number
+): Observable<Assignment> {
+
+  return this.http.patch<Assignment>(
+    `${this.supervisorApiUrl}/${assignmentId}/reassign`,
+    {
+      technicianId: technicianId
+    }
+  );
+
+}
 
 
 }

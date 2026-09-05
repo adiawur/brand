@@ -543,140 +543,87 @@
 <!-- =========================================================
      DETAILS MODAL
 ========================================================= -->
+<div class="modal-backdrop" *ngIf="selectedIncident">
 
-<div
-    class="modal-backdrop"
-    *ngIf="showDetailsModal">
+    <div class="details-modal">
 
-    <div class="modal details-modal">
-
+        <!-- MODAL HEADER -->
         <div class="modal-header">
 
-            <h3>
-                Incident Details
-            </h3>
+            <div>
+                <h3>Incident Details</h3>
+            </div>
 
             <button
-                (click)="closeDetails()">
-
-                <i class="fa fa-xmark"></i>
-
+                type="button"
+                class="close-btn"
+                (click)="closeDetails()"
+                aria-label="Close">
+                <i class="fas fa-times"></i>
             </button>
 
         </div>
 
 
+        <!-- YOUR EXISTING HTML -->
         <div class="modal-body">
 
-            <div class="detail-grid">
+            <div class="incident-view-grid">
 
-                <div class="detail-item">
-
-                    <label>
-                        Incident ID
-                    </label>
-
+                <div class="view-item">
+                    <span>Incident ID</span>
                     <strong>
                         {{ selectedIncident?.ticketId }}
                     </strong>
-
                 </div>
 
-
-                <div class="detail-item">
-
-                    <label>
-                        Customer
-                    </label>
-
+                <div class="view-item">
+                    <span>Customer</span>
                     <strong>
                         {{ selectedIncident?.reporterName }}
                     </strong>
-
                 </div>
 
-
-                <div class="detail-item">
-
-                    <label>
-                        Phone
-                    </label>
-
+                <div class="view-item">
+                    <span>Phone</span>
                     <strong>
                         {{ selectedIncident?.phone }}
                     </strong>
-
                 </div>
 
-
-                <div class="detail-item">
-
-                    <label>
-                        Type
-                    </label>
-
+                <div class="view-item">
+                    <span>Type</span>
                     <strong>
-                        {{ formatType(
-                            selectedIncident?.incidentType || ''
-                        ) }}
+                        {{ formatType(selectedIncident?.incidentType || '') }}
                     </strong>
-
                 </div>
 
-
-                <div class="detail-item">
-
-                    <label>
-                        Priority
-                    </label>
-
+                <div class="view-item">
+                    <span>Priority</span>
                     <strong>
-                        {{ formatPriority(
-                            selectedIncident?.priority || ''
-                        ) }}
+                        {{ formatPriority(selectedIncident?.priority || '') }}
                     </strong>
-
                 </div>
 
-
-                <div class="detail-item">
-
-                    <label>
-                        Status
-                    </label>
-
+                <div class="view-item">
+                    <span>Status</span>
                     <strong>
-                        {{ formatStatus(
-                            selectedIncident?.status || ''
-                        ) }}
+                        {{ formatStatus(selectedIncident?.status || '') }}
                     </strong>
-
                 </div>
 
-
-                <div class="detail-item full">
-
-                    <label>
-                        Location
-                    </label>
-
+                <div class="view-item full">
+                    <span>Location</span>
                     <strong>
                         {{ selectedIncident?.location }}
                     </strong>
-
                 </div>
 
-
-                <div class="detail-item full">
-
-                    <label>
-                        Description
-                    </label>
-
+                <div class="view-item full description">
+                    <span>Description</span>
                     <p>
                         {{ selectedIncident?.description }}
                     </p>
-
                 </div>
 
             </div>
@@ -686,8 +633,6 @@
     </div>
 
 </div>
-
-
 <!-- =========================================================
      ASSIGN MODAL
 ========================================================= -->

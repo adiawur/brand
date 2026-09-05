@@ -246,6 +246,15 @@ REGISTER
     font-weight:600;
 }
 
+.eye {
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.eye:hover {
+  opacity: 0.7;
+}
+
 /* ===================================
 MOBILE
 =================================== */

@@ -1429,32 +1429,34 @@
 
 
             <button
-                type="button"
-                class="modal-feedback-btn"
-                [disabled]="complaintLoading"
-                (click)="submitComplaint()">
+    type="button"
+    class="modal-feedback-btn"
+    [disabled]="complaintLoading"
+    (click)="submitComplaint()">
 
-                <i
-                    *ngIf="!complaintLoading"
-                    class="fa-solid fa-paper-plane">
-                </i>
+    <i
+        *ngIf="!complaintLoading"
+        class="fa-solid fa-paper-plane">
+    </i>
 
-                <i
-                    *ngIf="complaintLoading"
-                    class="fa-solid fa-spinner fa-spin">
-                </i>
+    <i
+        *ngIf="complaintLoading"
+        class="fa-solid fa-spinner fa-spin">
+    </i>
 
-                {{
-                    complaintLoading
-                        ? 'Submitting...'
-                        : (
-                            isCompleted(selectedIncident)
-                                ? 'Submit Feedback'
-                                : 'Submit Complaint'
-                        )
-                }}
+    <span>
+        {{
+            complaintLoading
+                ? 'Submitting...'
+                : (
+                    isCompleted(selectedIncident)
+                        ? 'Submit Feedback'
+                        : 'Submit Complaint'
+                )
+        }}
+    </span>
 
-            </button>
+</button>
 
         </div>
 

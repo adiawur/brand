@@ -113,6 +113,40 @@
 
             </li>
 
+            
+            <li
+                routerLink="sup-assignments"
+                routerLinkActive="active"
+                (click)="toggleMobileSidebar()">
+
+                <i class="fa-solid fa-list-check"></i>
+
+                <span
+                    *ngIf="!sidebarCollapsed">
+
+                   Assignments
+
+                </span>
+
+            </li>
+
+            <!-- NOTIFICATIONS -->
+
+            <li
+                routerLink="feedbacks"
+                routerLinkActive="active"
+                (click)="toggleMobileSidebar()">
+
+                <i class="fa fa-comment-dots"></i>
+
+                <span
+                    *ngIf="!sidebarCollapsed">
+
+                    Feedbacks
+
+                </span>
+
+            </li>
 
             <!-- NOTIFICATIONS -->
 

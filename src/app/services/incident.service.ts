@@ -154,24 +154,12 @@ export class IncidentService {
 
   }
 
-  submitComplaint(request: {
+getSupervisorIncidents(): Observable<Incident[]> {
 
-  ticketId: string;
-
-  fullName: string;
-
-  phone: string;
-
-  email?: string;
-
-  message: string;
-
-}): Observable<any> {
-
-  return this.http.post<any>(
-    `${this.apiUrl}/complaint`,
-    request
+  return this.http.get<Incident[]>(
+    `${this.apiUrl}/supervisor`
   );
+
 }
 
 }

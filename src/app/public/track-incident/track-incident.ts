@@ -15,6 +15,8 @@ import {
 import {
   FormsModule
 } from '@angular/forms';
+import { AlertService } from '../../services/alert.service';
+import { IncidentComplaintService } from '../../services/incident-complaint.service';
 
 
 @Component({
@@ -82,12 +84,18 @@ export class TrackIncident {
 
   complaintError = '';
 
+constructor(
 
-  constructor(
-    private incidentService: IncidentService,
+  private incidentService: IncidentService,
 
-    private cdr: ChangeDetectorRef
-  ) {}
+  private incidentComplaintService:
+    IncidentComplaintService,
+
+  private cdr: ChangeDetectorRef,
+
+  private alertService: AlertService
+
+) {}
 
 
   // =========================================================
@@ -523,156 +531,218 @@ export class TrackIncident {
 
   }
 
-
   // =========================================================
   // SUBMIT COMPLAINT / FEEDBACK
   // =========================================================
 
-  submitComplaint(): void {
+submitComplaint(): void {
+
+  // -------------------------------------------------------
+  // CHECK INCIDENT
+  // -------------------------------------------------------
+
+  if (!this.selectedIncident) {
+
+    return;
+
+  }
 
 
-    // -------------------------------------------------------
-    // CHECK INCIDENT
-    // -------------------------------------------------------
+  // -------------------------------------------------------
+  // VALIDATE MESSAGE
+  // -------------------------------------------------------
 
-    if (!this.selectedIncident) {
+  if (!this.complaintMessage.trim()) {
 
-      return;
+    this.complaintError =
+      this.isCompleted(
+        this.selectedIncident
+      )
+        ? 'Please enter your feedback.'
+        : 'Please enter your complaint.';
 
-    }
+    return;
 
-
-    // -------------------------------------------------------
-    // VALIDATE MESSAGE
-    // -------------------------------------------------------
-
-    if (!this.complaintMessage.trim()) {
-
-      this.complaintError =
-        this.isCompleted(this.selectedIncident)
-
-          ? 'Please enter your feedback.'
-
-          : 'Please enter your complaint.';
-
-      return;
-
-    }
+  }
 
 
-    // -------------------------------------------------------
-    // START SUBMISSION
-    // -------------------------------------------------------
+  // -------------------------------------------------------
+  // START SUBMISSION
+  // -------------------------------------------------------
 
-    this.complaintError = '';
+  this.complaintError = '';
 
-    this.complaintLoading = true;
-
-
-    // -------------------------------------------------------
-    // REQUEST
-    // -------------------------------------------------------
-
-    const request = {
-
-      ticketId:
-        this.selectedIncident.ticketId,
-
-      fullName:
-        this.fullName.trim(),
-
-      phone:
-        this.phone.trim(),
-
-      email:
-        this.email.trim()
-          ? this.email.trim()
-          : undefined,
-
-      message:
-        this.complaintMessage.trim()
-
-    };
+  this.complaintLoading = true;
 
 
-    console.log(
-      'Submitting complaint/feedback:',
-      request
+  // -------------------------------------------------------
+  // SAVE VALUES BEFORE API CALL
+  // -------------------------------------------------------
+
+  const isFeedback =
+    this.isCompleted(
+      this.selectedIncident
     );
 
 
-    // -------------------------------------------------------
-    // API CALL
-    // -------------------------------------------------------
+  // -------------------------------------------------------
+  // REQUEST
+  // -------------------------------------------------------
 
-    this.incidentService
-      .submitComplaint(request)
-      .subscribe({
+  const request = {
 
-        next: (response) => {
+    ticketId:
+      this.selectedIncident.ticketId,
 
-          console.log(
-            'Complaint/feedback submitted:',
-            response
-          );
+    fullName:
+      this.fullName.trim(),
+
+    phone:
+      this.phone.trim(),
+
+    email:
+      this.email.trim()
+        ? this.email.trim()
+        : undefined,
+
+    message:
+      this.complaintMessage.trim()
+
+  };
 
 
-          this.complaintLoading = false;
+  console.log(
+    'Submitting complaint/feedback:',
+    request
+  );
 
 
-          // -------------------------------------------------
-          // SUCCESS MESSAGE
-          // -------------------------------------------------
+  // -------------------------------------------------------
+  // API CALL
+  // -------------------------------------------------------
 
-          if (
-            this.selectedIncident &&
-            this.isCompleted(this.selectedIncident)
-          ) {
+  this.incidentComplaintService
+    .submitComplaint(request)
+    .subscribe({
 
-            window.alert(
+      // ===================================================
+      // SUCCESS
+      // ===================================================
+
+      next: (response) => {
+
+        console.log(
+          'Complaint/feedback submitted successfully:',
+          response
+        );
+
+
+        // -------------------------------------------------
+        // STOP LOADING
+        // -------------------------------------------------
+
+        this.complaintLoading = false;
+
+
+        // -------------------------------------------------
+        // CLOSE MODAL
+        // -------------------------------------------------
+
+        this.showComplaintModal = false;
+
+        this.complaintMessage = '';
+
+        this.complaintError = '';
+
+        document.body.style.overflow = '';
+
+
+        // -------------------------------------------------
+        // FORCE UI UPDATE
+        // -------------------------------------------------
+
+        this.cdr.detectChanges();
+
+
+        // -------------------------------------------------
+        // SUCCESS ALERT
+        // -------------------------------------------------
+
+        setTimeout(() => {
+
+          if (isFeedback) {
+
+            this.alertService.success(
+              'Feedback Submitted',
               'Thank you. Your feedback has been submitted successfully.'
             );
 
-          }
+          } else {
 
-          else {
-
-            window.alert(
+            this.alertService.success(
+              'Complaint Submitted',
               'Your complaint has been submitted successfully. Our team will review it.'
             );
 
           }
 
+        }, 100);
 
-          // Close modal
-
-          this.closeComplaint();
-
-        },
+      },
 
 
-        error: (error) => {
+      // ===================================================
+      // ERROR
+      // ===================================================
 
-          console.error(
-            'Complaint submission error:',
-            error
-          );
+      error: (error) => {
 
-
-          this.complaintLoading = false;
-
-
-          this.complaintError =
-            error?.error?.message ||
-            'Unable to submit your complaint. Please try again.';
+        console.error(
+          'Complaint submission error:',
+          error
+        );
 
 
-          this.cdr.detectChanges();
+        // -------------------------------------------------
+        // STOP LOADING
+        // -------------------------------------------------
 
-        }
+        this.complaintLoading = false;
 
-      });
 
-  }
+        // -------------------------------------------------
+        // ERROR MESSAGE
+        // -------------------------------------------------
+
+        const message =
+          error?.error?.message ||
+          'Unable to submit your complaint. Please try again.';
+
+
+        this.complaintError =
+          message;
+
+
+        // -------------------------------------------------
+        // ERROR ALERT
+        // -------------------------------------------------
+
+        this.alertService.error(
+          'Submission Failed',
+          message
+        );
+
+
+        // -------------------------------------------------
+        // UPDATE UI
+        // -------------------------------------------------
+
+        this.cdr.detectChanges();
+
+      }
+
+    });
+
+}
 
 }

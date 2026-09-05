@@ -25,6 +25,8 @@ import { TechProfile } from './technician/tech-profile/tech-profile';
 import { authGuard } from './services/auth.guard';
 import { roleGuard } from './services/role.guard';
 import { TrackIncident } from './public/track-incident/track-incident';
+import { SupAssignment } from './supervisor/sup-assignment/sup-assignment';
+import { Feedback } from './supervisor/feedbacks/feedback';
 
 
 export const routes: Routes = [
@@ -36,32 +38,12 @@ export const routes: Routes = [
 
   // ADMIN ROUTES
   {
-    path: 'admin',
-
-    component: AdminLayout,
-
-    canActivate: [
-      authGuard,
-      roleGuard
-    ],
-
-    data: {
-      roles: ['ADMIN']
-},
-
+    path: 'admin',component: AdminLayout,
+    canActivate: [authGuard,roleGuard],
+    data: {roles: ['ADMIN']},
     children: [
-
-      {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
-  },
-
-      {
-        path: 'dashboard',
-        component: AdminDashboard
-  },
-
+      {path: '',redirectTo: 'dashboard',pathMatch: 'full'},
+      {path: 'dashboard',component: AdminDashboard},
       {
         path: 'users',
         component: Users
@@ -137,7 +119,9 @@ export const routes: Routes = [
       {
         path: 'profile',
         component: SupProfile
-      }
+      },
+      {path:'sup-assignments',component:SupAssignment},
+      {path: 'feedbacks',component:Feedback}
 
     ]},
 

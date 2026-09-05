@@ -15,6 +15,13 @@ styleUrl: './login.css'
 })
 export class Login {
 
+  showPassword = false;
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+
 username = '';
 password = '';
 loading = false;

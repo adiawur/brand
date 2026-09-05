@@ -1,0 +1,648 @@
+<div class="feedback-page">
+
+  <!-- =========================================
+       HEADER
+  ========================================== -->
+
+  <div class="page-header">
+
+    <div>
+
+      <span class="eyebrow">
+        CUSTOMER SERVICE
+      </span>
+
+      <h1>
+        Complaints & Feedback
+      </h1>
+
+      <p>
+        Review customer complaints and feedback
+        submitted for incidents in your zone.
+      </p>
+
+    </div>
+
+
+    <button
+      class="refresh-btn"
+      type="button"
+      (click)="loadComplaints()"
+    >
+
+      <i class="fa-solid fa-rotate"></i>
+
+      Refresh
+
+    </button>
+
+  </div>
+
+
+  <!-- =========================================
+       ALERT
+  ========================================== -->
+
+  <div
+    class="alert success"
+    *ngIf="successMessage"
+  >
+
+    <i class="fa-solid fa-circle-check"></i>
+
+    <span>
+      {{ successMessage }}
+    </span>
+
+  </div>
+
+
+  <div
+    class="alert error"
+    *ngIf="errorMessage"
+  >
+
+    <i class="fa-solid fa-circle-exclamation"></i>
+
+    <span>
+      {{ errorMessage }}
+    </span>
+
+    <button
+      type="button"
+      (click)="errorMessage = ''"
+    >
+      ×
+    </button>
+
+  </div>
+
+
+  <!-- =========================================
+       SUMMARY
+  ========================================== -->
+
+  <div class="summary-grid">
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+
+        <i class="fa-solid fa-comments"></i>
+
+      </div>
+
+      <div>
+
+        <span>
+          Total
+        </span>
+
+        <strong>
+          {{ complaints.length }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <div class="summary-icon orange">
+
+        <i class="fa-solid fa-clock"></i>
+
+      </div>
+
+      <div>
+
+        <span>
+          Pending
+        </span>
+
+        <strong>
+          {{
+            complaints.filter(
+              c => c.status === 'SUBMITTED'
+            ).length
+          }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <div class="summary-icon green">
+
+        <i class="fa-solid fa-circle-check"></i>
+
+      </div>
+
+      <div>
+
+        <span>
+          Resolved
+        </span>
+
+        <strong>
+          {{
+            complaints.filter(
+              c => c.status === 'RESOLVED'
+            ).length
+          }}
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================
+       TABLE
+  ========================================== -->
+
+  <div class="table-card">
+
+    <div class="table-header">
+
+      <div>
+
+        <h2>
+          Customer Messages
+        </h2>
+
+        <span>
+          Complaints and feedback from your zone
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- LOADING -->
+
+    <div
+      class="loading"
+      *ngIf="loading"
+    >
+
+      <i class="fa-solid fa-spinner fa-spin"></i>
+
+      Loading messages...
+
+    </div>
+
+
+    <!-- EMPTY -->
+
+    <div
+      class="empty"
+      *ngIf="
+        !loading &&
+        complaints.length === 0
+      "
+    >
+
+      <div class="empty-icon">
+
+        <i class="fa-solid fa-comment-slash"></i>
+
+      </div>
+
+      <h3>
+        No complaints or feedback
+      </h3>
+
+      <p>
+        No customer messages have been submitted
+        for your zone.
+      </p>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div
+      class="table-wrapper"
+      *ngIf="
+        !loading &&
+        complaints.length > 0
+      "
+    >
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Ticket
+            </th>
+
+            <th>
+              Customer
+            </th>
+
+            <th>
+              Phone
+            </th>
+
+            <th>
+              Message
+            </th>
+
+            <th>
+              Submitted
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th>
+              Action
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="
+              let complaint of complaints;
+              trackBy: trackById
+            "
+          >
+
+            <td>
+
+              <strong class="ticket">
+                {{ complaint.incident.ticketId }}
+              </strong>
+
+            </td>
+
+
+            <td>
+
+              <div class="customer">
+
+                <div class="avatar">
+
+                  <i class="fa-solid fa-user"></i>
+
+                </div>
+
+                <div>
+
+                  <strong>
+                    {{ complaint.fullName }}
+                  </strong>
+
+                  <small>
+                    {{ complaint.email || 'No email' }}
+                  </small>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <td>
+              {{ complaint.phone }}
+            </td>
+
+
+            <td>
+
+              <div class="message-preview">
+
+                {{ complaint.message }}
+
+              </div>
+
+            </td>
+
+
+            <td>
+
+              {{
+                complaint.submittedAt
+                  | date:'dd MMM yyyy, HH:mm'
+              }}
+
+            </td>
+
+
+            <td>
+
+              <span
+                class="status"
+                [ngClass]="
+                  getStatusClass(
+                    complaint.status
+                  )
+                "
+              >
+
+                {{
+                  formatStatus(
+                    complaint.status
+                  )
+                }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <button
+                class="view-btn"
+                type="button"
+                (click)="openComplaint(complaint)"
+              >
+
+                <i class="fa-solid fa-eye"></i>
+
+                View
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================
+     COMPLAINT MODAL
+========================================== -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showModal"
+  (click)="closeComplaint()"
+>
+
+  <div
+    class="feedback-modal"
+    (click)="$event.stopPropagation()"
+  >
+
+    <!-- HEADER -->
+
+    <div class="modal-header">
+
+      <div>
+
+        <span class="modal-label">
+          CUSTOMER MESSAGE
+        </span>
+
+        <h2>
+          Complaint / Feedback
+        </h2>
+
+      </div>
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeComplaint()"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <!-- BODY -->
+
+    <div class="modal-body">
+
+      <!-- CUSTOMER -->
+
+      <div class="customer-box">
+
+        <div class="large-avatar">
+
+          <i class="fa-solid fa-user"></i>
+
+        </div>
+
+        <div>
+
+          <strong>
+            {{ selectedComplaint?.fullName }}
+          </strong>
+
+          <span>
+            {{ selectedComplaint?.phone }}
+          </span>
+
+          <span
+            *ngIf="selectedComplaint?.email"
+          >
+            {{ selectedComplaint?.email }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- INCIDENT -->
+
+      <div class="incident-grid">
+
+        <div>
+
+          <span>
+            Ticket ID
+          </span>
+
+          <strong>
+            {{ selectedComplaint?.incident?.ticketId }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Incident Type
+          </span>
+
+          <strong>
+            {{
+              selectedComplaint?.incident?.incidentType
+            }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Location
+          </span>
+
+          <strong>
+            {{
+              selectedComplaint?.incident?.location
+            }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Submitted
+          </span>
+
+          <strong>
+            {{
+              selectedComplaint?.submittedAt
+                | date:'dd MMM yyyy, HH:mm'
+            }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- MESSAGE -->
+
+      <div class="message-box">
+
+        <div class="message-title">
+
+          <span>
+            Customer Message
+          </span>
+
+          <span
+            class="status"
+            [ngClass]="
+              getStatusClass(
+                selectedComplaint?.status || ''
+              )
+            "
+          >
+
+            {{
+              formatStatus(
+                selectedComplaint?.status || ''
+              )
+            }}
+
+          </span>
+
+        </div>
+
+        <p>
+          {{ selectedComplaint?.message }}
+        </p>
+
+      </div>
+
+
+      <!-- REPLY -->
+
+      <div class="reply-section">
+
+        <label>
+          Reply to Customer
+        </label>
+
+        <textarea
+          [(ngModel)]="replyMessage"
+          rows="5"
+          placeholder="Write your response to the customer..."
+        ></textarea>
+
+        <small>
+          The customer will receive the supervisor's
+          response through the configured notification channel.
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="cancel-btn"
+        (click)="closeComplaint()"
+      >
+        Close
+      </button>
+
+      <button
+        type="button"
+        class="reply-btn"
+        [disabled]="
+          !replyMessage.trim() ||
+          replying
+        "
+        (click)="reply()"
+      >
+
+        <i
+          *ngIf="replying"
+          class="fa-solid fa-spinner fa-spin"
+        ></i>
+
+        <i
+          *ngIf="!replying"
+          class="fa-solid fa-paper-plane"
+        ></i>
+
+        {{
+          replying
+            ? 'Sending...'
+            : 'Send Reply'
+        }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

@@ -110,4 +110,12 @@ updateMyProfile(data: UpdateUserRequest): Observable<User> {
 
 }
 
+getSupervisorTechnicians(): Observable<User[]> {
+
+  return this.http.get<User[]>(
+    `http://localhost:8182/api/supervisor/technicians`
+  );
+
+}
+
 }
